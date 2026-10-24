@@ -22,21 +22,33 @@ body {
 /* Soft grid background for hero */
 .hero-grid {
   background-image:
-    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
 /* Floating card animation */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  50% { transform: translateY(-8px); }
 }
 
 .float-card {
-  animation: float 5s ease-in-out infinite;
+  animation: float 5.5s ease-in-out infinite;
 }
 
 .float-card-delay {
-  animation: float 5s ease-in-out 1.2s infinite;
+  animation: float 5.5s ease-in-out 1.4s infinite;
+}
+
+.float-card-slow {
+  animation: float 7s ease-in-out 0.6s infinite;
+}
+
+/* Soft glow for cards */
+.card-glow {
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 20px 40px -12px rgba(109, 40, 217, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
 }

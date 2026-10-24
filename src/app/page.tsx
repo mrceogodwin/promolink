@@ -52,88 +52,143 @@ export default function Home() {
       </header>
 
       <main className="flex-1">
-        {/* HERO */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#3b1a7a] via-primary-deep to-[#2e1065]">
-          <div className="absolute inset-0 hero-grid opacity-60" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2e1065]/80 via-transparent to-transparent" />
+        {/* ═══════════════ HERO — Rivly-inspired ═══════════════ */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#2a0f5e] via-[#3b1a7a] to-[#1a0b3d]">
+          {/* Background effects */}
+          <div className="absolute inset-0 hero-grid opacity-50" />
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] -translate-y-1/3 translate-x-1/4" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-teal-500/10 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4" />
+
           <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 sm:pt-20 sm:pb-28 lg:pt-24 lg:pb-32">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-              <div className="text-white">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-10 items-center">
+              {/* Left copy */}
+              <div className="text-white relative z-10">
                 <p className="inline-flex items-center gap-2 text-sm font-medium text-primary-light/90 mb-5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   Your Audience. Your Opportunity.
                 </p>
-                <h1 className="text-4xl sm:text-5xl lg:text-[3.4rem] font-bold tracking-tight leading-[1.12]">
-                  Turn Your WhatsApp Audience Into Earning Opportunities.
+                <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold tracking-tight leading-[1.1]">
+                  Turn Your WhatsApp Audience Into Real Earning Opportunities.
                 </h1>
-                <p className="mt-6 text-lg text-white/75 leading-relaxed max-w-lg">
-                  PromoLink is a marketplace where owners of WhatsApp contact lists and groups can offer approved promotional campaigns to advertisers — and earn when messages are successfully delivered.
+                <p className="mt-6 text-lg text-white/70 leading-relaxed max-w-lg">
+                  PromoLink connects owners of WhatsApp contact lists and groups with advertisers looking for high-engagement promotional reach — with owner approval on every campaign.
                 </p>
                 <div className="mt-9 flex flex-col sm:flex-row gap-3">
-                  <Link href="/register?role=audience_owner" className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3.5 text-base font-semibold text-primary-deep shadow-lg hover:bg-primary-light transition-colors">Start Earning</Link>
-                  <Link href="/register?role=advertiser" className="inline-flex items-center justify-center rounded-lg border border-white/25 bg-white/5 px-6 py-3.5 text-base font-semibold text-white hover:bg-white/10 transition-colors">Advertise With Us</Link>
+                  <Link
+                    href="/register?role=audience_owner"
+                    className="inline-flex items-center justify-center rounded-xl bg-white px-7 py-3.5 text-base font-semibold text-primary-deep shadow-lg shadow-black/20 hover:bg-primary-light transition-all"
+                  >
+                    Start Earning
+                  </Link>
+                  <Link
+                    href="/register?role=advertiser"
+                    className="inline-flex items-center justify-center rounded-xl border border-white/25 bg-white/5 px-7 py-3.5 text-base font-semibold text-white backdrop-blur-sm hover:bg-white/10 transition-all"
+                  >
+                    Advertise With Us
+                  </Link>
                 </div>
-                <p className="mt-6 text-sm text-white/50">WhatsApp audiences. Approved campaigns. Clear delivery tracking.</p>
+                <p className="mt-6 text-sm text-white/45">
+                  WhatsApp audiences · Approved campaigns · Private contact lists
+                </p>
               </div>
 
-              <div className="relative hidden lg:block h-[420px]">
-                <div className="absolute top-1/2 right-8 -translate-y-1/2 w-72 h-72 rounded-full bg-teal-400/20 blur-2xl" />
-                <div className="absolute top-8 right-0 w-72 bg-white rounded-2xl shadow-2xl p-5 float-card">
+              {/* Right visual composition */}
+              <div className="relative hidden lg:block h-[460px]">
+                {/* Soft teal circle behind figure area */}
+                <div className="absolute top-1/2 right-4 -translate-y-1/2 w-80 h-80 rounded-full bg-gradient-to-br from-teal-400/30 to-cyan-500/10 blur-sm" />
+
+                {/* Main audience card */}
+                <div className="absolute top-6 right-0 w-72 bg-white rounded-2xl p-5 float-card card-glow">
                   <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-[#25D366]/15 flex items-center justify-center">
-                        <span className="text-[#25D366] font-bold text-xs">W</span>
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-9 h-9 rounded-xl bg-[#25D366]/15 flex items-center justify-center">
+                        <span className="text-[#25D366] font-bold text-sm">W</span>
                       </div>
-                      <span className="text-sm font-semibold text-near-black">WhatsApp Audience</span>
+                      <div>
+                        <p className="text-sm font-semibold text-near-black">WhatsApp Audience</p>
+                        <p className="text-[11px] text-muted">Lifestyle & City</p>
+                      </div>
                     </div>
                     <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-primary-light text-primary">Illustrative</span>
                   </div>
-                  <p className="text-sm font-medium text-near-black mb-1">Lifestyle & City Updates</p>
-                  <p className="text-xs text-muted mb-4">Primary location · Nigeria</p>
-                  <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="bg-gray-50 rounded-lg p-2.5"><p className="text-muted">Audience size</p><p className="font-semibold text-near-black mt-0.5">14k – 18k</p></div>
-                    <div className="bg-gray-50 rounded-lg p-2.5"><p className="text-muted">Price / delivery</p><p className="font-semibold text-near-black mt-0.5">Set by owner</p></div>
+                  <div className="grid grid-cols-2 gap-3 mt-4">
+                    <div className="bg-gray-50 rounded-xl p-3">
+                      <p className="text-[11px] text-muted">Audience size</p>
+                      <p className="text-sm font-semibold text-near-black mt-0.5">14k – 18k</p>
+                    </div>
+                    <div className="bg-gray-50 rounded-xl p-3">
+                      <p className="text-[11px] text-muted">Price / delivery</p>
+                      <p className="text-sm font-semibold text-near-black mt-0.5">Set by owner</p>
+                    </div>
                   </div>
                 </div>
-                <div className="absolute bottom-16 left-0 w-64 bg-white rounded-2xl shadow-2xl p-4 float-card-delay">
+
+                {/* Campaign opportunity card */}
+                <div className="absolute bottom-20 left-0 w-64 bg-white rounded-2xl p-4 float-card-delay card-glow">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
-                      <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                      </svg>
                     </div>
-                    <span className="text-xs font-semibold text-near-black">Campaign Opportunity</span>
+                    <span className="text-xs font-semibold text-near-black">Campaign Request</span>
                   </div>
                   <p className="text-sm font-medium text-near-black">Product Launch Promo</p>
                   <p className="text-xs text-muted mt-0.5 mb-3">WhatsApp · Lifestyle audience</p>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted">Status</span>
-                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">Pending approval</span>
+                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">Pending approval</span>
                   </div>
                 </div>
-                <div className="absolute top-36 left-4 w-48 bg-white rounded-xl shadow-xl p-3.5 float-card">
+
+                {/* Analytics mini card */}
+                <div className="absolute top-40 left-6 w-52 bg-white rounded-xl p-3.5 float-card-slow card-glow">
                   <p className="text-[10px] font-medium text-muted mb-2">Delivery tracking</p>
-                  <div className="flex items-end gap-1 h-12">
-                    {[40, 65, 45, 80, 55, 90, 70].map((h, i) => (
-                      <div key={i} className="flex-1 rounded-sm bg-primary/20" style={{ height: `${h}%` }}>
-                        <div className="w-full rounded-sm bg-primary" style={{ height: `${Math.min(h + 10, 100)}%` }} />
+                  <div className="flex items-end gap-1 h-14">
+                    {[35, 55, 40, 75, 50, 90, 65, 80].map((h, i) => (
+                      <div key={i} className="flex-1 rounded-sm bg-primary/15" style={{ height: `${h}%` }}>
+                        <div className="w-full rounded-sm bg-primary" style={{ height: `${Math.min(h + 15, 100)}%` }} />
                       </div>
                     ))}
                   </div>
                   <p className="text-[10px] text-muted mt-2">Illustrative data only</p>
                 </div>
+
+                {/* Small success badge */}
+                <div className="absolute bottom-8 right-8 bg-white rounded-xl px-3.5 py-2.5 float-card card-glow flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <svg className="w-3.5 h-3.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-near-black">Owner approved</p>
+                    <p className="text-[10px] text-muted">Campaign ready</p>
+                  </div>
+                </div>
               </div>
 
-              <div className="lg:hidden mt-4">
-                <div className="bg-white/10 backdrop-blur rounded-2xl border border-white/15 p-5">
+              {/* Mobile visual fallback */}
+              <div className="lg:hidden mt-2">
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/15 p-5">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-[#25D366]/20 flex items-center justify-center"><span className="text-[#25D366] font-bold text-sm">W</span></div>
+                    <div className="w-11 h-11 rounded-xl bg-[#25D366]/20 flex items-center justify-center">
+                      <span className="text-[#25D366] font-bold text-sm">W</span>
+                    </div>
                     <div>
                       <p className="text-white font-medium text-sm">WhatsApp Audience · Lifestyle</p>
-                      <p className="text-white/60 text-xs">Illustrative listing preview</p>
+                      <p className="text-white/55 text-xs">Illustrative listing preview</p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-white/10 rounded-lg p-3"><p className="text-white/60 text-xs">Audience</p><p className="text-white font-semibold text-sm">14k–18k</p></div>
-                    <div className="bg-white/10 rounded-lg p-3"><p className="text-white/60 text-xs">Price / delivery</p><p className="text-white font-semibold text-sm">Set by owner</p></div>
+                    <div className="bg-white/10 rounded-xl p-3">
+                      <p className="text-white/55 text-xs">Audience</p>
+                      <p className="text-white font-semibold text-sm">14k–18k</p>
+                    </div>
+                    <div className="bg-white/10 rounded-xl p-3">
+                      <p className="text-white/55 text-xs">Price / delivery</p>
+                      <p className="text-white font-semibold text-sm">Set by owner</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -141,27 +196,27 @@ export default function Home() {
           </div>
         </section>
 
-        {/* FOCUS */}
-        <section className="py-14 bg-white border-b border-gray-100">
+        {/* FOCUS STRIP */}
+        <section className="py-12 bg-white border-b border-gray-100">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p className="text-sm font-medium text-muted mb-3">Built for WhatsApp audiences</p>
+            <p className="text-sm font-medium text-muted mb-2">Built for WhatsApp audiences</p>
             <p className="text-near-black font-medium max-w-2xl mx-auto">
               PromoLink focuses on WhatsApp contact lists and groups — the channels where real conversations and high open rates already exist.
             </p>
-            <p className="mt-4 text-xs text-muted max-w-lg mx-auto">
-              PromoLink is an independent marketplace. We are not affiliated with or endorsed by Meta or WhatsApp.
+            <p className="mt-3 text-xs text-muted max-w-lg mx-auto">
+              Independent marketplace. Not affiliated with or endorsed by Meta or WhatsApp.
             </p>
           </div>
         </section>
 
         {/* HOW IT WORKS */}
-        <section id="how-it-works" className="py-20 sm:py-24 bg-gray-50/50">
+        <section id="how-it-works" className="py-20 sm:py-24 bg-gray-50/60">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-14">
               <h2 className="text-3xl sm:text-4xl font-bold text-near-black tracking-tight">How PromoLink Works</h2>
               <p className="mt-4 text-muted text-lg">A clear path for audience owners and advertisers.</p>
             </div>
-            <div className="grid md:grid-cols-2 gap-10 lg:gap-16">
+            <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
               <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
                 <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-6">For Audience Owners</p>
                 <div className="space-y-6">
@@ -227,7 +282,9 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <Link href="/register?role=audience_owner" className="mt-8 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-deep transition-colors">Start Earning With PromoLink</Link>
+                <Link href="/register?role=audience_owner" className="mt-8 inline-flex items-center justify-center rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-deep transition-colors">
+                  Start Earning With PromoLink
+                </Link>
               </div>
               <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-6">
                 <div className="flex items-center justify-between mb-5">
@@ -257,14 +314,14 @@ export default function Home() {
         </section>
 
         {/* FOR ADVERTISERS */}
-        <section id="for-advertisers" className="py-20 sm:py-24 bg-primary-light/30">
+        <section id="for-advertisers" className="py-20 sm:py-24 bg-primary-light/40">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               <div className="order-2 lg:order-1 space-y-3">
                 {[
-                  { name: "Lifestyle & City Updates", size: "14k–18k contacts", tag: "Illustrative" },
-                  { name: "Business Owners Group", size: "3.2k contacts", tag: "Illustrative" },
-                  { name: "Fashion & Deals Audience", size: "9k contacts", tag: "Illustrative" },
+                  { name: "Lifestyle & City Updates", size: "14k–18k contacts" },
+                  { name: "Business Owners Group", size: "3.2k contacts" },
+                  { name: "Fashion & Deals Audience", size: "9k contacts" },
                 ].map((item) => (
                   <div key={item.name} className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm flex items-center justify-between hover:border-primary/20 transition-colors">
                     <div className="flex items-center gap-3">
@@ -274,7 +331,7 @@ export default function Home() {
                         <p className="text-xs text-muted">{item.size}</p>
                       </div>
                     </div>
-                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-primary-light text-primary">{item.tag}</span>
+                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-primary-light text-primary">Illustrative</span>
                   </div>
                 ))}
                 <p className="text-xs text-muted pt-1">Sample cards only. Live listings will appear after review and approval.</p>
@@ -300,7 +357,9 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <Link href="/register?role=advertiser" className="mt-8 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-deep transition-colors">Explore Advertising Opportunities</Link>
+                <Link href="/register?role=advertiser" className="mt-8 inline-flex items-center justify-center rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-deep transition-colors">
+                  Explore Advertising Opportunities
+                </Link>
               </div>
             </div>
           </div>
@@ -338,7 +397,7 @@ export default function Home() {
                 { q: "Who can list an audience?", a: "Anyone who owns or manages an eligible WhatsApp contact list or group and can provide clear information about it. Listings go through review before appearing in the marketplace." },
                 { q: "Do advertisers get my contact list?", a: "No. Contact details stay private. Advertisers never receive the underlying phone numbers." },
                 { q: "How do audience owners earn?", a: "Earnings depend on approved campaigns and successful deliveries according to the terms of each campaign. PromoLink does not guarantee any specific income." },
-                { q: "Is PromoLink available yet?", a: "We are currently building the full marketplace. You can create an account interest below and we will notify you when registration opens." },
+                { q: "Is PromoLink available yet?", a: "We are currently building the full marketplace. You can register your interest and we will notify you when accounts open." },
                 { q: "Is PromoLink affiliated with WhatsApp or Meta?", a: "No. PromoLink is an independent marketplace and is not affiliated with or endorsed by Meta or WhatsApp." },
               ].map((item) => (
                 <div key={item.q} className="border border-gray-100 rounded-xl p-5 sm:p-6">
@@ -351,17 +410,21 @@ export default function Home() {
         </section>
 
         {/* FINAL CTA */}
-        <section id="cta" className="py-20 sm:py-24 bg-gradient-to-br from-primary-deep to-[#2e1065] text-white">
+        <section id="cta" className="py-20 sm:py-24 bg-gradient-to-br from-[#2a0f5e] via-primary-deep to-[#1a0b3d] text-white">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Your Audience. Your Opportunity.</h2>
-            <p className="mt-4 text-white/75 text-lg max-w-xl mx-auto">
+            <p className="mt-4 text-white/70 text-lg max-w-xl mx-auto">
               Be among the first to list your WhatsApp audience or reach high-engagement WhatsApp contacts through approved campaigns.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/register?role=audience_owner" className="inline-flex items-center justify-center rounded-lg bg-white px-8 py-3.5 text-base font-semibold text-primary-deep shadow-lg hover:bg-primary-light transition-colors">Start Earning</Link>
-              <Link href="/register?role=advertiser" className="inline-flex items-center justify-center rounded-lg border border-white/30 bg-white/5 px-8 py-3.5 text-base font-semibold text-white hover:bg-white/10 transition-colors">Advertise With Us</Link>
+              <Link href="/register?role=audience_owner" className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-primary-deep shadow-lg hover:bg-primary-light transition-colors">
+                Start Earning
+              </Link>
+              <Link href="/register?role=advertiser" className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/5 px-8 py-3.5 text-base font-semibold text-white hover:bg-white/10 transition-colors">
+                Advertise With Us
+              </Link>
             </div>
-            <p className="mt-6 text-sm text-white/50">Registration is opening soon. Choose your role to get started.</p>
+            <p className="mt-6 text-sm text-white/45">Registration is opening soon. Choose your role to get started.</p>
           </div>
         </section>
       </main>
