@@ -23,8 +23,8 @@ export default function Home() {
               </nav>
 
               <div className="hidden md:flex items-center gap-3">
-                <Link href="#cta" className="text-sm font-medium text-muted hover:text-primary transition-colors px-3 py-2">Log in</Link>
-                <Link href="#cta" className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-deep transition-colors">Get Started</Link>
+                <Link href="/login" className="text-sm font-medium text-muted hover:text-primary transition-colors px-3 py-2">Log in</Link>
+                <Link href="/register" className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-deep transition-colors">Get Started</Link>
               </div>
 
               <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden p-2 rounded-lg text-near-black hover:bg-gray-50" aria-label="Toggle menu">
@@ -42,8 +42,8 @@ export default function Home() {
                 <a href="#for-owners" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 text-sm font-medium text-near-black hover:bg-primary-light rounded-lg">For Audience Owners</a>
                 <a href="#for-advertisers" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 text-sm font-medium text-near-black hover:bg-primary-light rounded-lg">For Advertisers</a>
                 <div className="pt-2 flex flex-col gap-2">
-                  <Link href="#cta" onClick={() => setMobileOpen(false)} className="block text-center px-3 py-2.5 text-sm font-medium text-muted border border-gray-200 rounded-lg">Log in</Link>
-                  <Link href="#cta" onClick={() => setMobileOpen(false)} className="block text-center px-3 py-2.5 text-sm font-semibold text-white bg-primary rounded-lg">Get Started</Link>
+                  <Link href="/login" onClick={() => setMobileOpen(false)} className="block text-center px-3 py-2.5 text-sm font-medium text-muted border border-gray-200 rounded-lg">Log in</Link>
+                  <Link href="/register" onClick={() => setMobileOpen(false)} className="block text-center px-3 py-2.5 text-sm font-semibold text-white bg-primary rounded-lg">Get Started</Link>
                 </div>
               </div>
             )}
@@ -70,8 +70,8 @@ export default function Home() {
                   PromoLink is a marketplace where owners of WhatsApp contact lists and groups can offer approved promotional campaigns to advertisers — and earn when messages are successfully delivered.
                 </p>
                 <div className="mt-9 flex flex-col sm:flex-row gap-3">
-                  <a href="#cta" className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3.5 text-base font-semibold text-primary-deep shadow-lg hover:bg-primary-light transition-colors">Start Earning</a>
-                  <a href="#for-advertisers" className="inline-flex items-center justify-center rounded-lg border border-white/25 bg-white/5 px-6 py-3.5 text-base font-semibold text-white hover:bg-white/10 transition-colors">Advertise With Us</a>
+                  <Link href="/register?role=audience_owner" className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3.5 text-base font-semibold text-primary-deep shadow-lg hover:bg-primary-light transition-colors">Start Earning</Link>
+                  <Link href="/register?role=advertiser" className="inline-flex items-center justify-center rounded-lg border border-white/25 bg-white/5 px-6 py-3.5 text-base font-semibold text-white hover:bg-white/10 transition-colors">Advertise With Us</Link>
                 </div>
                 <p className="mt-6 text-sm text-white/50">WhatsApp audiences. Approved campaigns. Clear delivery tracking.</p>
               </div>
@@ -227,7 +227,7 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <a href="#cta" className="mt-8 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-deep transition-colors">Start Earning With PromoLink</a>
+                <Link href="/register?role=audience_owner" className="mt-8 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-deep transition-colors">Start Earning With PromoLink</Link>
               </div>
               <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-6">
                 <div className="flex items-center justify-between mb-5">
@@ -300,7 +300,7 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <a href="#cta" className="mt-8 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-deep transition-colors">Explore Advertising Opportunities</a>
+                <Link href="/register?role=advertiser" className="mt-8 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-deep transition-colors">Explore Advertising Opportunities</Link>
               </div>
             </div>
           </div>
@@ -338,7 +338,7 @@ export default function Home() {
                 { q: "Who can list an audience?", a: "Anyone who owns or manages an eligible WhatsApp contact list or group and can provide clear information about it. Listings go through review before appearing in the marketplace." },
                 { q: "Do advertisers get my contact list?", a: "No. Contact details stay private. Advertisers never receive the underlying phone numbers." },
                 { q: "How do audience owners earn?", a: "Earnings depend on approved campaigns and successful deliveries according to the terms of each campaign. PromoLink does not guarantee any specific income." },
-                { q: "Is PromoLink available yet?", a: "We are currently building the full marketplace. You can join the early list below to be notified when listings and campaigns open." },
+                { q: "Is PromoLink available yet?", a: "We are currently building the full marketplace. You can create an account interest below and we will notify you when registration opens." },
                 { q: "Is PromoLink affiliated with WhatsApp or Meta?", a: "No. PromoLink is an independent marketplace and is not affiliated with or endorsed by Meta or WhatsApp." },
               ].map((item) => (
                 <div key={item.q} className="border border-gray-100 rounded-xl p-5 sm:p-6">
@@ -358,10 +358,10 @@ export default function Home() {
               Be among the first to list your WhatsApp audience or reach high-engagement WhatsApp contacts through approved campaigns.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="mailto:hello@promolink.ng?subject=I%20want%20to%20Start%20Earning" className="inline-flex items-center justify-center rounded-lg bg-white px-8 py-3.5 text-base font-semibold text-primary-deep shadow-lg hover:bg-primary-light transition-colors">Start Earning</a>
-              <a href="mailto:hello@promolink.ng?subject=I%20want%20to%20Advertise" className="inline-flex items-center justify-center rounded-lg border border-white/30 bg-white/5 px-8 py-3.5 text-base font-semibold text-white hover:bg-white/10 transition-colors">Advertise With Us</a>
+              <Link href="/register?role=audience_owner" className="inline-flex items-center justify-center rounded-lg bg-white px-8 py-3.5 text-base font-semibold text-primary-deep shadow-lg hover:bg-primary-light transition-colors">Start Earning</Link>
+              <Link href="/register?role=advertiser" className="inline-flex items-center justify-center rounded-lg border border-white/30 bg-white/5 px-8 py-3.5 text-base font-semibold text-white hover:bg-white/10 transition-colors">Advertise With Us</Link>
             </div>
-            <p className="mt-6 text-sm text-white/50">No account required yet. Tell us how you’d like to use PromoLink.</p>
+            <p className="mt-6 text-sm text-white/50">Registration is opening soon. Choose your role to get started.</p>
           </div>
         </section>
       </main>
@@ -385,7 +385,8 @@ export default function Home() {
             <div>
               <p className="font-semibold text-white text-sm mb-4">Company</p>
               <ul className="space-y-2.5 text-sm">
-                <li><a href="mailto:hello@promolink.ng" className="hover:text-white transition-colors">Contact</a></li>
+                <li><Link href="/login" className="hover:text-white transition-colors">Log in</Link></li>
+                <li><Link href="/register" className="hover:text-white transition-colors">Create account</Link></li>
                 <li><span className="text-gray-500">Privacy Policy (coming soon)</span></li>
                 <li><span className="text-gray-500">Terms of Service (coming soon)</span></li>
               </ul>
@@ -393,8 +394,8 @@ export default function Home() {
             <div>
               <p className="font-semibold text-white text-sm mb-4">Get started</p>
               <ul className="space-y-2.5 text-sm">
-                <li><a href="#cta" className="hover:text-white transition-colors">Start Earning</a></li>
-                <li><a href="#cta" className="hover:text-white transition-colors">Advertise With Us</a></li>
+                <li><Link href="/register?role=audience_owner" className="hover:text-white transition-colors">Start Earning</Link></li>
+                <li><Link href="/register?role=advertiser" className="hover:text-white transition-colors">Advertise With Us</Link></li>
               </ul>
             </div>
           </div>
