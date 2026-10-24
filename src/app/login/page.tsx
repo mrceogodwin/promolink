@@ -15,11 +15,12 @@ export default function LoginPage() {
     setStatus("loading");
     setMessage("");
 
-    // Auth is not yet configured. Show honest feedback.
-    await new Promise((r) => setTimeout(r, 600));
+    // Authentication backend is not configured yet.
+    await new Promise((r) => setTimeout(r, 400));
+
     setStatus("error");
     setMessage(
-      "Account login is not available yet. We are still building authentication. Join the waitlist from the homepage and we will notify you when accounts open."
+      "Login is not available yet. The authentication system is still being configured. Please check back soon."
     );
   }
 

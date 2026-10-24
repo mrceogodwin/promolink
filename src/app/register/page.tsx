@@ -17,7 +17,7 @@ function RegisterForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -31,14 +31,13 @@ function RegisterForm() {
     setStatus("loading");
     setMessage("");
 
-    // No auth backend is configured yet. Be honest.
-    await new Promise((r) => setTimeout(r, 700));
+    // Authentication backend is not configured yet.
+    // Do not claim success or that details were recorded.
+    await new Promise((r) => setTimeout(r, 400));
 
-    setStatus("success");
+    setStatus("error");
     setMessage(
-      role === "audience_owner"
-        ? "Thanks for your interest. Audience-owner accounts are not open yet. We have recorded your details and will notify you when registration goes live."
-        : "Thanks for your interest. Advertiser accounts are not open yet. We have recorded your details and will notify you when registration goes live."
+      "Account registration is not available yet. The authentication system is still being configured. Please check back soon or contact us if you need early access."
     );
   }
 
@@ -50,7 +49,6 @@ function RegisterForm() {
           Choose how you want to use PromoLink.
         </p>
 
-        {/* Role selector */}
         <div className="mt-6 grid grid-cols-2 gap-3">
           <button
             type="button"
@@ -126,26 +124,18 @@ function RegisterForm() {
           </div>
 
           {message && (
-            <div
-              className={`rounded-lg px-4 py-3 text-sm ${
-                status === "success"
-                  ? "bg-emerald-50 border border-emerald-100 text-emerald-800"
-                  : "bg-amber-50 border border-amber-100 text-amber-800"
-              }`}
-            >
+            <div className="rounded-lg bg-amber-50 border border-amber-100 px-4 py-3 text-sm text-amber-800">
               {message}
             </div>
           )}
 
           <button
             type="submit"
-            disabled={status === "loading" || status === "success"}
+            disabled={status === "loading"}
             className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-deep transition-colors disabled:opacity-60"
           >
             {status === "loading"
-              ? "Submitting…"
-              : status === "success"
-              ? "Submitted"
+              ? "Checking…"
               : role === "audience_owner"
               ? "Register as Audience Owner"
               : "Register as Advertiser"}
