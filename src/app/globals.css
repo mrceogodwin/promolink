@@ -18,3 +18,25 @@ body {
   color: var(--color-near-black);
   background: #ffffff;
 }
+
+/* Soft grid background for hero */
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Floating card animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.float-card {
+  animation: float 5s ease-in-out infinite;
+}
+
+.float-card-delay {
+  animation: float 5s ease-in-out 1.2s infinite;
+}
