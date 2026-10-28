@@ -8,9 +8,9 @@ export const dynamic = "force-dynamic";
 
 const navItems = [
   { mark: "⌂", label: "Overview", href: "/dashboard", active: true },
-  { mark: "▤", label: "My listings", href: "#", active: false },
-  { mark: "↗", label: "Campaigns", href: "#", active: false },
-  { mark: "◷", label: "Activity", href: "#", active: false },
+  { mark: "▤", label: "My listings", href: "/dashboard/listings", active: false },
+  { mark: "↗", label: "Campaigns", href: "/dashboard/campaigns", active: false },
+  { mark: "◷", label: "Activity", href: "/dashboard", active: false },
 ];
 
 export default async function DashboardPage() {
@@ -41,11 +41,11 @@ export default async function DashboardPage() {
           <p className="mb-4 px-3 text-[10px] font-extrabold uppercase tracking-[.19em] text-[#7b8f82]">Workspace</p>
           <nav className="space-y-1" aria-label="Dashboard navigation">
             {navItems.map((item) => (
-              <div key={item.label} aria-current={item.active ? "page" : undefined} title={item.active ? "Current page" : "Coming soon"}
-                className={`flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold ${item.active ? "bg-[#075638] text-white shadow-sm" : "cursor-default text-[#aaa99f]"}`}>
+              <Link key={item.label} href={item.href} aria-current={item.active ? "page" : undefined}
+                className={`flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition-colors ${item.active ? "bg-[#075638] text-white shadow-sm" : "text-[#61746a] hover:bg-[#e5f7eb] hover:text-[#075638]"}`}>
                 <span className={`grid h-7 w-7 place-items-center rounded-lg text-base ${item.active ? "bg-[#c8f169] text-[#075638]" : "bg-white text-[#aaa99f]"}`}>{item.mark}</span>
-                <span>{item.label}</span>{!item.active && <span className="ml-auto text-[9px] font-semibold uppercase tracking-wide">Soon</span>}
-              </div>
+                <span>{item.label}</span>
+              </Link>
             ))}
           </nav>
           <div className="mt-10 rounded-2xl border border-[#e0ebe3] bg-white p-4">
