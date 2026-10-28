@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 import LogoutButton from "./logout-button";
+import { Logo } from "@/components/Logo";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +29,7 @@ export default async function DashboardPage() {
         <div className="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between px-5 sm:px-8">
           <Link href="/" className="flex items-center gap-2.5" aria-label="PromoLink home">
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#11110e] text-base font-black text-[#c8f169]">P</span>
-            <span className="text-xl font-extrabold tracking-[-.8px]">Promo<span className="text-[#a58b3c]">Link</span></span>
+            <span className="text-xl font-extrabold tracking-[-.8px]">Promo<span className="text-[#08794e]">Link</span></span>
           </Link>
           <div className="flex items-center gap-3 sm:gap-5">
             <span className="hidden rounded-full border border-[#dcebe0] bg-[#f0f8f2] px-3 py-1.5 text-xs font-semibold text-[#5f7568] sm:inline-flex">{roleLabel}</span>
