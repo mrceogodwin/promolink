@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
@@ -15,13 +17,22 @@ export default function LoginPage() {
     setStatus("loading");
     setMessage("");
 
-    // Authentication backend is not configured yet.
-    await new Promise((r) => setTimeout(r, 400));
-
-    setStatus("error");
-    setMessage(
-      "Login is not available yet. The authentication system is still being configured. Please check back soon."
-    );
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Unable to log in.");
+      router.push("/dashboard");
+      router.refresh();
+    } catch (error) {
+      setStatus("error");
+      setMessage(error instanceof Error ? error.message : "Unable to log in. Please try again.");
+    } finally {
+      setStatus("idle");
+    }
   }
 
   return (
@@ -82,7 +93,7 @@ export default function LoginPage() {
                 disabled={status === "loading"}
                 className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-deep transition-colors disabled:opacity-60"
               >
-                {status === "loading" ? "Checking…" : "Log in"}
+                {status === "loading" ? "Logging in…" : "Log in"}
               </button>
             </form>
 
