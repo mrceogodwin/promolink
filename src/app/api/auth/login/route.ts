@@ -6,9 +6,13 @@ export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const email = typeof body.email === "string" ? normalizeEmail(body.email) : "";
-    const password = typeof body.password === "string" ? body.password : "";
+    const body: unknown = await request.json().catch(() => null);
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return NextResponse.json({ error: "Send valid login details." }, { status: 400 });
+    }
+    const input = body as Record<string, unknown>;
+    const email = typeof input.email === "string" ? normalizeEmail(input.email) : "";
+    const password = typeof input.password === "string" ? input.password : "";
     if (!email || !password || email.length > 254 || password.length > 128) {
       return NextResponse.json({ error: "Enter your email and password." }, { status: 400 });
     }
