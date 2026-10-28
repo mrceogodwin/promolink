@@ -27,7 +27,7 @@ export default async function DashboardPage() {
     <main className="min-h-screen bg-[#f7faf7] text-[#11251b]">
       <header className="sticky top-0 z-30 border-b border-black/[.08] bg-white/90 backdrop-blur-xl">
         <div className="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between px-5 sm:px-8">
-          <Logo dark />
+          <Logo />
           <div className="flex items-center gap-3 sm:gap-5">
             <span className="hidden rounded-full border border-[#dcebe0] bg-[#f0f8f2] px-3 py-1.5 text-xs font-semibold text-[#5f7568] sm:inline-flex">{roleLabel}</span>
             <div className="grid h-9 w-9 place-items-center rounded-full bg-[#d9f5e3] text-sm font-bold text-[#075638]" title={user.name}>{initial}</div>
@@ -59,7 +59,7 @@ export default async function DashboardPage() {
         <section className="min-w-0">
           <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
             <div>
-              <p className="flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[.2em] text-[#08794e]"><span className="h-1.5 w-1.5 rounded-full bg-[#c4a94f]" /> Your workspace</p>
+              <p className="flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[.2em] text-[#08794e]"><span className="h-1.5 w-1.5 rounded-full bg-[#c8f169]" /> Your workspace</p>
               <h1 className="mt-3 text-3xl font-extrabold tracking-[-1.6px] sm:text-[42px]">Good to have you, {firstName}.</h1>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-[#73736a]">Your PromoLink account, in one place. Start with the next step for your role.</p>
             </div>
