@@ -8,6 +8,8 @@ type User = { name: string; email: string; role: string };
 export default function SettingsPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileName, setProfileName] = useState("");
+  const [profileSaving, setProfileSaving] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -20,12 +22,31 @@ export default function SettingsPage() {
     fetch("/api/auth/me").then(async (response) => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Please sign in again.");
-      if (active) setUser(data.user);
+      if (active) { setUser(data.user); setProfileName(data.user.name || ""); }
     }).catch((reason: unknown) => {
       if (active) setError(reason instanceof Error ? reason.message : "Could not load account details.");
     }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, []);
+
+  async function saveProfile(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+    setNotice("");
+    setProfileSaving(true);
+    try {
+      const response = await fetch("/api/profile", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: profileName }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not update profile.");
+      setUser(data.user);
+      setProfileName(data.user.name);
+      setNotice(data.message || "Profile updated.");
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Could not update profile.");
+    } finally {
+      setProfileSaving(false);
+    }
+  }
 
   async function changePassword(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -73,6 +94,7 @@ export default function SettingsPage() {
           <div className="rounded-xl bg-[#f7faf7] p-4"><dt className="text-xs font-semibold text-[#61746a]">Account role</dt><dd className="mt-2 text-sm font-bold">{roleLabel}</dd></div>
           <div className="rounded-xl bg-[#f7faf7] p-4"><dt className="text-xs font-semibold text-[#61746a]">Email verification</dt><dd className="mt-2 text-sm font-bold">Not yet available</dd><p className="mt-1 text-xs leading-5 text-[#61746a]">Email verification requires an email delivery provider and token workflow.</p></div>
         </dl> : <p className="mt-5 text-sm text-[#61746a]">Sign in to view your account details.</p>}
+        {user && <form onSubmit={saveProfile} className="mt-5 border-t border-[#e8efe9] pt-5 sm:max-w-xl"><label className="block text-sm font-semibold">Edit display name<input className={input} value={profileName} onChange={event=>setProfileName(event.target.value)} minLength={2} maxLength={120} required /></label><button disabled={profileSaving || loading || profileName.trim() === user.name} className="mt-3 rounded-xl border border-[#cddfd2] bg-white px-4 py-2.5 text-sm font-bold text-[#075638] disabled:opacity-50">{profileSaving ? "Saving…" : "Save profile"}</button></form>}
       </section>
       <section className="mt-5 rounded-2xl border border-[#e0ebe3] bg-white p-5 shadow-sm sm:p-7">
         <div className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-xl bg-[#e5f7eb] text-lg text-[#08794e]">⌑</span><div><h2 className="font-extrabold">Change password</h2><p className="mt-1 text-xs text-[#61746a]">Use at least 10 characters. All active sessions will be signed out.</p></div></div>
