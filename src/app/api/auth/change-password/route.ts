@@ -30,6 +30,7 @@ export async function POST(request: Request) {
     const passwordHash = await hashPassword(newPassword);
     await sql`UPDATE users SET password_hash = ${passwordHash}, updated_at = now() WHERE id = ${user.id}`;
     await sql`DELETE FROM sessions WHERE user_id = ${user.id}`;
+    await sql`INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata) VALUES (${user.id}, 'password.changed', 'user', ${user.id}, '{}'::jsonb)`;
     return NextResponse.json({ ok: true, message: "Password updated. Sign in again with your new password." });
   } catch (error) {
     console.error("Password change failed", error instanceof Error ? error.message : "unknown error");
