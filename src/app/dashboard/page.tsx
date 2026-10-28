@@ -10,6 +10,7 @@ const navItems = [
   { mark: "⌂", label: "Overview", href: "/dashboard", active: true },
   { mark: "▤", label: "My listings", href: "/dashboard/listings", active: false },
   { mark: "↗", label: "Campaigns", href: "/dashboard/campaigns", active: false },
+  { mark: "⚙", label: "Settings", href: "/dashboard/settings", active: false },
   { mark: "◷", label: "Activity", href: "/dashboard", active: false },
   { mark: "✓", label: "Review queue", href: "/dashboard/admin/review", active: false, adminOnly: true },
 ];
@@ -36,7 +37,6 @@ export default async function DashboardPage() {
           </div>
         </div>
       </header>
-
       <div className="mx-auto grid max-w-[1440px] gap-8 px-5 py-7 sm:px-8 lg:grid-cols-[230px_minmax(0,1fr)] lg:gap-12 lg:py-10">
         <aside className="hidden lg:block">
           <p className="mb-4 px-3 text-[10px] font-extrabold uppercase tracking-[.19em] text-[#7b8f82]">Workspace</p>
@@ -56,7 +56,6 @@ export default async function DashboardPage() {
             <Link href="/" className="mt-3 inline-flex text-xs font-bold text-[#08794e] hover:underline">Explore PromoLink ↗</Link>
           </div>
         </aside>
-
         <section className="min-w-0">
           <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
             <div>
@@ -66,7 +65,6 @@ export default async function DashboardPage() {
             </div>
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-[#d6e5da] bg-white px-3 py-2 text-xs font-semibold text-[#5f7568]"><span className="h-2 w-2 rounded-full bg-[#10a568]" /> Account active</span>
           </div>
-
           <div className="mt-8 overflow-hidden rounded-2xl bg-[#075638] text-white shadow-[0_18px_50px_rgba(20,20,12,.10)]">
             <div className="grid gap-7 p-6 sm:p-8 md:grid-cols-[1fr_auto] md:items-center">
               <div>
@@ -81,42 +79,17 @@ export default async function DashboardPage() {
               <span className="inline-flex items-center gap-2"><span className="text-[#c8f169]">✓</span> Private audience data stays private</span>
             </div>
           </div>
-
           <div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            <article className="rounded-2xl border border-[#e0ebe3] bg-white p-5 sm:p-6">
-              <div className="flex items-center justify-between"><span className="text-sm font-semibold text-[#61746a]">Account type</span><span className="grid h-9 w-9 place-items-center rounded-xl bg-[#e5f7eb] text-[#08794e]">◈</span></div>
-              <p className="mt-5 text-xl font-extrabold tracking-tight">{roleLabel}</p>
-              <p className="mt-2 text-xs leading-5 text-[#718176]">Your workspace is tailored to this account role.</p>
-            </article>
-            <article className="rounded-2xl border border-[#e0ebe3] bg-white p-5 sm:p-6">
-              <div className="flex items-center justify-between"><span className="text-sm font-semibold text-[#61746a]">Email address</span><span className="grid h-9 w-9 place-items-center rounded-xl bg-[#e5f7eb] text-[#08794e]">@</span></div>
-              <p className="mt-5 break-all text-base font-bold tracking-tight">{user.email}</p>
-              <p className="mt-2 text-xs leading-5 text-[#718176]">Used for your account sign-in.</p>
-            </article>
-            <article className="rounded-2xl border border-[#e0ebe3] bg-white p-5 sm:p-6 sm:col-span-2 xl:col-span-1">
-              <div className="flex items-center justify-between"><span className="text-sm font-semibold text-[#61746a]">Marketplace status</span><span className="grid h-9 w-9 place-items-center rounded-xl bg-[#e5f7eb] text-[#08794e]">◷</span></div>
-              <p className="mt-5 text-xl font-extrabold tracking-tight">In development</p>
-              <p className="mt-2 text-xs leading-5 text-[#718176]">Listings, campaigns and payment workflows are not presented as live until verified.</p>
-            </article>
+            <article className="rounded-2xl border border-[#e0ebe3] bg-white p-5 sm:p-6"><div className="flex items-center justify-between"><span className="text-sm font-semibold text-[#61746a]">Account type</span><span className="grid h-9 w-9 place-items-center rounded-xl bg-[#e5f7eb] text-[#08794e]">◈</span></div><p className="mt-5 text-xl font-extrabold tracking-tight">{roleLabel}</p><p className="mt-2 text-xs leading-5 text-[#718176]">Your workspace is tailored to this account role.</p></article>
+            <article className="rounded-2xl border border-[#e0ebe3] bg-white p-5 sm:p-6"><div className="flex items-center justify-between"><span className="text-sm font-semibold text-[#61746a]">Email address</span><span className="grid h-9 w-9 place-items-center rounded-xl bg-[#e5f7eb] text-[#08794e]">@</span></div><p className="mt-5 break-all text-base font-bold tracking-tight">{user.email}</p><p className="mt-2 text-xs leading-5 text-[#718176]">Used for your account sign-in.</p></article>
+            <article className="rounded-2xl border border-[#e0ebe3] bg-white p-5 sm:p-6 sm:col-span-2 xl:col-span-1"><div className="flex items-center justify-between"><span className="text-sm font-semibold text-[#61746a]">Marketplace status</span><span className="grid h-9 w-9 place-items-center rounded-xl bg-[#e5f7eb] text-[#08794e]">◷</span></div><p className="mt-5 text-xl font-extrabold tracking-tight">In development</p><p className="mt-2 text-xs leading-5 text-[#718176]">Listings, campaigns and payment workflows are not presented as live until verified.</p></article>
           </div>
-
-          <div className="mt-7">
-            <div className="mb-4 flex items-end justify-between gap-4">
-              <div><h2 className="text-lg font-extrabold tracking-tight">Your next steps</h2><p className="mt-1 text-xs text-[#61746a]">A simple guide to what comes next.</p></div>
-              <span className="hidden text-[10px] font-bold uppercase tracking-[.15em] text-[#7b8f82] sm:block">Getting started</span>
-            </div>
+          <div className="mt-7"><div className="mb-4 flex items-end justify-between gap-4"><div><h2 className="text-lg font-extrabold tracking-tight">Your next steps</h2><p className="mt-1 text-xs text-[#61746a]">A simple guide to what comes next.</p></div><span className="hidden text-[10px] font-bold uppercase tracking-[.15em] text-[#7b8f82] sm:block">Getting started</span></div>
             <div className="grid gap-3 md:grid-cols-2">
-              <article className="flex gap-4 rounded-2xl border border-[#e0ebe3] bg-white p-5">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#e5f7eb] font-extrabold text-[#08794e]">01</span>
-                <div><h3 className="text-sm font-bold">{isAdmin ? "Review platform requirements" : isOwner ? "Prepare your audience listing" : "Prepare your campaign brief"}</h3><p className="mt-2 text-xs leading-5 text-[#61746a]">{isAdmin ? "Open the review queue to approve or reject audience listings before advertisers can see them." : isOwner ? "Create an audience listing for review. Never upload private contact lists." : "Choose an approved audience and submit a campaign request. Payment is not collected here."}</p><span className="mt-3 inline-flex rounded-full bg-[#e5f7eb] px-2.5 py-1 text-[10px] font-bold text-[#426c55]">Open workspace</span></div>
-              </article>
-              <article className="flex gap-4 rounded-2xl border border-[#e0ebe3] bg-white p-5">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#e5f7eb] font-extrabold text-[#08794e]">02</span>
-                <div><h3 className="text-sm font-bold">Keep your account secure</h3><p className="mt-2 text-xs leading-5 text-[#61746a]">Use a unique password and sign out when you finish on a shared device.</p><span className="mt-3 inline-flex rounded-full bg-[#dcf6e5] px-2.5 py-1 text-[10px] font-bold text-[#08794e]">Available now</span></div>
-              </article>
+              <Link href={isAdmin ? "/dashboard/admin/review" : isOwner ? "/dashboard/listings" : "/dashboard/campaigns"} className="flex gap-4 rounded-2xl border border-[#e0ebe3] bg-white p-5 transition hover:border-[#a8d5b7]"><span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#e5f7eb] font-extrabold text-[#08794e]">01</span><div><h3 className="text-sm font-bold">{isAdmin ? "Review platform listings" : isOwner ? "Prepare your audience listing" : "Prepare your campaign brief"}</h3><p className="mt-2 text-xs leading-5 text-[#61746a]">{isAdmin ? "Open the review queue to approve or reject audience listings before advertisers can see them." : isOwner ? "Create a listing for review. Never upload private contact lists." : "Choose an approved audience and submit a campaign request. Payment is not collected here."}</p><span className="mt-3 inline-flex rounded-full bg-[#e5f7eb] px-2.5 py-1 text-[10px] font-bold text-[#426c55]">Open workspace ↗</span></div></Link>
+              <Link href="/dashboard/settings" className="flex gap-4 rounded-2xl border border-[#e0ebe3] bg-white p-5 transition hover:border-[#a8d5b7]"><span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#e5f7eb] font-extrabold text-[#08794e]">02</span><div><h3 className="text-sm font-bold">Account & security settings</h3><p className="mt-2 text-xs leading-5 text-[#61746a]">Review your account details and update your password. Password changes sign out existing sessions.</p><span className="mt-3 inline-flex rounded-full bg-[#dcf6e5] px-2.5 py-1 text-[10px] font-bold text-[#08794e]">Open settings ↗</span></div></Link>
             </div>
           </div>
-
           <footer className="mt-10 flex flex-col gap-2 border-t border-[#e0ebe3] pt-5 text-[11px] text-[#7b8f82] sm:flex-row sm:items-center sm:justify-between"><span>© {new Date().getFullYear()} PromoLink</span><Link href="/" className="font-semibold text-[#61746a] hover:text-[#08794e]">Back to homepage ↗</Link></footer>
         </section>
       </div>
