@@ -4,468 +4,201 @@ import { useState } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 
+const channels = [
+  { name: "WhatsApp", mark: "W", tone: "green" },
+  { name: "Telegram", mark: "↗", tone: "blue" },
+  { name: "Facebook", mark: "f", tone: "blue" },
+  { name: "Instagram", mark: "◎", tone: "pink" },
+];
+
+function Arrow({ diagonal = false }: { diagonal?: boolean }) {
+  return <span aria-hidden="true">{diagonal ? "↗" : "→"}</span>;
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="section-label">
+      <span className="section-label-dot" />
+      {children}
+    </div>
+  );
+}
+
 export default function Home() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      {/* ─── NAVIGATION ─── */}
-      <header className="sticky top-0 z-50">
-        <div className="bg-white/95 backdrop-blur-md border-b border-gray-100">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <Logo />
-
-              <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted">
-                <a href="#how-it-works" className="hover:text-primary transition-colors">How It Works</a>
-                <a href="#for-owners" className="hover:text-primary transition-colors">For Audience Owners</a>
-                <a href="#for-advertisers" className="hover:text-primary transition-colors">For Advertisers</a>
-              </nav>
-
-              <div className="hidden md:flex items-center gap-3">
-                <Link href="/login" className="text-sm font-medium text-muted hover:text-primary transition-colors px-3 py-2">Log in</Link>
-                <Link href="/register" className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-deep transition-colors">Get Started</Link>
-              </div>
-
-              <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden p-2 rounded-lg text-near-black hover:bg-gray-50" aria-label="Toggle menu">
-                {mobileOpen ? (
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                ) : (
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-                )}
-              </button>
-            </div>
-
-            {mobileOpen && (
-              <div className="md:hidden pb-4 border-t border-gray-100 pt-3 space-y-1">
-                <a href="#how-it-works" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 text-sm font-medium text-near-black hover:bg-primary-light rounded-lg">How It Works</a>
-                <a href="#for-owners" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 text-sm font-medium text-near-black hover:bg-primary-light rounded-lg">For Audience Owners</a>
-                <a href="#for-advertisers" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 text-sm font-medium text-near-black hover:bg-primary-light rounded-lg">For Advertisers</a>
-                <div className="pt-2 flex flex-col gap-2">
-                  <Link href="/login" onClick={() => setMobileOpen(false)} className="block text-center px-3 py-2.5 text-sm font-medium text-muted border border-gray-200 rounded-lg">Log in</Link>
-                  <Link href="/register" onClick={() => setMobileOpen(false)} className="block text-center px-3 py-2.5 text-sm font-semibold text-white bg-primary rounded-lg">Get Started</Link>
-                </div>
-              </div>
-            )}
+    <div className="pl-site">
+      <header className="pl-header">
+        <div className="pl-nav-wrap">
+          <div className="pl-brand"><Logo dark /></div>
+          <nav className="pl-nav-links" aria-label="Main navigation">
+            <a href="#how-it-works">How it works</a>
+            <a href="#for-owners">For creators</a>
+            <a href="#for-advertisers">For brands</a>
+          </nav>
+          <div className="pl-nav-actions">
+            <Link href="/login" className="pl-login">Log in</Link>
+            <Link href="/register" className="pl-button pl-button-yellow pl-nav-cta">Get started <Arrow diagonal /></Link>
           </div>
+          <button className="pl-menu-toggle" aria-label={mobileOpen ? "Close menu" : "Open menu"} aria-expanded={mobileOpen} onClick={() => setMobileOpen(!mobileOpen)}>
+            <span /><span />
+          </button>
         </div>
+        {mobileOpen && (
+          <nav className="pl-mobile-nav" aria-label="Mobile navigation">
+            <a href="#how-it-works" onClick={() => setMobileOpen(false)}>How it works</a>
+            <a href="#for-owners" onClick={() => setMobileOpen(false)}>For creators</a>
+            <a href="#for-advertisers" onClick={() => setMobileOpen(false)}>For brands</a>
+            <Link href="/login" onClick={() => setMobileOpen(false)}>Log in</Link>
+            <Link href="/register" className="pl-button pl-button-yellow" onClick={() => setMobileOpen(false)}>Get started <Arrow diagonal /></Link>
+          </nav>
+        )}
       </header>
 
-      <main className="flex-1">
-        {/* ═══════════════ HERO — Rivly-inspired ═══════════════ */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#2a0f5e] via-[#3b1a7a] to-[#1a0b3d]">
-          {/* Background effects */}
-          <div className="absolute inset-0 hero-grid opacity-50" />
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] -translate-y-1/3 translate-x-1/4" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-teal-500/10 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4" />
-
-          <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 sm:pt-20 sm:pb-28 lg:pt-24 lg:pb-32">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-10 items-center">
-              {/* Left copy */}
-              <div className="text-white relative z-10">
-                <p className="inline-flex items-center gap-2 text-sm font-medium text-primary-light/90 mb-5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  Your Audience. Your Opportunity.
-                </p>
-                <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold tracking-tight leading-[1.1]">
-                  Turn Your WhatsApp Audience Into Real Earning Opportunities.
-                </h1>
-                <p className="mt-6 text-lg text-white/70 leading-relaxed max-w-lg">
-                  PromoLink connects owners of WhatsApp contact lists and groups with advertisers looking for high-engagement promotional reach — with owner approval on every campaign.
-                </p>
-                <div className="mt-9 flex flex-col sm:flex-row gap-3">
-                  <Link
-                    href="/register?role=audience_owner"
-                    className="inline-flex items-center justify-center rounded-xl bg-white px-7 py-3.5 text-base font-semibold text-primary-deep shadow-lg shadow-black/20 hover:bg-primary-light transition-all"
-                  >
-                    Start Earning
-                  </Link>
-                  <Link
-                    href="/register?role=advertiser"
-                    className="inline-flex items-center justify-center rounded-xl border border-white/25 bg-white/5 px-7 py-3.5 text-base font-semibold text-white backdrop-blur-sm hover:bg-white/10 transition-all"
-                  >
-                    Advertise With Us
-                  </Link>
-                </div>
-                <p className="mt-6 text-sm text-white/45">
-                  WhatsApp audiences · Approved campaigns · Private contact lists
-                </p>
+      <main>
+        <section className="pl-hero">
+          <div className="pl-hero-glow" />
+          <div className="pl-hero-grid" />
+          <div className="pl-container pl-hero-layout">
+            <div className="pl-hero-copy">
+              <div className="pl-eyebrow"><span className="pl-live-dot" /> THE AUDIENCE COMMERCE PLATFORM</div>
+              <h1>Your audience is<br />an <span>opportunity.</span></h1>
+              <p className="pl-hero-description">The place where audience owners meet brands ready to reach the right people. Make your reach valuable. Make every campaign count.</p>
+              <div className="pl-hero-actions">
+                <Link href="/register?role=audience_owner" className="pl-button pl-button-yellow pl-button-large">Monetise your audience <Arrow diagonal /></Link>
+                <Link href="/register?role=advertiser" className="pl-button pl-button-outline pl-button-large">Find your audience <Arrow /></Link>
               </div>
+              <div className="pl-trust-note"><span className="pl-check">✓</span> Owners stay in control. Campaigns need approval.</div>
+            </div>
 
-              {/* Right visual composition */}
-              <div className="relative hidden lg:block h-[460px]">
-                {/* Soft teal circle behind figure area */}
-                <div className="absolute top-1/2 right-4 -translate-y-1/2 w-80 h-80 rounded-full bg-gradient-to-br from-teal-400/30 to-cyan-500/10 blur-sm" />
-
-                {/* Main audience card */}
-                <div className="absolute top-6 right-0 w-72 bg-white rounded-2xl p-5 float-card card-glow">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-xl bg-[#25D366]/15 flex items-center justify-center">
-                        <span className="text-[#25D366] font-bold text-sm">W</span>
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-near-black">WhatsApp Audience</p>
-                        <p className="text-[11px] text-muted">Lifestyle & City</p>
+            <div className="pl-product-visual" aria-label="Illustration of the PromoLink campaign workspace">
+              <div className="pl-orbit pl-orbit-one" />
+              <div className="pl-orbit pl-orbit-two" />
+              <div className="pl-app-window">
+                <div className="pl-app-topbar">
+                  <div className="pl-window-dots"><i /><i /><i /></div>
+                  <span>YOUR PROMOLINK WORKSPACE</span>
+                  <span className="pl-topbar-menu">•••</span>
+                </div>
+                <div className="pl-app-content">
+                  <div className="pl-app-sidebar">
+                    <div className="pl-sidebar-mark">P</div>
+                    <span className="active">▦</span><span>◉</span><span>↗</span><span>⌘</span>
+                    <div className="pl-sidebar-bottom">?</div>
+                  </div>
+                  <div className="pl-app-main">
+                    <div className="pl-app-heading">
+                      <div><span className="pl-small-overline">OVERVIEW</span><h3>Campaign workspace</h3></div>
+                      <span className="pl-avatar">PL</span>
+                    </div>
+                    <div className="pl-app-welcome"><div><span>YOUR NEXT MOVE STARTS HERE</span><strong>Make your reach work.</strong></div><span className="pl-welcome-icon">↗</span></div>
+                    <div className="pl-stat-grid">
+                      <div className="pl-stat-card"><span>Campaigns</span><strong>—</strong><small>Track your activity</small></div>
+                      <div className="pl-stat-card"><span>Audience reach</span><strong>—</strong><small>Across your channels</small></div>
+                      <div className="pl-stat-card"><span>Campaign status</span><strong className="pl-status-text">Ready when you are</strong><small>Start by setting up your account</small></div>
+                    </div>
+                    <div className="pl-app-list">
+                      <div className="pl-list-heading"><strong>Choose your channel</strong><span>Channel options</span></div>
+                      <div className="pl-channel-list">
+                        {channels.map((channel) => <div className="pl-channel-row" key={channel.name}><span className={"pl-channel-icon " + channel.tone}>{channel.mark}</span><span>{channel.name}</span><span className="pl-channel-arrow">↗</span></div>)}
                       </div>
                     </div>
-                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-primary-light text-primary">Illustrative</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 mt-4">
-                    <div className="bg-gray-50 rounded-xl p-3">
-                      <p className="text-[11px] text-muted">Audience size</p>
-                      <p className="text-sm font-semibold text-near-black mt-0.5">14k – 18k</p>
-                    </div>
-                    <div className="bg-gray-50 rounded-xl p-3">
-                      <p className="text-[11px] text-muted">Price / delivery</p>
-                      <p className="text-sm font-semibold text-near-black mt-0.5">Set by owner</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Campaign opportunity card */}
-                <div className="absolute bottom-20 left-0 w-64 bg-white rounded-2xl p-4 float-card-delay card-glow">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                      </svg>
-                    </div>
-                    <span className="text-xs font-semibold text-near-black">Campaign Request</span>
-                  </div>
-                  <p className="text-sm font-medium text-near-black">Product Launch Promo</p>
-                  <p className="text-xs text-muted mt-0.5 mb-3">WhatsApp · Lifestyle audience</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted">Status</span>
-                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-700">Pending approval</span>
-                  </div>
-                </div>
-
-                {/* Analytics mini card */}
-                <div className="absolute top-40 left-6 w-52 bg-white rounded-xl p-3.5 float-card-slow card-glow">
-                  <p className="text-[10px] font-medium text-muted mb-2">Delivery tracking</p>
-                  <div className="flex items-end gap-1 h-14">
-                    {[35, 55, 40, 75, 50, 90, 65, 80].map((h, i) => (
-                      <div key={i} className="flex-1 rounded-sm bg-primary/15" style={{ height: `${h}%` }}>
-                        <div className="w-full rounded-sm bg-primary" style={{ height: `${Math.min(h + 15, 100)}%` }} />
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-[10px] text-muted mt-2">Illustrative data only</p>
-                </div>
-
-                {/* Small success badge */}
-                <div className="absolute bottom-8 right-8 bg-white rounded-xl px-3.5 py-2.5 float-card card-glow flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">
-                    <svg className="w-3.5 h-3.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold text-near-black">Owner approved</p>
-                    <p className="text-[10px] text-muted">Campaign ready</p>
                   </div>
                 </div>
               </div>
+              <div className="pl-float-card pl-float-card-top"><span className="pl-float-icon">✳</span><div><strong>Built around trust</strong><small>Owners approve campaigns</small></div></div>
+              <div className="pl-float-card pl-float-card-bottom"><span className="pl-float-icon pl-float-icon-dark">↗</span><div><strong>One connected marketplace</strong><small>Audiences meet opportunity</small></div></div>
+            </div>
+          </div>
+          <div className="pl-hero-bottom"><span>BUILT FOR AUDIENCE OWNERS</span><span className="pl-bottom-line" /><span>MADE FOR AMBITIOUS BRANDS</span><span className="pl-bottom-line" /><span>DESIGNED TO SCALE</span></div>
+        </section>
 
-              {/* Mobile visual fallback */}
-              <div className="lg:hidden mt-2">
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/15 p-5">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-11 h-11 rounded-xl bg-[#25D366]/20 flex items-center justify-center">
-                      <span className="text-[#25D366] font-bold text-sm">W</span>
-                    </div>
-                    <div>
-                      <p className="text-white font-medium text-sm">WhatsApp Audience · Lifestyle</p>
-                      <p className="text-white/55 text-xs">Illustrative listing preview</p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-white/10 rounded-xl p-3">
-                      <p className="text-white/55 text-xs">Audience</p>
-                      <p className="text-white font-semibold text-sm">14k–18k</p>
-                    </div>
-                    <div className="bg-white/10 rounded-xl p-3">
-                      <p className="text-white/55 text-xs">Price / delivery</p>
-                      <p className="text-white font-semibold text-sm">Set by owner</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        <section className="pl-channel-strip" aria-label="Supported and planned social channels">
+          <div className="pl-container pl-channel-strip-inner">
+            <span className="pl-channel-strip-label">AUDIENCE CHANNELS</span>
+            {channels.map((channel) => <div className="pl-strip-channel" key={channel.name}><span className={"pl-channel-icon " + channel.tone}>{channel.mark}</span>{channel.name}</div>)}
+            <span className="pl-channel-strip-note">Availability depends on channel access and permissions.</span>
+          </div>
+        </section>
+
+        <section className="pl-section pl-light-section" id="how-it-works">
+          <div className="pl-container">
+            <div className="pl-section-intro">
+              <SectionLabel>THE PROMOLINK WAY</SectionLabel>
+              <h2>Less chasing.<br /><span>More connecting.</span></h2>
+              <p>A clearer way to bring brands and communities together—with transparent campaign workflows and control where it matters.</p>
+            </div>
+            <div className="pl-steps-grid">
+              <article className="pl-step-card"><div className="pl-step-top"><span>01 / LIST</span><span className="pl-step-symbol">↗</span></div><div className="pl-step-graphic pl-graphic-list"><div className="pl-mini-profile"><span>AO</span><div><b>Your audience</b><small>Channel · Category · Reach</small></div><i>✓</i></div><div className="pl-mini-bars"><i /><i /><i /></div></div><h3>Put your audience on the map.</h3><p>Present your channel or promotional opportunity with the details brands need to evaluate a fit.</p></article>
+              <article className="pl-step-card"><div className="pl-step-top"><span>02 / MATCH</span><span className="pl-step-symbol">⌕</span></div><div className="pl-step-graphic pl-graphic-match"><div className="pl-match-card"><span className="pl-match-spark">✳</span><div><b>Campaign brief</b><small>Audience · Goal · Budget</small></div><span className="pl-match-arrow">→</span></div><div className="pl-match-line" /><div className="pl-match-card pl-match-card-dark"><span className="pl-match-spark">◉</span><div><b>Right-fit audience</b><small>Review the opportunity</small></div><span>✓</span></div></div><h3>Find the right fit.</h3><p>Advertisers discover relevant audience opportunities and agree on the campaign before it goes live.</p></article>
+              <article className="pl-step-card"><div className="pl-step-top"><span>03 / GROW</span><span className="pl-step-symbol">↗</span></div><div className="pl-step-graphic pl-graphic-grow"><div className="pl-grow-ring"><span>↗</span></div><div className="pl-grow-caption"><b>Campaign progress</b><small>Evidence &amp; results</small><div className="pl-grow-track"><i /></div></div></div><h3>Keep the process clear.</h3><p>Follow campaign status and available performance evidence, with the owner and advertiser aligned.</p></article>
             </div>
           </div>
         </section>
 
-        {/* FOCUS STRIP */}
-        <section className="py-12 bg-white border-b border-gray-100">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p className="text-sm font-medium text-muted mb-2">Built for WhatsApp audiences</p>
-            <p className="text-near-black font-medium max-w-2xl mx-auto">
-              PromoLink focuses on WhatsApp contact lists and groups — the channels where real conversations and high open rates already exist.
-            </p>
-            <p className="mt-3 text-xs text-muted max-w-lg mx-auto">
-              Independent marketplace. Not affiliated with or endorsed by Meta or WhatsApp.
-            </p>
-          </div>
-        </section>
-
-        {/* HOW IT WORKS */}
-        <section id="how-it-works" className="py-20 sm:py-24 bg-gray-50/60">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-2xl mx-auto mb-14">
-              <h2 className="text-3xl sm:text-4xl font-bold text-near-black tracking-tight">How PromoLink Works</h2>
-              <p className="mt-4 text-muted text-lg">A clear path for audience owners and advertisers.</p>
+        <section className="pl-section pl-dark-section" id="for-owners">
+          <div className="pl-container pl-split-layout">
+            <div className="pl-split-copy">
+              <SectionLabel>FOR AUDIENCE OWNERS</SectionLabel>
+              <h2>Your reach took work.<br /><span>Let it create value.</span></h2>
+              <p>Turn your audience-building effort into a professional advertising opportunity. Set expectations, review campaign requests and keep control of what you accept.</p>
+              <ul className="pl-feature-list"><li><span>✓</span> Present your audience on your terms</li><li><span>✓</span> Review campaigns before accepting</li><li><span>✓</span> Keep private contact data private</li><li><span>✓</span> Track campaign status and agreed deliverables</li></ul>
+              <Link href="/register?role=audience_owner" className="pl-button pl-button-yellow pl-button-large">Become an audience owner <Arrow diagonal /></Link>
             </div>
-            <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-              <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
-                <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-6">For Audience Owners</p>
-                <div className="space-y-6">
-                  {[
-                    { step: "1", title: "List your WhatsApp audience", desc: "Describe your contact list or group, set a price per successful delivery, and submit for review." },
-                    { step: "2", title: "Approve campaigns", desc: "Review advertiser messages and approve only the promotions you want to run." },
-                    { step: "3", title: "Earn from deliveries", desc: "Track successful deliveries and earnings according to the agreed campaign terms." },
-                  ].map((item) => (
-                    <div key={item.step} className="flex gap-4">
-                      <div className="flex-shrink-0 w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">{item.step}</div>
-                      <div>
-                        <h3 className="font-semibold text-near-black">{item.title}</h3>
-                        <p className="text-sm text-muted mt-1 leading-relaxed">{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+            <div className="pl-owner-visual">
+              <div className="pl-owner-card">
+                <div className="pl-owner-card-top"><span>YOUR LISTING</span><span className="pl-review-pill"><i /> REVIEW-LED</span></div>
+                <div className="pl-owner-profile"><div className="pl-owner-avatar">A</div><div><strong>Your audience, your rules.</strong><span>Promotional opportunity</span></div></div>
+                <div className="pl-owner-divider" />
+                <div className="pl-owner-field"><span>Channel</span><strong>Connected social audience</strong></div>
+                <div className="pl-owner-field"><span>Campaign permissions</span><strong>Owner approval required</strong></div>
+                <div className="pl-owner-field"><span>Private contacts</span><strong className="pl-private-status">Never publicly listed <span>✓</span></strong></div>
+                <div className="pl-owner-footer"><span>YOUR AUDIENCE STAYS YOURS</span><span>↗</span></div>
               </div>
-              <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
-                <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-6">For Advertisers</p>
-                <div className="space-y-6">
-                  {[
-                    { step: "1", title: "Discover audiences", desc: "Browse approved WhatsApp audience lists by category, location and price." },
-                    { step: "2", title: "Create a campaign", desc: "Write your message, set a budget and delivery target, then submit for owner approval." },
-                    { step: "3", title: "Track results", desc: "Monitor delivery status, spending and remaining budget in one place." },
-                  ].map((item) => (
-                    <div key={item.step} className="flex gap-4">
-                      <div className="flex-shrink-0 w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">{item.step}</div>
-                      <div>
-                        <h3 className="font-semibold text-near-black">{item.title}</h3>
-                        <p className="text-sm text-muted mt-1 leading-relaxed">{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <div className="pl-owner-sticker"><span>✳</span> Your audience.<br />Your decision.</div>
             </div>
           </div>
         </section>
 
-        {/* FOR OWNERS */}
-        <section id="for-owners" className="py-20 sm:py-24">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              <div>
-                <h2 className="text-3xl sm:text-4xl font-bold text-near-black tracking-tight">Your WhatsApp Audience Has More Potential.</h2>
-                <p className="mt-4 text-muted text-lg leading-relaxed">
-                  You already built a real WhatsApp contact list or group. PromoLink gives you a professional way to offer approved promotional campaigns and earn from successful deliveries.
-                </p>
-                <ul className="mt-8 space-y-3.5">
-                  {[
-                    "List eligible WhatsApp contact lists and groups",
-                    "Set your own price per successful delivery",
-                    "Approve or reject every campaign message",
-                    "Track deliveries and earnings clearly",
-                    "Keep control of what reaches your audience",
-                  ].map((b) => (
-                    <li key={b} className="flex items-start gap-3">
-                      <span className="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                      </span>
-                      <span className="text-near-black text-[15px]">{b}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/register?role=audience_owner" className="mt-8 inline-flex items-center justify-center rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-deep transition-colors">
-                  Start Earning With PromoLink
-                </Link>
+        <section className="pl-section pl-light-section pl-advertiser-section" id="for-advertisers">
+          <div className="pl-container pl-split-layout pl-advertiser-layout">
+            <div className="pl-advertiser-visual">
+              <div className="pl-campaign-panel">
+                <div className="pl-campaign-panel-top"><span>CAMPAIGN BRIEF</span><span className="pl-campaign-status">● DRAFT</span></div>
+                <h3>Start with the right audience.</h3>
+                <p>Define what you want to promote and agree on the deliverables before a campaign begins.</p>
+                <div className="pl-brief-row"><span>01</span><div><strong>Choose a channel</strong><small>Explore eligible opportunities</small></div><span>↗</span></div>
+                <div className="pl-brief-row"><span>02</span><div><strong>Set your campaign brief</strong><small>Goal, creative and budget</small></div><span>↗</span></div>
+                <div className="pl-brief-row"><span>03</span><div><strong>Get owner approval</strong><small>Agree before launch</small></div><span>✓</span></div>
+                <div className="pl-brief-note"><span>✳</span> Clear expectations. More accountable campaigns.</div>
               </div>
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-6">
-                <div className="flex items-center justify-between mb-5">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-primary">Listing Preview</p>
-                  <span className="text-[10px] font-medium px-2.5 py-1 rounded-full bg-primary-light text-primary">Illustrative only</span>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-xl bg-[#25D366]/15 flex items-center justify-center"><span className="text-[#25D366] font-bold">W</span></div>
-                    <div>
-                      <p className="font-semibold text-near-black">WhatsApp · Lifestyle Audience</p>
-                      <p className="text-xs text-muted">City updates & daily content</p>
-                    </div>
-                  </div>
-                  <div className="h-px bg-gray-100" />
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div><p className="text-muted text-xs">Audience size</p><p className="font-semibold text-near-black mt-0.5">12k – 18k</p></div>
-                    <div><p className="text-muted text-xs">Primary location</p><p className="font-semibold text-near-black mt-0.5">Nigeria</p></div>
-                    <div><p className="text-muted text-xs">Price per delivery</p><p className="font-semibold text-near-black mt-0.5">Set by owner</p></div>
-                    <div><p className="text-muted text-xs">Status</p><p className="font-semibold text-near-black mt-0.5">Pending review</p></div>
-                  </div>
-                  <p className="text-xs text-muted pt-1">Sample data for illustration only. Real listings will show reviewed details after approval.</p>
-                </div>
-              </div>
+            </div>
+            <div className="pl-split-copy pl-advertiser-copy">
+              <SectionLabel>FOR ADVERTISERS</SectionLabel>
+              <h2>Reach people.<br /><span>Not just numbers.</span></h2>
+              <p>Discover promotional opportunities that fit your brand, set a clear brief and work directly through a structured approval process.</p>
+              <ul className="pl-feature-list pl-feature-list-dark"><li><span>✓</span> Explore audience opportunities by channel</li><li><span>✓</span> Define campaign goals and deliverables</li><li><span>✓</span> Get owner approval before campaigns run</li><li><span>✓</span> Review available campaign evidence</li></ul>
+              <Link href="/register?role=advertiser" className="pl-button pl-button-dark pl-button-large">Start a campaign <Arrow diagonal /></Link>
             </div>
           </div>
         </section>
 
-        {/* FOR ADVERTISERS */}
-        <section id="for-advertisers" className="py-20 sm:py-24 bg-primary-light/40">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              <div className="order-2 lg:order-1 space-y-3">
-                {[
-                  { name: "Lifestyle & City Updates", size: "14k–18k contacts" },
-                  { name: "Business Owners Group", size: "3.2k contacts" },
-                  { name: "Fashion & Deals Audience", size: "9k contacts" },
-                ].map((item) => (
-                  <div key={item.name} className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm flex items-center justify-between hover:border-primary/20 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-[#25D366]/15 flex items-center justify-center"><span className="text-[#25D366] font-bold text-xs">W</span></div>
-                      <div>
-                        <p className="font-medium text-near-black text-sm">{item.name}</p>
-                        <p className="text-xs text-muted">{item.size}</p>
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-primary-light text-primary">Illustrative</span>
-                  </div>
-                ))}
-                <p className="text-xs text-muted pt-1">Sample cards only. Live listings will appear after review and approval.</p>
-              </div>
-              <div className="order-1 lg:order-2">
-                <h2 className="text-3xl sm:text-4xl font-bold text-near-black tracking-tight">Reach WhatsApp Audiences That Already Listen.</h2>
-                <p className="mt-4 text-muted text-lg leading-relaxed">
-                  Find approved WhatsApp contact lists and groups, create campaigns, and pay according to successful deliveries — with clear tracking and owner approval on every message.
-                </p>
-                <ul className="mt-8 space-y-3.5">
-                  {[
-                    "Browse approved WhatsApp audiences by category and location",
-                    "Set budget and delivery targets for each campaign",
-                    "Messages require audience-owner approval before sending",
-                    "Track delivery results and remaining budget",
-                    "Contact details stay private — you never receive the list",
-                  ].map((b) => (
-                    <li key={b} className="flex items-start gap-3">
-                      <span className="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                      </span>
-                      <span className="text-near-black text-[15px]">{b}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/register?role=advertiser" className="mt-8 inline-flex items-center justify-center rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-deep transition-colors">
-                  Explore Advertising Opportunities
-                </Link>
-              </div>
-            </div>
-          </div>
+        <section className="pl-privacy-band">
+          <div className="pl-container pl-privacy-inner"><div className="pl-privacy-icon">⌑</div><div><span>BUILT ON A SIMPLE PRINCIPLE</span><h2>Your reach is valuable.<br />Your privacy is non-negotiable.</h2></div><p>PromoLink is designed to keep private audience contact details out of public listings. Campaign access and metrics depend on channel permissions and verified evidence.</p></div>
         </section>
 
-        {/* TRUST */}
-        <section className="py-20 sm:py-24 bg-near-black text-white">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-2xl mx-auto mb-14">
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Trust & Transparency</h2>
-              <p className="mt-4 text-gray-300 text-lg">Principles we intend to follow as the platform grows.</p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                { title: "Owner approval on every message", desc: "Audience owners review and approve campaign messages before anything is sent to their contacts." },
-                { title: "Clear delivery tracking", desc: "Campaigns are measured against defined delivery events so both sides can see what was successfully delivered." },
-                { title: "Private contact lists", desc: "Advertisers never receive the underlying phone numbers or contact database. Lists stay with the audience owner." },
-              ].map((item) => (
-                <div key={item.title} className="bg-white/5 rounded-2xl p-6 border border-white/10">
-                  <h3 className="text-lg font-semibold mb-3">{item.title}</h3>
-                  <p className="text-gray-300 text-sm leading-relaxed">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <section className="py-20 sm:py-24">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl sm:text-4xl font-bold text-near-black tracking-tight text-center mb-12">Frequently Asked Questions</h2>
-            <div className="space-y-4">
-              {[
-                { q: "What is PromoLink?", a: "PromoLink is a WhatsApp audience advertising marketplace. Audience owners list eligible contact lists and groups; advertisers create campaigns and pay according to successful deliveries." },
-                { q: "Who can list an audience?", a: "Anyone who owns or manages an eligible WhatsApp contact list or group and can provide clear information about it. Listings go through review before appearing in the marketplace." },
-                { q: "Do advertisers get my contact list?", a: "No. Contact details stay private. Advertisers never receive the underlying phone numbers." },
-                { q: "How do audience owners earn?", a: "Earnings depend on approved campaigns and successful deliveries according to the terms of each campaign. PromoLink does not guarantee any specific income." },
-                { q: "Is PromoLink available yet?", a: "We are currently building the full marketplace. You can register your interest and we will notify you when accounts open." },
-                { q: "Is PromoLink affiliated with WhatsApp or Meta?", a: "No. PromoLink is an independent marketplace and is not affiliated with or endorsed by Meta or WhatsApp." },
-              ].map((item) => (
-                <div key={item.q} className="border border-gray-100 rounded-xl p-5 sm:p-6">
-                  <h3 className="font-semibold text-near-black">{item.q}</h3>
-                  <p className="mt-2 text-muted text-sm leading-relaxed">{item.a}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* FINAL CTA */}
-        <section id="cta" className="py-20 sm:py-24 bg-gradient-to-br from-[#2a0f5e] via-primary-deep to-[#1a0b3d] text-white">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">Your Audience. Your Opportunity.</h2>
-            <p className="mt-4 text-white/70 text-lg max-w-xl mx-auto">
-              Be among the first to list your WhatsApp audience or reach high-engagement WhatsApp contacts through approved campaigns.
-            </p>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/register?role=audience_owner" className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-primary-deep shadow-lg hover:bg-primary-light transition-colors">
-                Start Earning
-              </Link>
-              <Link href="/register?role=advertiser" className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/5 px-8 py-3.5 text-base font-semibold text-white hover:bg-white/10 transition-colors">
-                Advertise With Us
-              </Link>
-            </div>
-            <p className="mt-6 text-sm text-white/45">Registration is opening soon. Choose your role to get started.</p>
+        <section className="pl-section pl-final-cta-section">
+          <div className="pl-container">
+            <div className="pl-final-cta"><div className="pl-final-glow" /><div className="pl-final-cta-content"><SectionLabel>YOUR NEXT MOVE</SectionLabel><h2>Make your audience<br /><span>mean more.</span></h2><p>Join the marketplace built to connect attention with opportunity.</p><div className="pl-hero-actions"><Link href="/register?role=audience_owner" className="pl-button pl-button-yellow pl-button-large">I own an audience <Arrow diagonal /></Link><Link href="/register?role=advertiser" className="pl-button pl-button-outline pl-button-large">I’m a brand <Arrow diagonal /></Link></div></div><div className="pl-final-watermark">P</div></div>
           </div>
         </section>
       </main>
 
-      {/* FOOTER */}
-      <footer className="bg-near-black text-gray-300 py-14">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
-            <div className="lg:col-span-1">
-              <Logo dark />
-              <p className="text-sm text-gray-400 leading-relaxed mt-4">Your Audience. Your Opportunity.</p>
-            </div>
-            <div>
-              <p className="font-semibold text-white text-sm mb-4">Product</p>
-              <ul className="space-y-2.5 text-sm">
-                <li><a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a></li>
-                <li><a href="#for-owners" className="hover:text-white transition-colors">For Audience Owners</a></li>
-                <li><a href="#for-advertisers" className="hover:text-white transition-colors">For Advertisers</a></li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-semibold text-white text-sm mb-4">Company</p>
-              <ul className="space-y-2.5 text-sm">
-                <li><Link href="/login" className="hover:text-white transition-colors">Log in</Link></li>
-                <li><Link href="/register" className="hover:text-white transition-colors">Create account</Link></li>
-                <li><span className="text-gray-500">Privacy Policy (coming soon)</span></li>
-                <li><span className="text-gray-500">Terms of Service (coming soon)</span></li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-semibold text-white text-sm mb-4">Get started</p>
-              <ul className="space-y-2.5 text-sm">
-                <li><Link href="/register?role=audience_owner" className="hover:text-white transition-colors">Start Earning</Link></li>
-                <li><Link href="/register?role=advertiser" className="hover:text-white transition-colors">Advertise With Us</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-4 text-xs text-gray-500">
-            <p>© {new Date().getFullYear()} PromoLink. All rights reserved.</p>
-            <p>Independent marketplace. Not affiliated with Meta or WhatsApp.</p>
-          </div>
+      <footer className="pl-footer">
+        <div className="pl-container">
+          <div className="pl-footer-main"><div className="pl-footer-brand"><div><Logo dark /></div><p>Your audience. Your opportunity.</p></div><div className="pl-footer-links"><div><span>EXPLORE</span><a href="#how-it-works">How it works</a><a href="#for-owners">For creators</a><a href="#for-advertisers">For brands</a></div><div><span>YOUR ACCOUNT</span><Link href="/login">Log in</Link><Link href="/register">Get started</Link></div></div><div className="pl-footer-note"><span className="pl-live-dot" /> A new way to connect audiences and opportunity.</div></div>
+          <div className="pl-footer-bottom"><span>© {new Date().getFullYear()} PromoLink</span><span>Built for meaningful reach.</span></div>
         </div>
       </footer>
     </div>
