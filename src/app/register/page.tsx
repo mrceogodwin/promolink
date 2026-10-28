@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 
@@ -9,6 +9,7 @@ type Role = "audience_owner" | "advertiser";
 
 function RegisterForm() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const roleParam = searchParams.get("role");
 
   const [role, setRole] = useState<Role>(
@@ -31,14 +32,22 @@ function RegisterForm() {
     setStatus("loading");
     setMessage("");
 
-    // Authentication backend is not configured yet.
-    // Do not claim success or that details were recorded.
-    await new Promise((r) => setTimeout(r, 400));
-
-    setStatus("error");
-    setMessage(
-      "Account registration is not available yet. The authentication system is still being configured. Please check back soon or contact us if you need early access."
-    );
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, role }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Unable to create your account.");
+      router.push("/dashboard");
+      router.refresh();
+    } catch (error) {
+      setStatus("error");
+      setMessage(error instanceof Error ? error.message : "Unable to create your account. Please try again.");
+    } finally {
+      setStatus("idle");
+    }
   }
 
   return (
@@ -60,7 +69,7 @@ function RegisterForm() {
             }`}
           >
             <p className="text-sm font-semibold text-near-black">Audience Owner</p>
-            <p className="text-xs text-muted mt-0.5">List WhatsApp audiences & earn</p>
+            <p className="text-xs text-muted mt-0.5">List audiences & earn</p>
           </button>
           <button
             type="button"
@@ -72,7 +81,7 @@ function RegisterForm() {
             }`}
           >
             <p className="text-sm font-semibold text-near-black">Advertiser</p>
-            <p className="text-xs text-muted mt-0.5">Reach WhatsApp audiences</p>
+            <p className="text-xs text-muted mt-0.5">Reach audiences</p>
           </button>
         </div>
 
@@ -115,11 +124,11 @@ function RegisterForm() {
               id="password"
               type="password"
               required
-              minLength={8}
+              minLength={10}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm text-near-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-              placeholder="At least 8 characters"
+              placeholder="At least 10 characters"
             />
           </div>
 
@@ -135,7 +144,7 @@ function RegisterForm() {
             className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-deep transition-colors disabled:opacity-60"
           >
             {status === "loading"
-              ? "Checking…"
+              ? "Creating account…"
               : role === "audience_owner"
               ? "Register as Audience Owner"
               : "Register as Advertiser"}
