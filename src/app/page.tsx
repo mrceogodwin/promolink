@@ -31,9 +31,7 @@ export default function Home() {
     <div className="pl-site">
       <header className="pl-header">
         <div className="pl-nav-wrap">
-          <Link href="/" className="pl-brand" aria-label="PromoLink home">
-            <Logo />
-          </Link>
+          <div className="pl-brand"><Logo dark /></div>
           <nav className="pl-nav-links" aria-label="Main navigation">
             <a href="#how-it-works">How it works</a>
             <a href="#for-owners">For creators</a>
@@ -199,7 +197,7 @@ export default function Home() {
 
       <footer className="pl-footer">
         <div className="pl-container">
-          <div className="pl-footer-main"><div className="pl-footer-brand"><Link href="/" aria-label="PromoLink home"><Logo /></Link><p>Your audience. Your opportunity.</p></div><div className="pl-footer-links"><div><span>EXPLORE</span><a href="#how-it-works">How it works</a><a href="#for-owners">For creators</a><a href="#for-advertisers">For brands</a></div><div><span>YOUR ACCOUNT</span><Link href="/login">Log in</Link><Link href="/register">Get started</Link></div></div><div className="pl-footer-note"><span className="pl-live-dot" /> A new way to connect audiences and opportunity.</div></div>
+          <div className="pl-footer-main"><div className="pl-footer-brand"><div><Logo dark /></div><p>Your audience. Your opportunity.</p></div><div className="pl-footer-links"><div><span>EXPLORE</span><a href="#how-it-works">How it works</a><a href="#for-owners">For creators</a><a href="#for-advertisers">For brands</a></div><div><span>YOUR ACCOUNT</span><Link href="/login">Log in</Link><Link href="/register">Get started</Link></div></div><div className="pl-footer-note"><span className="pl-live-dot" /> A new way to connect audiences and opportunity.</div></div>
           <div className="pl-footer-bottom"><span>© {new Date().getFullYear()} PromoLink</span><span>Built for meaningful reach.</span></div>
         </div>
       </footer>
