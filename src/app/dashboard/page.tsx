@@ -11,6 +11,7 @@ const navItems = [
   { mark: "▤", label: "My listings", href: "/dashboard/listings", active: false },
   { mark: "↗", label: "Campaigns", href: "/dashboard/campaigns", active: false },
   { mark: "◷", label: "Activity", href: "/dashboard", active: false },
+  { mark: "✓", label: "Review queue", href: "/dashboard/admin/review", active: false, adminOnly: true },
 ];
 
 export default async function DashboardPage() {
@@ -40,7 +41,7 @@ export default async function DashboardPage() {
         <aside className="hidden lg:block">
           <p className="mb-4 px-3 text-[10px] font-extrabold uppercase tracking-[.19em] text-[#7b8f82]">Workspace</p>
           <nav className="space-y-1" aria-label="Dashboard navigation">
-            {navItems.map((item) => (
+            {navItems.filter((item) => !("adminOnly" in item) || (item as {adminOnly?: boolean}).adminOnly === isAdmin).map((item) => (
               <Link key={item.label} href={item.href} aria-current={item.active ? "page" : undefined}
                 className={`flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition-colors ${item.active ? "bg-[#075638] text-white shadow-sm" : "text-[#61746a] hover:bg-[#e5f7eb] hover:text-[#075638]"}`}>
                 <span className={`grid h-7 w-7 place-items-center rounded-lg text-base ${item.active ? "bg-[#c8f169] text-[#075638]" : "bg-white text-[#aaa99f]"}`}>{item.mark}</span>
@@ -71,7 +72,7 @@ export default async function DashboardPage() {
               <div>
                 <p className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#c8f169]">{isAdmin ? "Platform overview" : isOwner ? "For audience owners" : "For advertisers"}</p>
                 <h2 className="mt-3 max-w-xl text-2xl font-extrabold leading-tight tracking-[-.8px] sm:text-3xl">{isAdmin ? "Keep the marketplace trustworthy." : isOwner ? "Your audience can become an opportunity." : "Find the right audience for your next campaign."}</h2>
-                <p className="mt-3 max-w-xl text-sm leading-6 text-white/60">{isAdmin ? "Administrative tools are being built separately and access remains restricted." : isOwner ? "Prepare a clear listing, set expectations and retain approval over every campaign request." : "Define your goals first. Campaigns should only move forward after the owner agrees to the brief."}</p>
+                <p className="mt-3 max-w-xl text-sm leading-6 text-white/60">{isAdmin ? "Review submitted audience listings and keep the marketplace trustworthy." : isOwner ? "Prepare a clear listing, set expectations and retain approval over every campaign request." : "Define your goals first. Campaigns should only move forward after the owner agrees to the brief."}</p>
               </div>
               <div className="flex h-[76px] w-[76px] items-center justify-center rounded-2xl border border-[#c8f169]/25 bg-[#c8f169]/10 text-4xl text-[#c8f169]" aria-hidden="true">{isAdmin ? "⌘" : isOwner ? "◉" : "↗"}</div>
             </div>
@@ -107,7 +108,7 @@ export default async function DashboardPage() {
             <div className="grid gap-3 md:grid-cols-2">
               <article className="flex gap-4 rounded-2xl border border-[#e0ebe3] bg-white p-5">
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#e5f7eb] font-extrabold text-[#08794e]">01</span>
-                <div><h3 className="text-sm font-bold">{isAdmin ? "Review platform requirements" : isOwner ? "Prepare your audience listing" : "Prepare your campaign brief"}</h3><p className="mt-2 text-xs leading-5 text-[#61746a]">{isAdmin ? "Admin moderation and management tools are not yet available in this workspace." : isOwner ? "Listing creation and review are still being built. Private contact lists should never be uploaded into public fields." : "Audience discovery and campaign creation are still being built. No payment has been taken through this dashboard."}</p><span className="mt-3 inline-flex rounded-full bg-[#e5f7eb] px-2.5 py-1 text-[10px] font-bold text-[#426c55]">Not available yet</span></div>
+                <div><h3 className="text-sm font-bold">{isAdmin ? "Review platform requirements" : isOwner ? "Prepare your audience listing" : "Prepare your campaign brief"}</h3><p className="mt-2 text-xs leading-5 text-[#61746a]">{isAdmin ? "Open the review queue to approve or reject audience listings before advertisers can see them." : isOwner ? "Create an audience listing for review. Never upload private contact lists." : "Choose an approved audience and submit a campaign request. Payment is not collected here."}</p><span className="mt-3 inline-flex rounded-full bg-[#e5f7eb] px-2.5 py-1 text-[10px] font-bold text-[#426c55]">Open workspace</span></div>
               </article>
               <article className="flex gap-4 rounded-2xl border border-[#e0ebe3] bg-white p-5">
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#e5f7eb] font-extrabold text-[#08794e]">02</span>
