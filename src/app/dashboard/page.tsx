@@ -7,9 +7,9 @@ export const dynamic = "force-dynamic";
 
 const navItems = [
   { mark: "⌂", label: "Overview", href: "/dashboard", active: true },
-  { mark: "▤", label: "My listings", href: "/dashboard/listings", active: false },
-  { mark: "↗", label: "Campaigns", href: "/dashboard/campaigns", active: false },
-  { mark: "◷", label: "Activity", href: "/dashboard/activity", active: false },
+  { mark: "▤", label: "My listings", href: "#", active: false },
+  { mark: "↗", label: "Campaigns", href: "#", active: false },
+  { mark: "◷", label: "Activity", href: "#", active: false },
 ];
 
 export default async function DashboardPage() {
@@ -43,11 +43,11 @@ export default async function DashboardPage() {
           <p className="mb-4 px-3 text-[10px] font-extrabold uppercase tracking-[.19em] text-[#929187]">Workspace</p>
           <nav className="space-y-1" aria-label="Dashboard navigation">
             {navItems.map((item) => (
-              <Link key={item.label} href={item.href} aria-current={item.active ? "page" : undefined}
-                className={`flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition-colors ${item.active ? "bg-[#171711] text-white shadow-sm" : "text-[#68685f] hover:bg-white hover:text-[#171711]"}`}>
-                <span className={`grid h-7 w-7 place-items-center rounded-lg text-base ${item.active ? "bg-[#d6bd69] text-[#171711]" : "bg-white text-[#77766b]"}`}>{item.mark}</span>
-                {item.label}
-              </Link>
+              <div key={item.label} aria-current={item.active ? "page" : undefined} title={item.active ? "Current page" : "Coming soon"}
+                className={`flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold ${item.active ? "bg-[#171711] text-white shadow-sm" : "cursor-default text-[#aaa99f]"}`}>
+                <span className={`grid h-7 w-7 place-items-center rounded-lg text-base ${item.active ? "bg-[#d6bd69] text-[#171711]" : "bg-white text-[#aaa99f]"}`}>{item.mark}</span>
+                <span>{item.label}</span>{!item.active && <span className="ml-auto text-[9px] font-semibold uppercase tracking-wide">Soon</span>}
+              </div>
             ))}
           </nav>
           <div className="mt-10 rounded-2xl border border-[#e7e4d7] bg-white p-4">
