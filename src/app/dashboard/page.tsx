@@ -11,7 +11,7 @@ const navItems = [
   { mark: "▤", label: "My listings", href: "/dashboard/listings", active: false },
   { mark: "↗", label: "Campaigns", href: "/dashboard/campaigns", active: false },
   { mark: "⚙", label: "Settings", href: "/dashboard/settings", active: false },
-  { mark: "◷", label: "Activity", href: "/dashboard", active: false },
+  { mark: "◷", label: "Activity", href: "/dashboard/activity", active: false },
   { mark: "✓", label: "Review queue", href: "/dashboard/admin/review", active: false, adminOnly: true },
 ];
 
