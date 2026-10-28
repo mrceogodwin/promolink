@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createSession, hashPassword, normalizeEmail } from "@/lib/auth";
+import { consumeRateLimit, createSession, hashPassword, normalizeEmail } from "@/lib/auth";
 import { neon } from "@neondatabase/serverless";
 
 export const runtime = "nodejs";
@@ -22,6 +22,10 @@ export async function POST(request: Request) {
     if (!role) return NextResponse.json({ error: "Choose an account type." }, { status: 400 });
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Authentication is not configured." }, { status: 503 });
 
+    const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+    const emailAllowed = await consumeRateLimit("register-email", email, 5, 3600);
+    const ipAllowed = await consumeRateLimit("register-ip", forwarded, 15, 3600);
+    if (!emailAllowed || !ipAllowed) return NextResponse.json({ error: "Too many registration attempts. Try again in an hour." }, { status: 429 });
     const sql = neon(process.env.DATABASE_URL);
     const passwordHash = await hashPassword(password);
     const rows = await sql`
