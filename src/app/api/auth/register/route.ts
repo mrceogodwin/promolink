@@ -23,9 +23,13 @@ export async function POST(request: Request) {
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Authentication is not configured." }, { status: 503 });
 
     const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
-    const emailAllowed = await consumeRateLimit("register-email", email, 5, 3600);
-    const ipAllowed = await consumeRateLimit("register-ip", forwarded, 15, 3600);
-    if (!emailAllowed || !ipAllowed) return NextResponse.json({ error: "Too many registration attempts. Try again in an hour." }, { status: 429 });
+    try {
+      const emailAllowed = await consumeRateLimit("register-email", email, 5, 3600);
+      const ipAllowed = await consumeRateLimit("register-ip", forwarded, 15, 3600);
+      if (!emailAllowed || !ipAllowed) return NextResponse.json({ error: "Too many registration attempts. Try again in an hour." }, { status: 429 });
+    } catch {
+      return NextResponse.json({ error: "Registration security checks are unavailable. Try again later." }, { status: 503 });
+    }
     const sql = neon(process.env.DATABASE_URL);
     const passwordHash = await hashPassword(password);
     const rows = await sql`
