@@ -36,8 +36,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b border-gray-100">
+    <div className="min-h-screen bg-[#f4faf5] flex flex-col">
+      <header className="bg-white border-b border-[#e0ebe3]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center">
           <Logo />
         </div>
@@ -45,15 +45,15 @@ export default function LoginPage() {
 
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
-            <h1 className="text-2xl font-bold text-near-black tracking-tight">Log in</h1>
-            <p className="mt-2 text-sm text-muted">
+          <div className="bg-white rounded-2xl border border-[#e0ebe3] shadow-[0_16px_50px_rgba(8,74,44,.07)] p-8">
+            <h1 className="text-2xl font-bold text-[#11251b] tracking-tight">Log in</h1>
+            <p className="mt-2 text-sm text-[#61746a]">
               Access your PromoLink account.
             </p>
 
             <form onSubmit={handleSubmit} className="mt-8 space-y-5">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-near-black mb-1.5">
+                <label htmlFor="email" className="block text-sm font-medium text-[#11251b] mb-1.5">
                   Email
                 </label>
                 <input
@@ -62,13 +62,13 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm text-near-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                  className="w-full rounded-lg border border-[#d6e5da] px-3.5 py-2.5 text-sm text-[#11251b] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#08794e]/20 focus:border-[#08794e]"
                   placeholder="you@example.com"
                 />
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-near-black mb-1.5">
+                <label htmlFor="password" className="block text-sm font-medium text-[#11251b] mb-1.5">
                   Password
                 </label>
                 <input
@@ -77,7 +77,7 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm text-near-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                  className="w-full rounded-lg border border-[#d6e5da] px-3.5 py-2.5 text-sm text-[#11251b] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#08794e]/20 focus:border-[#08794e]"
                   placeholder="••••••••"
                 />
               </div>
@@ -91,22 +91,22 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={status === "loading"}
-                className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-deep transition-colors disabled:opacity-60"
+                className="w-full rounded-lg bg-[#08794e] px-4 py-3 text-sm font-bold text-white shadow-sm shadow-green-900/10 transition-colors hover:bg-[#05613e] disabled:opacity-60"
               >
                 {status === "loading" ? "Logging in…" : "Log in"}
               </button>
             </form>
 
-            <p className="mt-6 text-center text-sm text-muted">
+            <p className="mt-6 text-center text-sm text-[#61746a]">
               Don’t have an account?{" "}
-              <Link href="/register" className="font-medium text-primary hover:text-primary-deep">
+              <Link href="/register" className="font-medium text-[#08794e] hover:text-[#05613e]">
                 Create one
               </Link>
             </p>
           </div>
 
-          <p className="mt-6 text-center text-xs text-muted">
-            <Link href="/" className="hover:text-primary">← Back to homepage</Link>
+          <p className="mt-6 text-center text-xs text-[#61746a]">
+            <Link href="/" className="hover:text-[#08794e]">← Back to homepage</Link>
           </p>
         </div>
       </main>
