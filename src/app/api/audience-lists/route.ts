@@ -14,7 +14,9 @@ export async function GET() {
     const sql = neon(process.env.DATABASE_URL);
     const rows = user.role === "admin"
       ? await sql`SELECT a.id, a.owner_id, a.title, a.description, a.category, a.country_code, a.channel, a.estimated_reach, a.currency, a.price_amount, a.pricing_model, a.status, a.created_at FROM audience_lists a ORDER BY a.created_at DESC LIMIT 100`
-      : await sql`SELECT a.id, a.owner_id, a.title, a.description, a.category, a.country_code, a.channel, a.estimated_reach, a.currency, a.price_amount, a.pricing_model, a.status, a.created_at FROM audience_lists a WHERE a.owner_id = ${user.id} ORDER BY a.created_at DESC LIMIT 100`;
+      : user.role === "advertiser"
+        ? await sql`SELECT a.id, a.title, a.description, a.category, a.country_code, a.channel, a.estimated_reach, a.currency, a.price_amount, a.pricing_model, a.status, a.created_at FROM audience_lists a WHERE a.status = 'approved' ORDER BY a.created_at DESC LIMIT 100`
+        : await sql`SELECT a.id, a.owner_id, a.title, a.description, a.category, a.country_code, a.channel, a.estimated_reach, a.currency, a.price_amount, a.pricing_model, a.status, a.created_at FROM audience_lists a WHERE a.owner_id = ${user.id} ORDER BY a.created_at DESC LIMIT 100`;
     return NextResponse.json({ listings: rows });
   } catch (error) {
     console.error("Audience listing read failed", error instanceof Error ? error.message : "unknown error");
