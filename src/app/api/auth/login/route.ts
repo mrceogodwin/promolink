@@ -1,0 +1,28 @@
+import { NextResponse } from "next/server";
+import { createSession, normalizeEmail, verifyPassword } from "@/lib/auth";
+import { neon } from "@neondatabase/serverless";
+
+export const runtime = "nodejs";
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const email = typeof body.email === "string" ? normalizeEmail(body.email) : "";
+    const password = typeof body.password === "string" ? body.password : "";
+    if (!email || !password || email.length > 254 || password.length > 128) {
+      return NextResponse.json({ error: "Enter your email and password." }, { status: 400 });
+    }
+    if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Authentication is not configured." }, { status: 503 });
+    const sql = neon(process.env.DATABASE_URL);
+    const rows = await sql`SELECT id, name, email, role, status, password_hash FROM users WHERE email = ${email} LIMIT 1`;
+    const user = rows[0] as { id: string; name: string; email: string; role: string; status: string; password_hash: string } | undefined;
+    if (!user || user.status !== "active" || !(await verifyPassword(password, user.password_hash))) {
+      return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
+    }
+    await createSession(user.id);
+    return NextResponse.json({ user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+  } catch (error) {
+    console.error("Login failed", error instanceof Error ? error.message : "unknown error");
+    return NextResponse.json({ error: "Could not log in. Confirm the database migration has been applied." }, { status: 500 });
+  }
+}
