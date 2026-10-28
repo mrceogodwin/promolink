@@ -18,7 +18,8 @@ export async function POST(request: Request) {
     if (!currentPassword || currentPassword.length > 128) return NextResponse.json({ error: "Enter your current password." }, { status: 400 });
     if (newPassword.length < 10 || newPassword.length > 128) return NextResponse.json({ error: "Your new password must be 10–128 characters." }, { status: 400 });
     if (currentPassword === newPassword) return NextResponse.json({ error: "Choose a password different from your current one." }, { status: 400 });
-    const sql = neon(process.env.DATABASE_URL || "");
+    if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Authentication is not configured." }, { status: 503 });
+    const sql = neon(process.env.DATABASE_URL);
     const allowed = await consumeRateLimit("password-change", user.id, 5, 3600);
     if (!allowed) return NextResponse.json({ error: "Too many password-change attempts. Try again later." }, { status: 429 });
     const rows = await sql`SELECT password_hash FROM users WHERE id = ${user.id} AND status = 'active' LIMIT 1`;
