@@ -20,6 +20,21 @@ export function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
 }
 
+export async function consumeRateLimit(scope: string, identifier: string, maxAttempts: number, windowSeconds: number) {
+  const sql = database();
+  const bucketKey = createHash("sha256").update(scope + ":" + identifier).digest("hex");
+  const rows = await sql`
+    INSERT INTO auth_rate_limits (bucket_key, window_started_at, attempts, updated_at)
+    VALUES (${bucketKey}, now(), 1, now())
+    ON CONFLICT (bucket_key) DO UPDATE SET
+      attempts = CASE WHEN auth_rate_limits.window_started_at <= now() - make_interval(secs => ${windowSeconds}) THEN 1 ELSE auth_rate_limits.attempts + 1 END,
+      window_started_at = CASE WHEN auth_rate_limits.window_started_at <= now() - make_interval(secs => ${windowSeconds}) THEN now() ELSE auth_rate_limits.window_started_at END,
+      updated_at = now()
+    RETURNING attempts
+  `;
+  return Number(rows[0]?.attempts ?? maxAttempts + 1) <= maxAttempts;
+}
+
 export async function hashPassword(password: string) {
   const salt = randomBytes(16).toString("hex");
   const derived = (await scrypt(password, salt, 64)) as Buffer;
