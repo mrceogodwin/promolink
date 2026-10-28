@@ -125,6 +125,7 @@ function RegisterForm() {
               type="password"
               required
               minLength={10}
+              maxLength={128}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-lg border border-[#d6e5da] px-3.5 py-2.5 text-sm text-[#11251b] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#08794e]/20 focus:border-[#08794e]"
