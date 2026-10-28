@@ -6,11 +6,15 @@ export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const name = typeof body.name === "string" ? body.name.trim() : "";
-    const email = typeof body.email === "string" ? normalizeEmail(body.email) : "";
-    const password = typeof body.password === "string" ? body.password : "";
-    const role = body.role === "advertiser" ? "advertiser" : body.role === "audience_owner" ? "audience_owner" : null;
+    const body: unknown = await request.json().catch(() => null);
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return NextResponse.json({ error: "Send valid account details." }, { status: 400 });
+    }
+    const input = body as Record<string, unknown>;
+    const name = typeof input.name === "string" ? input.name.trim() : "";
+    const email = typeof input.email === "string" ? normalizeEmail(input.email) : "";
+    const password = typeof input.password === "string" ? input.password : "";
+    const role = input.role === "advertiser" ? "advertiser" : input.role === "audience_owner" ? "audience_owner" : null;
 
     if (name.length < 2 || name.length > 120) return NextResponse.json({ error: "Enter your full name." }, { status: 400 });
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) return NextResponse.json({ error: "Enter a valid email address." }, { status: 400 });
