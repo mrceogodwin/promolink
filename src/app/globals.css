@@ -404,3 +404,11 @@ body, .pl-site { background: #f7faf7; color: #11251b; }
   .pl-hero h1 span { text-shadow: 0 4px 28px rgba(200,241,105,.14); }
   .pl-button { transition: transform .22s ease, background .22s ease, border-color .22s ease, box-shadow .22s ease; }
 }
+
+/* Final contrast safeguards for the green-and-white brand. */
+.pl-brand a > span { color: #ffffff !important; }
+.pl-brand a > span span { color: #c8f169 !important; }
+.pl-footer-brand a > span { color: #ffffff !important; }
+.pl-footer-brand a > span span { color: #c8f169 !important; }
+.pl-channel-icon.mint { background: #e1f7e8; color: #08794e; }
+.pl-channel-icon.lime { background: #eff9cf; color: #426a1b; }
