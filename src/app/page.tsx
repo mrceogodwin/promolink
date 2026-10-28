@@ -6,9 +6,9 @@ import { Logo } from "@/components/Logo";
 
 const channels = [
   { name: "WhatsApp", mark: "W", tone: "green" },
-  { name: "Telegram", mark: "↗", tone: "blue" },
-  { name: "Facebook", mark: "f", tone: "blue" },
-  { name: "Instagram", mark: "◎", tone: "pink" },
+  { name: "Telegram", mark: "↗", tone: "mint" },
+  { name: "Facebook", mark: "f", tone: "mint" },
+  { name: "Instagram", mark: "◎", tone: "lime" },
 ];
 
 function Arrow({ diagonal = false }: { diagonal?: boolean }) {
@@ -83,7 +83,7 @@ export default function Home() {
                 </div>
                 <div className="pl-app-content">
                   <div className="pl-app-sidebar">
-                    <div className="pl-sidebar-mark">P</div>
+                    <div className="pl-sidebar-mark">↗</div>
                     <span className="active">▦</span><span>◉</span><span>↗</span><span>⌘</span>
                     <div className="pl-sidebar-bottom">?</div>
                   </div>
@@ -190,7 +190,7 @@ export default function Home() {
 
         <section className="pl-section pl-final-cta-section">
           <div className="pl-container">
-            <div className="pl-final-cta"><div className="pl-final-glow" /><div className="pl-final-cta-content"><SectionLabel>YOUR NEXT MOVE</SectionLabel><h2>Make your audience<br /><span>mean more.</span></h2><p>Join the marketplace built to connect attention with opportunity.</p><div className="pl-hero-actions"><Link href="/register?role=audience_owner" className="pl-button pl-button-yellow pl-button-large">I own an audience <Arrow diagonal /></Link><Link href="/register?role=advertiser" className="pl-button pl-button-outline pl-button-large">I’m a brand <Arrow diagonal /></Link></div></div><div className="pl-final-watermark">P</div></div>
+            <div className="pl-final-cta"><div className="pl-final-glow" /><div className="pl-final-cta-content"><SectionLabel>YOUR NEXT MOVE</SectionLabel><h2>Make your audience<br /><span>mean more.</span></h2><p>Join the marketplace built to connect attention with opportunity.</p><div className="pl-hero-actions"><Link href="/register?role=audience_owner" className="pl-button pl-button-yellow pl-button-large">I own an audience <Arrow diagonal /></Link><Link href="/register?role=advertiser" className="pl-button pl-button-outline pl-button-large">I’m a brand <Arrow diagonal /></Link></div></div><div className="pl-final-watermark">↗</div></div>
           </div>
         </section>
       </main>
