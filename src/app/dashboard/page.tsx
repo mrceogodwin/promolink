@@ -13,6 +13,7 @@ const navItems = [
   { mark: "⚙", label: "Settings", href: "/dashboard/settings", active: false },
   { mark: "◷", label: "Activity", href: "/dashboard/activity", active: false },
   { mark: "✓", label: "Review queue", href: "/dashboard/admin/review", active: false, adminOnly: true },
+  { mark: "♙", label: "User management", href: "/dashboard/admin/users", active: false, adminOnly: true },
 ];
 
 export default async function DashboardPage() {
