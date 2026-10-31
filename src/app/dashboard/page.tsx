@@ -14,6 +14,7 @@ const navItems = [
   { mark: "◷", label: "Activity", href: "/dashboard/activity", active: false },
   { mark: "✓", label: "Review queue", href: "/dashboard/admin/review", active: false, adminOnly: true },
   { mark: "♙", label: "User management", href: "/dashboard/admin/users", active: false, adminOnly: true },
+  { mark: "▦", label: "Platform overview", href: "/dashboard/admin/overview", active: false, adminOnly: true },
 ];
 
 export default async function DashboardPage() {
