@@ -1,15 +1,15 @@
 # PromoLink — Product & Technical Architecture
 
 **Last updated:** 2026-10-24  
-**Status:** Architecture plan only. No backend features are implemented yet.
+**Status:** Landing page and Neon connection health check exist. Authentication foundation and initial schema are in progress on `feature/neon-auth-foundation`; production readiness is not yet verified.
 
 ---
 
 ## 1. Core Product Definition
 
-PromoLink is a **WhatsApp audience advertising marketplace**.
+PromoLink is a **multi-channel audience advertising marketplace** designed to support verified promotions across social and messaging platforms.
 
-Audience owners organise eligible WhatsApp contacts and groups into audience lists, set a price per successful delivery, and earn when advertisers run approved promotional campaigns through those lists.
+Audience owners list eligible channels, communities, pages and creator inventory, choose an appropriate pricing model, and earn when advertisers run approved promotional campaigns. The platform must not expose private contact lists or phone numbers.
 
 Advertisers browse approved audiences, create campaigns, fund budgets, and pay according to a clearly defined delivery rule.
 
@@ -43,7 +43,7 @@ Advertisers browse approved audiences, create campaigns, fund budgets, and pay a
 
 **Recommended stack**
 - Next.js 15 App Router + TypeScript + Tailwind CSS (already in place)
-- Auth.js / NextAuth (or Clerk)
+- Neon-backed server-side sessions and scrypt password hashing (current implementation in progress)
 - PostgreSQL via Neon
 - Prisma or Drizzle ORM
 - Paystack (primary Nigerian payment provider)

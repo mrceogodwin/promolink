@@ -1,33 +1,33 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #d2b65f;
-  --color-primary-deep: #8f7835;
-  --color-primary-light: #f4edcf;
-  --color-near-black: #10100e;
-  --color-muted: #77766f;
+  --color-primary: #08794e;
+  --color-primary-deep: #05613e;
+  --color-primary-light: #e5f7eb;
+  --color-near-black: #11251b;
+  --color-muted: #61746a;
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 :root {
   color-scheme: light;
-  --pl-black: #0b0b09;
-  --pl-panel: #12120f;
-  --pl-yellow: #d6bd69;
-  --pl-yellow-soft: #e9d99c;
-  --pl-ink: #171713;
-  --pl-muted: #74746b;
-  --pl-line: #e8e7e0;
+  --pl-black: #063d2b;
+  --pl-panel: #075638;
+  --pl-yellow: #c8f169;
+  --pl-yellow-soft: #e4ffb0;
+  --pl-ink: #11251b;
+  --pl-muted: #61746a;
+  --pl-line: #e0ebe3;
 }
 
 html { scroll-behavior: smooth; scroll-padding-top: 90px; }
-body { margin: 0; font-family: var(--font-sans); color: var(--pl-ink); background: #f8f8f5; }
+body { margin: 0; font-family: var(--font-sans); color: var(--pl-ink); background: #f7faf7; }
 * { box-sizing: border-box; }
 a { text-decoration: none; }
 button, a { -webkit-tap-highlight-color: transparent; }
-::selection { background: #e7d58f; color: #11110e; }
+::selection { background: #c8f169; color: #073d2a; }
 
-.pl-site { overflow: hidden; background: #f8f8f5; }
+.pl-site { overflow: hidden; background: #f7faf7; }
 .pl-container { width: min(1180px, calc(100% - 48px)); margin-inline: auto; }
 .pl-header { position: sticky; top: 0; z-index: 50; background: rgba(10,10,9,.88); backdrop-filter: blur(18px); border-bottom: 1px solid rgba(255,255,255,.09); }
 .pl-nav-wrap { width: min(1320px, calc(100% - 56px)); height: 78px; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
@@ -310,3 +310,105 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+
+/* PromoLink Greenline visual system — white canvas, WhatsApp-inspired green, restrained citrus accents */
+:root {
+  --pl-black: #063d2b;
+  --pl-panel: #075638;
+  --pl-yellow: #c8f169;
+  --pl-yellow-soft: #e4ffb0;
+  --pl-ink: #11251b;
+  --pl-muted: #61746a;
+  --pl-line: #e0ebe3;
+}
+body, .pl-site { background: #f7faf7; color: #11251b; }
+::selection { background: #c8f169; color: #073d2a; }
+.pl-header { background: rgba(5, 76, 48, .96); border-bottom-color: rgba(255,255,255,.12); }
+.pl-brand a > span span, .pl-footer-brand a > span span { color: #c8f169 !important; }
+.pl-nav-links a, .pl-login { color: rgba(255,255,255,.78); }
+.pl-nav-links a:hover, .pl-login:hover { color: #dfffaa; }
+.pl-button-yellow { background: #c8f169; color: #103c28; box-shadow: 0 8px 24px rgba(3,55,33,.13); }
+.pl-button-yellow:hover { background: #ddff9b; }
+.pl-button-outline { color: #fff; border-color: rgba(255,255,255,.45); background: rgba(255,255,255,.07); }
+.pl-button-outline:hover { border-color: #c8f169; background: rgba(200,241,105,.12); }
+.pl-button-dark { background: #08794e; color: #fff; }
+.pl-button-dark:hover { background: #05613e; }
+.pl-menu-toggle { border-color: rgba(255,255,255,.35); }
+.pl-menu-toggle span { background: #fff; }
+.pl-mobile-nav { background: #075638; border-top-color: rgba(255,255,255,.14); }
+.pl-mobile-nav > a:not(.pl-button) { color: #fff; }
+.pl-hero { background: radial-gradient(ellipse at 78% 28%, rgba(200,241,105,.18), transparent 32%), linear-gradient(135deg,#08794e 0%,#05613e 52%,#06452f 100%); }
+.pl-hero-glow { background: rgba(200,241,105,.13); }
+.pl-hero-grid { opacity: .13; }
+.pl-hero h1 span, .pl-final-cta h2 span { color: #d8ff8d; }
+.pl-eyebrow { color: #d8ffb4; }
+.pl-live-dot { background: #c8f169; box-shadow: 0 0 0 4px rgba(200,241,105,.12); }
+.pl-check { color: #d8ff8d; }
+.pl-orbit { border-color: rgba(214,255,218,.18); }
+.pl-app-window { border-color: rgba(255,255,255,.23); box-shadow: 0 35px 95px rgba(0,25,13,.32); }
+.pl-app-topbar { background: #f9fcf9; }
+.pl-sidebar-mark { background: #08794e; color: #fff; }
+.pl-app-welcome { background: linear-gradient(115deg,#08794e,#0c9962); }
+.pl-welcome-icon { background: #c8f169; color: #073d2a; }
+.pl-channel-icon.green { background: #d9fbe5; color: #08794e; }
+.pl-channel-icon.blue { background: #e1f3eb; color: #08794e; }
+.pl-channel-icon.pink { background: #f1f5d8; color: #557d25; }
+.pl-float-icon { background: #c8f169; color: #103c28; }
+.pl-float-icon-dark { background: #e0f8e8; color: #08794e; }
+.pl-hero-bottom { color: rgba(255,255,255,.68); border-top-color: rgba(255,255,255,.17); }
+.pl-bottom-line { background: rgba(200,241,105,.8); }
+.pl-channel-strip { border-bottom-color: #e0ebe3; }
+.pl-section-label, .section-label { color: #08794e; }
+.section-label-dot { background: #10a568; }
+.pl-section-intro h2 span, .pl-split-copy h2 span, .pl-advertiser-copy h2 span { color: #078653; }
+.pl-step-card { border-color: #e0ebe3; box-shadow: 0 8px 28px rgba(8,74,44,.025); }
+.pl-step-card:hover { box-shadow: 0 20px 45px rgba(8,74,44,.09); }
+.pl-step-symbol { background: #e6f8ec; color: #08794e; }
+.pl-step-graphic { background: #f0f8f2; }
+.pl-mini-profile > span { background: #c8f169; color: #103c28; }
+.pl-mini-bars i { background: #78d7a3; }
+.pl-match-spark { background: #e1f7e8; color: #08794e; }
+.pl-match-arrow, .pl-grow-ring { color: #08794e; }
+.pl-match-line { background: #61c88f; }
+.pl-match-card-dark { background: #075638; border-color: #075638; }
+.pl-match-card-dark .pl-match-spark { background: #0b754d; color: #d8ff8d; }
+.pl-match-card-dark > span:last-child { color: #d8ff8d; }
+.pl-grow-ring { border-color: #d7eddf; border-top-color: #0d9b61; border-right-color: #79d89c; }
+.pl-grow-track i { background: #0b9b61; }
+.pl-dark-section { background: radial-gradient(ellipse at 85% 50%, rgba(200,241,105,.12), transparent 38%), linear-gradient(130deg,#075638,#063d2b); }
+.pl-dark-section .pl-split-copy h2 span { color: #d8ff8d; }
+.pl-feature-list li > span { background: rgba(200,241,105,.15); color: #d8ff8d; }
+.pl-owner-card { background: linear-gradient(150deg,#0d6544,#06432e); border-color: rgba(255,255,255,.17); }
+.pl-review-pill { border-color: rgba(200,241,105,.38); color: #d8ff8d; }
+.pl-review-pill i { background: #c8f169; }
+.pl-owner-avatar { background: linear-gradient(135deg,#d8ff8d,#73d99a); color: #06432e; }
+.pl-private-status, .pl-owner-footer { color: #d8ff8d; }
+.pl-owner-sticker { background: #c8f169; color: #103c28; }
+.pl-campaign-panel { border-color: #dfece3; background: #fff; box-shadow: 0 28px 70px rgba(8,74,44,.08); }
+.pl-campaign-status, .pl-brief-row > span:first-child, .pl-brief-row > span:last-child { color: #078653; }
+.pl-brief-note { background: #e5f7eb; color: #075638; }
+.pl-feature-list-dark li > span { background: #e0f6e7; color: #08794e; }
+.pl-privacy-band { background: #e7f6e9; }
+.pl-privacy-icon { background: #08794e; color: #d8ff8d; }
+.pl-privacy-inner > div:nth-child(2) > span { color: #08794e; }
+.pl-final-cta { background: radial-gradient(ellipse at 83% 55%, rgba(200,241,105,.18), transparent 38%), linear-gradient(120deg,#08794e,#06452f); }
+.pl-final-glow { background: rgba(200,241,105,.14); }
+.pl-final-cta .section-label { color: #d8ffb4; }
+.pl-final-watermark { color: rgba(255,255,255,.045); }
+.pl-footer { background: #043b29; }
+.pl-footer-links a:hover { color: #c8f169; }
+.pl-footer-note .pl-live-dot { background: #c8f169; }
+.pl-footer-bottom { border-top-color: rgba(255,255,255,.13); }
+@media (prefers-reduced-motion: no-preference) {
+  .pl-hero h1 span { text-shadow: 0 4px 28px rgba(200,241,105,.14); }
+  .pl-button { transition: transform .22s ease, background .22s ease, border-color .22s ease, box-shadow .22s ease; }
+}
+
+/* Final contrast safeguards for the green-and-white brand. */
+.pl-brand a > span { color: #ffffff !important; }
+.pl-brand a > span span { color: #c8f169 !important; }
+.pl-footer-brand a > span { color: #ffffff !important; }
+.pl-footer-brand a > span span { color: #c8f169 !important; }
+.pl-channel-icon.mint { background: #e1f7e8; color: #08794e; }
+.pl-channel-icon.lime { background: #eff9cf; color: #426a1b; }

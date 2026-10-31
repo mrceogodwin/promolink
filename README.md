@@ -2,54 +2,65 @@
 
 **Your Audience. Your Opportunity.**
 
-PromoLink is a WhatsApp audience advertising marketplace. Audience owners list eligible WhatsApp contact lists and groups; advertisers create campaigns and pay according to successful deliveries.
+PromoLink is being built as an audience-promotion marketplace. Audience owners can submit channel listings for review; advertisers can request campaigns against approved listings. Raw member contact lists must not be uploaded or exposed to advertisers.
 
-## Current Status
+## Implementation status
 
 | Area | Status |
-|------|--------|
-| Marketing landing page | Implemented |
-| Registration & login UI | Implemented (honest “not available yet” state) |
-| Real authentication backend | **Not yet configured** |
-| Database | **Not yet configured** |
-| Audience listings | Planned |
-| Campaign workflow | Planned |
-| Payments & ledger | Planned |
-| WhatsApp delivery | Planned |
+|---|---|
+| Marketing landing page | Implemented; latest redesign awaits a successful build/deploy |
+| Neon-backed account registration and login | Implemented in code; requires database migrations and end-to-end verification |
+| Session cookies and logout | Implemented in code; requires end-to-end verification |
+| Audience listing submission | Implemented in code; pending review by default |
+| Administrator listing review | Implemented in code; requires verification |
+| Campaign request creation | Implemented in code; owner approval required |
+| Campaign owner approval/rejection | Implemented in code; requires verification |
+| Authentication rate limiting | Implemented in code using Neon; requires migration 002 |
+| Payments, ledger settlement and withdrawals | Not implemented/verified |
+| Channel delivery integrations and verified delivery evidence | Not implemented/verified |
+| Password reset and email verification | Not implemented |
 
-## Tech Stack
+Do not treat a workflow as production-ready until CI passes and it has been tested against the configured Neon database.
 
-- Next.js 15 (App Router)
-- React 19
-- TypeScript
-- Tailwind CSS v4
+## Tech stack
 
-## Getting Started
+- Next.js App Router, React and TypeScript
+- Neon PostgreSQL via `@neondatabase/serverless`
+- Password hashing with Node.js scrypt
+- HttpOnly session cookies
+
+## Local development
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-## Required Setup for Real Authentication
+## Database setup
 
-To enable real account creation and login you will need:
+Apply migrations in order using the Neon SQL Editor:
 
-1. A PostgreSQL database (recommended: [Neon](https://neon.tech))
-2. An `AUTH_SECRET` (generate with `openssl rand -base64 32`)
-3. Environment variables:
+1. `db/migrations/001_initial_auth.sql`
+2. `db/migrations/002_auth_rate_limits.sql`
 
-```env
-DATABASE_URL="postgresql://..."
-AUTH_SECRET="your-secret"
+Set `DATABASE_URL` in local development and in the appropriate Vercel environments. Never commit database credentials or paste them into source files.
+
+## Verification
+
+```bash
+npm run lint
+npm run build
 ```
 
-See `docs/PRODUCT-ARCHITECTURE.md` for the full plan.
+GitHub Actions runs these checks for pushes to the feature branch and pull requests targeting `main`.
 
-## Documentation
+## Security and privacy
 
-- [Product Architecture](docs/PRODUCT-ARCHITECTURE.md)
-- [Neuron Competitive Analysis](docs/NEURON-COMPETITIVE-ANALYSIS.md)
+- The public registration API does not allow users to register as administrators.
+- Audience listings default to `pending_review`.
+- Advertisers receive only approved audience listings.
+- No raw contact-list table is part of the schema.
+- Payment and delivery claims must not be made until provider webhooks, signatures, idempotency and evidence flows are implemented and tested.
 
 ## Licence
 
