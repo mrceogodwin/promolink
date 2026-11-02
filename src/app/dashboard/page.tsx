@@ -39,6 +39,16 @@ export default async function DashboardPage() {
           </div>
         </div>
       </header>
+      <nav className="border-b border-[#e0ebe3] bg-white px-4 py-2 lg:hidden" aria-label="Mobile dashboard navigation">
+        <div className="mx-auto flex max-w-[1440px] gap-2 overflow-x-auto pb-1">
+          {navItems.filter((item) => !("adminOnly" in item) || (item as {adminOnly?: boolean}).adminOnly === isAdmin).map((item) => (
+            <Link key={item.label} href={item.href} aria-current={item.active ? "page" : undefined}
+              className={`inline-flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold transition-colors ${item.active ? "bg-[#075638] text-white" : "bg-[#f0f8f2] text-[#61746a]"}`}>
+              <span>{item.mark}</span>{item.label}
+            </Link>
+          ))}
+        </div>
+      </nav>
       <div className="mx-auto grid max-w-[1440px] gap-8 px-5 py-7 sm:px-8 lg:grid-cols-[230px_minmax(0,1fr)] lg:gap-12 lg:py-10">
         <aside className="hidden lg:block">
           <p className="mb-4 px-3 text-[10px] font-extrabold uppercase tracking-[.19em] text-[#7b8f82]">Workspace</p>
