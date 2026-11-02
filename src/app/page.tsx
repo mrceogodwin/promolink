@@ -124,10 +124,31 @@ export default function Home() {
 
         <section className="pl-section pl-light-section" id="how-it-works">
           <div className="pl-container">
-            <div className="pl-section-intro">
-              <SectionLabel>THE PROMOLINK WAY</SectionLabel>
-              <h2>Less chasing.<br /><span>More connecting.</span></h2>
-              <p>A clearer way to bring brands and communities together—with transparent campaign workflows and control where it matters.</p>
+            <div className="pl-intro-layout">
+              <div className="pl-section-intro">
+                <SectionLabel>THE PROMOLINK WAY</SectionLabel>
+                <h2>Less chasing.<br /><span>More connecting.</span></h2>
+                <p>A clearer way to bring brands and communities together—with transparent campaign workflows and control where it matters.</p>
+              </div>
+              <div className="pl-dashboard-preview" aria-label="Preview of the PromoLink dashboard">
+                <div className="pl-preview-glow" />
+                <div className="pl-preview-window">
+                  <div className="pl-preview-topbar"><div className="pl-window-dots"><i /><i /><i /></div><span>PROMOLINK / WORKSPACE</span><b>•••</b></div>
+                  <div className="pl-preview-body">
+                    <aside className="pl-preview-sidebar"><span className="pl-preview-logo">P</span><i className="selected">▦</i><i>◉</i><i>↗</i><i>⌘</i><small>?</small></aside>
+                    <div className="pl-preview-main">
+                      <div className="pl-preview-heading"><div><small>OVERVIEW</small><strong>Your workspace</strong></div><span>PL</span></div>
+                      <div className="pl-preview-welcome"><small>YOUR NEXT MOVE STARTS HERE</small><strong>Make your reach work.</strong><span>↗</span></div>
+                      <div className="pl-preview-stats"><div><small>Campaigns</small><b>12</b><em>+3 this month</em></div><div><small>Audience reach</small><b>48.2k</b><em>Across channels</em></div></div>
+                      <div className="pl-preview-chart"><div><strong>Campaign activity</strong><small>Last 30 days</small></div><div className="pl-chart-bars"><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/></div></div>
+                      <div className="pl-preview-bottom"><strong>Recent campaigns</strong><span>View all ↗</span></div>
+                      <div className="pl-preview-row"><i/><span>Summer product launch</span><b>In review</b></div>
+                      <div className="pl-preview-row"><i/><span>Community spotlight</span><b className="live">Active</b></div>
+                    </div>
+                  </div>
+                </div>
+                <div className="pl-preview-float"><span>✓</span><div><b>Owner approved</b><small>Campaign workflow</small></div></div>
+              </div>
             </div>
             <div className="pl-steps-grid">
               <article className="pl-step-card"><div className="pl-step-top"><span>01 / LIST</span><span className="pl-step-symbol">↗</span></div><div className="pl-step-graphic pl-graphic-list"><div className="pl-mini-profile"><span>AO</span><div><b>Your audience</b><small>Channel · Category · Reach</small></div><i>✓</i></div><div className="pl-mini-bars"><i /><i /><i /></div></div><h3>Put your audience on the map.</h3><p>Present your channel or promotional opportunity with the details brands need to evaluate a fit.</p></article>
