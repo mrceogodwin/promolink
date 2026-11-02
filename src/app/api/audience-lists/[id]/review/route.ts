@@ -21,10 +21,39 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     if (!status) return NextResponse.json({ error: "Choose approve or reject." }, { status: 400 });
     if (reviewNotes.length > 1000) return NextResponse.json({ error: "Review notes must be under 1,000 characters." }, { status: 400 });
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
+
     const sql = neon(process.env.DATABASE_URL);
-    const rows = await sql`UPDATE audience_lists SET status = ${status}, review_notes = ${reviewNotes || null}, reviewed_by = ${user.id}, reviewed_at = now(), updated_at = now() WHERE id = ${id} AND status IN ('pending_review','rejected','approved') RETURNING id, title, status, review_notes, reviewed_at`;
-    if (!rows.length) return NextResponse.json({ error: "Listing not found or cannot be reviewed." }, { status: 404 });
-    await sql`INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata) VALUES (${user.id}, ${status === "approved" ? "audience_listing_approved" : "audience_listing_rejected"}, 'audience_list', ${id}, ${JSON.stringify({ review_notes: reviewNotes || null })}::jsonb)`;
+    // The update and audit record commit as one PostgreSQL statement. A listing
+    // can only be reviewed while it is awaiting its first administrator decision.
+    const rows = await sql`
+      WITH updated AS (
+        UPDATE audience_lists
+        SET status = ${status},
+            review_notes = ${reviewNotes || null},
+            reviewed_by = ${user.id},
+            reviewed_at = now(),
+            updated_at = now()
+        WHERE id = ${id} AND status = 'pending_review'
+        RETURNING id, title, status, review_notes, reviewed_at
+      ),
+      logged AS (
+        INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata)
+        SELECT ${user.id},
+               CASE WHEN updated.status = 'approved'
+                 THEN 'audience_listing_approved'
+                 ELSE 'audience_listing_rejected'
+               END,
+               'audience_list',
+               updated.id,
+               ${JSON.stringify({ review_notes: reviewNotes || null })}::jsonb
+        FROM updated
+        RETURNING entity_id
+      )
+      SELECT updated.id, updated.title, updated.status, updated.review_notes, updated.reviewed_at
+      FROM updated
+      INNER JOIN logged ON logged.entity_id = updated.id
+    `;
+    if (!rows.length) return NextResponse.json({ error: "Listing not found or it has already been reviewed." }, { status: 404 });
     return NextResponse.json({ listing: rows[0] });
   } catch (error) {
     console.error("Audience listing review failed", error instanceof Error ? error.message : "unknown error");

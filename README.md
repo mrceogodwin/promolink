@@ -12,7 +12,7 @@ PromoLink is being built as an audience-promotion marketplace. Audience owners c
 | Neon-backed account registration and login | Implemented in code; requires database migrations and end-to-end verification |
 | Session cookies and logout | Implemented in code; requires end-to-end verification |
 | Audience listing submission | Implemented in code; pending review by default |
-| Administrator listing review | Implemented in code; requires verification |
+| Administrator listing review | Implemented in code; one-time pending-review transition with atomic audit logging |
 | Campaign request creation | Implemented in code; owner approval required |
 | Campaign owner approval/rejection | Implemented in code; requires verification |
 | Authentication rate limiting | Implemented in code using Neon; requires migration 002 |
@@ -42,6 +42,9 @@ Apply migrations in order using the Neon SQL Editor:
 
 1. `db/migrations/001_initial_auth.sql`
 2. `db/migrations/002_auth_rate_limits.sql`
+3. `db/migrations/003_waitlist.sql`
+
+The live PromoLink Neon database has the waitlist table and its core constraints already present, including an additional `source` column. Inspect the live schema before applying any migration manually; do not recreate or overwrite existing data.
 
 Set `DATABASE_URL` in local development and in the appropriate Vercel environments. Never commit database credentials or paste them into source files.
 
@@ -58,6 +61,7 @@ GitHub Actions runs these checks for pushes to the feature branch and pull reque
 
 - The public registration API does not allow users to register as administrators.
 - Audience listings default to `pending_review`.
+- Administrator review accepts only listings still in `pending_review`; the status transition and audit record are committed in one statement.
 - Advertisers receive only approved audience listings.
 - No raw contact-list table is part of the schema.
 - Payment and delivery claims must not be made until provider webhooks, signatures, idempotency and evidence flows are implemented and tested.
