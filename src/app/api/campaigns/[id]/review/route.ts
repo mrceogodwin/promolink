@@ -19,10 +19,31 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
     const sql = neon(process.env.DATABASE_URL);
     const rows = user.role === "admin"
-      ? await sql`UPDATE campaigns SET status = ${status}, updated_at = now() WHERE id = ${id} AND status = 'pending_owner_approval' RETURNING id, title, status, audience_list_id, advertiser_id`
-      : await sql`UPDATE campaigns c SET status = ${status}, updated_at = now() FROM audience_lists a WHERE c.id = ${id} AND c.audience_list_id = a.id AND a.owner_id = ${user.id} AND c.status = 'pending_owner_approval' RETURNING c.id, c.title, c.status, c.audience_list_id, c.advertiser_id`;
+      ? await sql`WITH updated AS (
+          UPDATE campaigns SET status = ${status}, updated_at = now()
+          WHERE id = ${id} AND status = 'pending_owner_approval'
+          RETURNING id, title, status, audience_list_id, advertiser_id
+        ), logged AS (
+          INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata)
+          SELECT ${user.id}, CASE WHEN status = 'approved' THEN 'campaign_request_approved' ELSE 'campaign_request_rejected' END,
+            'campaign', id, '{}'::jsonb FROM updated RETURNING entity_id
+        )
+        SELECT updated.id, updated.title, updated.status, updated.audience_list_id, updated.advertiser_id
+        FROM updated JOIN logged ON logged.entity_id = updated.id`
+      : await sql`WITH updated AS (
+          UPDATE campaigns c SET status = ${status}, updated_at = now()
+          FROM audience_lists a
+          WHERE c.id = ${id} AND c.audience_list_id = a.id AND a.owner_id = ${user.id}
+            AND c.status = 'pending_owner_approval'
+          RETURNING c.id, c.title, c.status, c.audience_list_id, c.advertiser_id
+        ), logged AS (
+          INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata)
+          SELECT ${user.id}, CASE WHEN status = 'approved' THEN 'campaign_request_approved' ELSE 'campaign_request_rejected' END,
+            'campaign', id, '{}'::jsonb FROM updated RETURNING entity_id
+        )
+        SELECT updated.id, updated.title, updated.status, updated.audience_list_id, updated.advertiser_id
+        FROM updated JOIN logged ON logged.entity_id = updated.id`;
     if (!rows.length) return NextResponse.json({ error: "Request not found, already reviewed, or not owned by your audience." }, { status: 404 });
-    await sql`INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata) VALUES (${user.id}, ${status === "approved" ? "campaign_request_approved" : "campaign_request_rejected"}, 'campaign', ${id}, '{}'::jsonb)`;
     return NextResponse.json({ campaign: rows[0] });
   } catch (error) {
     console.error("Campaign review failed", error instanceof Error ? error.message : "unknown error");
