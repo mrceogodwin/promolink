@@ -85,7 +85,10 @@ export default function Home() {
               </div>
               <div className="pl-trust-note"><span className="pl-check">✓</span> Owners stay in control. Campaigns need approval.</div>
             </div>
-
+            <div className="pl-community-art">
+              <img src="/community-network.svg" alt="Connected WhatsApp communities and group conversations" />
+              <div className="pl-community-caption"><span /> COMMUNITIES THAT MOVE PEOPLE</div>
+            </div>
           </div>
           <div className="pl-hero-bottom"><span>BUILT FOR AUDIENCE OWNERS</span><span className="pl-bottom-line" /><span>MADE FOR AMBITIOUS BRANDS</span><span className="pl-bottom-line" /><span>DESIGNED TO SCALE</span></div>
         </section>
