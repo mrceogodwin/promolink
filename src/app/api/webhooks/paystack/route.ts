@@ -22,16 +22,29 @@ export async function POST(request: Request) {
     if (payment.status === "success") return NextResponse.json({ received: true, duplicate: true });
     if (event.event === "charge.success") {
       if (event.data?.status !== "success" || Number(event.data?.amount) !== Number(payment.amount_minor) || event.data?.currency !== payment.currency) {
-        await sql`UPDATE payment_events SET status = 'verification_mismatch', raw_event = ${raw}::jsonb, updated_at = now() WHERE id = ${payment.id} AND status <> 'success'`;
+        await sql`UPDATE payment_events SET status = 'failed', raw_event = ${raw}::jsonb, updated_at = now() WHERE id = ${payment.id} AND status = 'pending'`;
         return NextResponse.json({ error: "Payment amount or currency did not match the recorded transaction." }, { status: 400 });
       }
-      const updated = await sql`UPDATE payment_events SET status = 'success', raw_event = ${raw}::jsonb, updated_at = now() WHERE id = ${payment.id} AND status <> 'success' RETURNING campaign_id, user_id`;
-      if (updated.length) {
+      const posted = await sql`WITH confirmed AS (
+        UPDATE payment_events SET status = 'success', raw_event = ${raw}::jsonb, updated_at = now()
+        WHERE id = ${payment.id} AND status = 'pending'
+        RETURNING id, campaign_id, user_id, amount_minor, currency, provider_reference
+      ), ledger AS (
+        INSERT INTO ledger_entries (user_id, campaign_id, payment_event_id, entry_type, amount_minor, currency, reference, metadata)
+        SELECT user_id, campaign_id, id, 'deposit', amount_minor, currency,
+          'paystack:' || provider_reference || ':deposit',
+          jsonb_build_object('provider','paystack','reference',provider_reference)
+        FROM confirmed
+        ON CONFLICT (reference) DO NOTHING
+        RETURNING id
+      )
+      SELECT confirmed.campaign_id, confirmed.user_id FROM confirmed`;
+      if (posted.length) {
         await sql`UPDATE campaigns SET status = 'funded', updated_at = now() WHERE id = ${payment.campaign_id} AND advertiser_id = ${payment.user_id} AND status = 'pending_payment'`;
-        await sql`INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata) VALUES (${payment.user_id}, 'campaign_payment_confirmed', 'campaign', ${payment.campaign_id}, ${JSON.stringify({ provider: "paystack", reference })}::jsonb)`;
+        await sql`INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata) VALUES (${payment.user_id}, 'campaign_payment_confirmed', 'campaign', ${payment.campaign_id}, ${JSON.stringify({ provider: "paystack", reference, ledger_entry: "deposit" })}::jsonb)`;
       }
     } else {
-      await sql`UPDATE payment_events SET status = 'failed', raw_event = ${raw}::jsonb, updated_at = now() WHERE id = ${payment.id} AND status NOT IN ('success', 'failed')`;
+      await sql`UPDATE payment_events SET status = 'failed', raw_event = ${raw}::jsonb, updated_at = now() WHERE id = ${payment.id} AND status = 'pending'`;
       await sql`UPDATE campaigns SET status = 'approved', updated_at = now() WHERE id = ${payment.campaign_id} AND advertiser_id = ${payment.user_id} AND status = 'pending_payment'`;
     }
     return NextResponse.json({ received: true });
