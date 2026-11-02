@@ -22,7 +22,7 @@ export async function POST(_request: Request, context: { params: Promise<{ id: s
     const amountMinor = Math.round(Number(campaign.budget_amount) * 100);
     if (!Number.isSafeInteger(amountMinor) || amountMinor < 100) return NextResponse.json({ error: "Campaign budget is below the minimum supported amount." }, { status: 400 });
     const reference = "pl_" + randomUUID().replaceAll("-", "");
-    await sql`INSERT INTO payment_events (provider, provider_reference, user_id, campaign_id, amount_minor, currency, status, raw_event) VALUES ('paystack', ${reference}, ${user.id}, ${id}, ${amountMinor}, 'NGN', 'initializing', '{}'::jsonb)`;
+    await sql`INSERT INTO payment_events (provider, provider_reference, user_id, campaign_id, amount_minor, currency, status, raw_event) VALUES ('paystack', ${reference}, ${user.id}, ${id}, ${amountMinor}, 'NGN', 'pending', '{}'::jsonb)`;
     const origin = new URL(_request.url).origin;
     const response = await fetch("https://api.paystack.co/transaction/initialize", {
       method: "POST",
@@ -32,7 +32,7 @@ export async function POST(_request: Request, context: { params: Promise<{ id: s
     });
     const payload = await response.json().catch(() => null) as { status?: boolean; message?: string; data?: { authorization_url?: string; reference?: string } } | null;
     if (!response.ok || !payload?.status || !payload.data?.authorization_url) {
-      await sql`UPDATE payment_events SET status = 'initialization_failed', raw_event = ${JSON.stringify(payload ?? {})}::jsonb, updated_at = now() WHERE provider_reference = ${reference}`;
+      await sql`UPDATE payment_events SET status = 'failed', raw_event = ${JSON.stringify(payload ?? {})}::jsonb, updated_at = now() WHERE provider_reference = ${reference}`;
       return NextResponse.json({ error: payload?.message || "Payment provider could not initialize this transaction." }, { status: 502 });
     }
     await sql`UPDATE payment_events SET status = 'pending', raw_event = ${JSON.stringify({ initialized: true })}::jsonb, updated_at = now() WHERE provider_reference = ${reference}`;
