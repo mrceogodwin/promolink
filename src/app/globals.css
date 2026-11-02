@@ -469,22 +469,3 @@ body, .pl-site { background: #f7faf7; color: #11251b; }
 .pl-footer-brand a > span span { color: #c8f169 !important; }
 .pl-channel-icon.mint { background: #e1f7e8; color: #08794e; }
 .pl-channel-icon.lime { background: #eff9cf; color: #426a1b; }
-
-
-/* Creator cutout layered into the dashboard showcase. */
-.pl-dashboard-preview { position: relative; isolation: isolate; }
-.pl-preview-window { position: relative; z-index: 1; }
-.pl-creator-cutout { position: absolute; z-index: 4; width: clamp(190px, 25vw, 310px); right: -48px; bottom: -58px; pointer-events: none; filter: drop-shadow(0 22px 28px rgba(3,48,29,.22)); }
-.pl-creator-cutout svg { display: block; width: 100%; height: auto; overflow: visible; }
-.pl-preview-float { z-index: 5; }
-@media (max-width: 1100px) {
-  .pl-creator-cutout { width: 235px; right: -25px; bottom: -44px; }
-}
-@media (max-width: 760px) {
-  .pl-dashboard-preview { margin: 0 12px 68px 0; }
-  .pl-creator-cutout { width: 158px; right: -19px; bottom: -82px; }
-  .pl-preview-float { right: 18px; bottom: -38px; }
-}
-@media (max-width: 390px) {
-  .pl-creator-cutout { width: 138px; right: -17px; bottom: -72px; }
-}
