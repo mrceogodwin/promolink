@@ -16,47 +16,6 @@ function Arrow({ diagonal = false }: { diagonal?: boolean }) {
 }
 
 
-function CreatorCutout() {
-  return (
-    <div className="pl-creator-cutout" aria-label="PromoLink creator holding a phone">
-      <svg viewBox="0 0 360 460" role="img" aria-hidden="true">
-        <defs>
-          <linearGradient id="creator-skin" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#9b573b"/><stop offset=".55" stopColor="#713a2d"/><stop offset="1" stopColor="#4a2925"/></linearGradient>
-          <linearGradient id="creator-shirt" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#d8ff8d"/><stop offset="1" stopColor="#72d79a"/></linearGradient>
-          <linearGradient id="creator-phone" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#24352c"/><stop offset="1" stopColor="#071b13"/></linearGradient>
-        </defs>
-        <ellipse cx="183" cy="438" rx="125" ry="14" fill="#063d2b" opacity=".13"/>
-        <path d="M73 460c4-80 24-130 74-150h73c52 18 75 76 78 150Z" fill="url(#creator-shirt)"/>
-        <path d="M119 322c16-21 35-31 66-31 30 0 54 12 70 34l-29 39-44-24-42 24Z" fill="#f3c6a7"/>
-        <path d="M119 152c-8-54 18-99 68-104 57-6 88 34 84 94l-7 81c-5 48-37 78-75 77-42-1-69-37-72-82Z" fill="url(#creator-skin)"/>
-        <path d="M112 168c-20-70 3-136 65-148 45-9 87 13 104 55 10 26 7 66-4 94l-17-38-8-49c-23 15-56 24-95 24-7 24-20 45-45 62Z" fill="#171411"/>
-        <path d="M117 120c-13 30-16 73-7 105-19-12-28-34-24-57 3-21 14-39 31-48Zm154-18c19 18 27 47 20 73-4 15-13 27-25 34l5-52Z" fill="#171411"/>
-        <path d="M147 178c9-7 21-8 31-2m35 0c10-6 22-5 31 2" fill="none" stroke="#2d1915" strokeWidth="5" strokeLinecap="round"/>
-        <path d="M163 216c13 11 30 11 43 0" fill="none" stroke="#45221c" strokeWidth="4" strokeLinecap="round"/>
-        <path d="M190 188l-5 17 9 3" fill="none" stroke="#5a3027" strokeWidth="3" strokeLinecap="round"/>
-        <path d="M151 258c20 15 51 17 73 0l-4 48c-20 21-48 21-67 0Z" fill="url(#creator-skin)"/>
-        <path d="M103 350c13-25 30-42 51-49l31 33 33-33c32 11 53 33 65 65l-24 94H99Z" fill="url(#creator-shirt)"/>
-        <path d="M183 332c-16 21-29 44-39 72l-21 56h-45c13-54 26-98 50-126 14-16 31-26 50-31Z" fill="#baf17b"/>
-        <path d="M230 308c26 7 48 29 62 62l24 90h-48l-25-76-35-37Z" fill="#8ce0a0"/>
-        <path d="M239 211c19 5 30 19 35 40l15 66-28 11-27-72Z" fill="url(#creator-skin)"/>
-        <g transform="rotate(-9 276 236)">
-          <rect x="247" y="157" width="69" height="125" rx="13" fill="url(#creator-phone)" stroke="#d8ff8d" strokeWidth="3"/>
-          <rect x="253" y="166" width="57" height="106" rx="8" fill="#e9f8ed"/>
-          <rect x="263" y="178" width="37" height="5" rx="2.5" fill="#08794e"/>
-          <rect x="263" y="192" width="29" height="24" rx="5" fill="#c8f169"/>
-          <path d="M266 207l7-8 7 6 8-9" fill="none" stroke="#08794e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <rect x="263" y="224" width="37" height="4" rx="2" fill="#a9c9b2"/>
-          <rect x="263" y="234" width="27" height="4" rx="2" fill="#a9c9b2"/>
-          <circle cx="281" cy="261" r="3" fill="#08794e"/>
-        </g>
-        <path d="M245 232c-12-4-21 1-24 12l-8 29c-3 10 3 18 13 19 9 1 17-5 20-14l10-28Z" fill="url(#creator-skin)"/>
-        <path d="M90 382c-9 15-16 35-20 59h40l14-38Z" fill="#78d99a"/>
-        <circle cx="132" cy="183" r="4" fill="#171411"/><circle cx="239" cy="183" r="4" fill="#171411"/>
-        <path d="M142 137c-3 21-13 37-28 48m147-51c6 19 17 32 31 39" fill="none" stroke="#171411" strokeWidth="13" strokeLinecap="round"/>
-      </svg>
-    </div>
-  );
-}
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -115,44 +74,7 @@ export default function Home() {
               <div className="pl-trust-note"><span className="pl-check">✓</span> Owners stay in control. Campaigns need approval.</div>
             </div>
 
-            <div className="pl-product-visual" aria-label="Illustration of the PromoLink campaign workspace">
-              <div className="pl-orbit pl-orbit-one" />
-              <div className="pl-orbit pl-orbit-two" />
-              <div className="pl-app-window">
-                <div className="pl-app-topbar">
-                  <div className="pl-window-dots"><i /><i /><i /></div>
-                  <span>YOUR PROMOLINK WORKSPACE</span>
-                  <span className="pl-topbar-menu">•••</span>
-                </div>
-                <div className="pl-app-content">
-                  <div className="pl-app-sidebar">
-                    <div className="pl-sidebar-mark">↗</div>
-                    <span className="active">▦</span><span>◉</span><span>↗</span><span>⌘</span>
-                    <div className="pl-sidebar-bottom">?</div>
-                  </div>
-                  <div className="pl-app-main">
-                    <div className="pl-app-heading">
-                      <div><span className="pl-small-overline">OVERVIEW</span><h3>Campaign workspace</h3></div>
-                      <span className="pl-avatar">PL</span>
-                    </div>
-                    <div className="pl-app-welcome"><div><span>YOUR NEXT MOVE STARTS HERE</span><strong>Make your reach work.</strong></div><span className="pl-welcome-icon">↗</span></div>
-                    <div className="pl-stat-grid">
-                      <div className="pl-stat-card"><span>Campaigns</span><strong>—</strong><small>Track your activity</small></div>
-                      <div className="pl-stat-card"><span>Audience reach</span><strong>—</strong><small>Across your channels</small></div>
-                      <div className="pl-stat-card"><span>Campaign status</span><strong className="pl-status-text">Ready when you are</strong><small>Start by setting up your account</small></div>
-                    </div>
-                    <div className="pl-app-list">
-                      <div className="pl-list-heading"><strong>Choose your channel</strong><span>Channel options</span></div>
-                      <div className="pl-channel-list">
-                        {channels.map((channel) => <div className="pl-channel-row" key={channel.name}><span className={"pl-channel-icon " + channel.tone}>{channel.mark}</span><span>{channel.name}</span><span className="pl-channel-arrow">↗</span></div>)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="pl-float-card pl-float-card-top"><span className="pl-float-icon">✳</span><div><strong>Built around trust</strong><small>Owners approve campaigns</small></div></div>
-              <div className="pl-float-card pl-float-card-bottom"><span className="pl-float-icon pl-float-icon-dark">↗</span><div><strong>One connected marketplace</strong><small>Audiences meet opportunity</small></div></div>
-            </div>
+            <div className="pl-hero-creator" aria-hidden="true"><img src="/creator-cutout.svg" alt="" /></div>
           </div>
           <div className="pl-hero-bottom"><span>BUILT FOR AUDIENCE OWNERS</span><span className="pl-bottom-line" /><span>MADE FOR AMBITIOUS BRANDS</span><span className="pl-bottom-line" /><span>DESIGNED TO SCALE</span></div>
         </section>
@@ -191,7 +113,6 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="pl-preview-float"><span>✓</span><div><b>Owner approved</b><small>Campaign workflow</small></div></div>
-                <CreatorCutout />
               </div>
             </div>
             <div className="pl-steps-grid">
