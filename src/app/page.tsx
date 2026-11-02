@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 
@@ -28,6 +28,18 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 export default function Home() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistStatus, setWaitlistStatus] = useState("");
+  const [waitlistBusy, setWaitlistBusy] = useState(false);
+  async function submitWaitlist(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault(); setWaitlistBusy(true); setWaitlistStatus("");
+    try {
+      const response = await fetch("/api/waitlist", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: waitlistEmail }) });
+      const data = await response.json(); if (!response.ok) throw new Error(data.error || "Unable to join the waitlist.");
+      setWaitlistStatus(data.message); setWaitlistEmail("");
+    } catch (error) { setWaitlistStatus(error instanceof Error ? error.message : "Please try again."); }
+    finally { setWaitlistBusy(false); }
+  }
 
   return (
     <div className="pl-site">
@@ -40,7 +52,7 @@ export default function Home() {
             <a href="#for-advertisers">For brands</a>
           </nav>
           <div className="pl-nav-actions">
-            <Link href="/login" className="pl-login">Log in</Link>
+            <a href="#waitlist" className="pl-login">Join waitlist</a><Link href="/login" className="pl-login">Log in</Link>
             <Link href="/register" className="pl-button pl-button-yellow pl-nav-cta">Get started <Arrow diagonal /></Link>
           </div>
           <button className="pl-menu-toggle" aria-label={mobileOpen ? "Close menu" : "Open menu"} aria-expanded={mobileOpen} onClick={() => setMobileOpen(!mobileOpen)}>
@@ -166,6 +178,19 @@ export default function Home() {
               <ul className="pl-feature-list pl-feature-list-dark"><li><span>✓</span> Explore audience opportunities by channel</li><li><span>✓</span> Define campaign goals and deliverables</li><li><span>✓</span> Get owner approval before campaigns run</li><li><span>✓</span> Review available campaign evidence</li></ul>
               <Link href="/register?role=advertiser" className="pl-button pl-button-dark pl-button-large">Start a campaign <Arrow diagonal /></Link>
             </div>
+          </div>
+        </section>
+
+        <section className="pl-waitlist-section" id="waitlist">
+          <div className="pl-container pl-waitlist-layout">
+            <div><SectionLabel>GET IN EARLY</SectionLabel><h2>Be first in.<br /><span>Be ready to grow.</span></h2><p>Join the early-access list for launch updates and first access to the PromoLink marketplace.</p></div>
+            <form className="pl-waitlist-card" onSubmit={submitWaitlist}>
+              <span className="pl-waitlist-kicker">THE PROMOLINK EARLY LIST</span><h3>Save your place.</h3>
+              <label htmlFor="waitlist-email">Email address</label>
+              <input id="waitlist-email" type="email" required value={waitlistEmail} onChange={(event) => setWaitlistEmail(event.target.value)} placeholder="you@example.com" maxLength={254} />
+              <button className="pl-button pl-button-yellow pl-waitlist-submit" type="submit" disabled={waitlistBusy}>{waitlistBusy ? "Saving…" : "Join the waitlist"} <Arrow diagonal /></button>
+              <div className="pl-waitlist-feedback" role="status" aria-live="polite">{waitlistStatus}</div>
+            </form>
           </div>
         </section>
 
