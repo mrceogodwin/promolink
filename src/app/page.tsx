@@ -74,7 +74,6 @@ export default function Home() {
               <div className="pl-trust-note"><span className="pl-check">✓</span> Owners stay in control. Campaigns need approval.</div>
             </div>
 
-            <div className="pl-hero-creator" aria-hidden="true"><img src="/creator-cutout.svg" alt="" /></div>
           </div>
           <div className="pl-hero-bottom"><span>BUILT FOR AUDIENCE OWNERS</span><span className="pl-bottom-line" /><span>MADE FOR AMBITIOUS BRANDS</span><span className="pl-bottom-line" /><span>DESIGNED TO SCALE</span></div>
         </section>
@@ -117,7 +116,7 @@ export default function Home() {
             </div>
             <div className="pl-steps-grid">
               <article className="pl-step-card"><div className="pl-step-top"><span>01 / LIST</span><span className="pl-step-symbol">↗</span></div><div className="pl-step-graphic pl-graphic-list"><div className="pl-mini-profile"><span>AO</span><div><b>Your audience</b><small>Channel · Category · Reach</small></div><i>✓</i></div><div className="pl-mini-bars"><i /><i /><i /></div></div><h3>Put your audience on the map.</h3><p>Present your channel or promotional opportunity with the details brands need to evaluate a fit.</p></article>
-              <article className="pl-step-card"><div className="pl-step-top"><span>02 / MATCH</span><span className="pl-step-symbol">⌕</span></div><div className="pl-step-graphic pl-graphic-match"><div className="pl-match-card"><span className="pl-match-spark">✳</span><div><b>Campaign brief</b><small>Audience · Goal · Budget</small></div><span className="pl-match-arrow">→</span></div><div className="pl-match-line" /><div className="pl-match-card pl-match-card-dark"><span className="pl-match-spark">◉</span><div><b>Right-fit audience</b><small>Review the opportunity</small></div><span>✓</span></div></div><h3>Find the right fit.</h3><p>Advertisers discover relevant audience opportunities and agree on the campaign before it goes live.</p></article>
+              <article className="pl-step-card"><div className="pl-step-top"><span>02 / MATCH</span><span className="pl-step-symbol">⌕</span></div><div className="pl-step-graphic pl-graphic-match"><div className="pl-match-card"><div><b>Campaign brief</b><small>Audience · Goal · Budget</small></div><span className="pl-match-arrow">→</span></div><div className="pl-match-line" /><div className="pl-match-card pl-match-card-dark"><span className="pl-match-spark">◉</span><div><b>Right-fit audience</b><small>Review the opportunity</small></div><span>✓</span></div></div><h3>Find the right fit.</h3><p>Advertisers discover relevant audience opportunities and agree on the campaign before it goes live.</p></article>
               <article className="pl-step-card"><div className="pl-step-top"><span>03 / GROW</span><span className="pl-step-symbol">↗</span></div><div className="pl-step-graphic pl-graphic-grow"><div className="pl-grow-ring"><span>↗</span></div><div className="pl-grow-caption"><b>Campaign progress</b><small>Evidence &amp; results</small><div className="pl-grow-track"><i /></div></div></div><h3>Keep the process clear.</h3><p>Follow campaign status and available performance evidence, with the owner and advertiser aligned.</p></article>
             </div>
           </div>
@@ -142,7 +141,7 @@ export default function Home() {
                 <div className="pl-owner-field"><span>Private contacts</span><strong className="pl-private-status">Never publicly listed <span>✓</span></strong></div>
                 <div className="pl-owner-footer"><span>YOUR AUDIENCE STAYS YOURS</span><span>↗</span></div>
               </div>
-              <div className="pl-owner-sticker"><span>✳</span> Your audience.<br />Your decision.</div>
+              <div className="pl-owner-sticker">Your audience.<br />Your decision.</div>
             </div>
           </div>
         </section>
@@ -157,7 +156,7 @@ export default function Home() {
                 <div className="pl-brief-row"><span>01</span><div><strong>Choose a channel</strong><small>Explore eligible opportunities</small></div><span>↗</span></div>
                 <div className="pl-brief-row"><span>02</span><div><strong>Set your campaign brief</strong><small>Goal, creative and budget</small></div><span>↗</span></div>
                 <div className="pl-brief-row"><span>03</span><div><strong>Get owner approval</strong><small>Agree before launch</small></div><span>✓</span></div>
-                <div className="pl-brief-note"><span>✳</span> Clear expectations. More accountable campaigns.</div>
+                <div className="pl-brief-note">Clear expectations. More accountable campaigns.</div>
               </div>
             </div>
             <div className="pl-split-copy pl-advertiser-copy">
