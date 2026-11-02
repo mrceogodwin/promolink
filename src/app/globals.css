@@ -132,6 +132,63 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .section-label { color: #77766b; font-size: 9px; letter-spacing: 1.7px; }
 .section-label-dot { width: 6px; height: 6px; }
 .pl-section-intro { max-width: 660px; margin-bottom: 50px; }
+
+.pl-intro-layout { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); align-items: center; gap: clamp(28px, 5vw, 76px); margin-bottom: 54px; }
+.pl-intro-layout .pl-section-intro { max-width: 560px; margin: 0; position: relative; z-index: 2; }
+.pl-dashboard-preview { position: relative; min-width: 0; padding: 18px 12px 30px 0; }
+.pl-preview-glow { position: absolute; width: 75%; height: 85%; right: 2%; top: 5%; border-radius: 50%; background: radial-gradient(ellipse, rgba(18,153,99,.15), transparent 68%); filter: blur(20px); }
+.pl-preview-window { position: relative; overflow: hidden; border: 1px solid #e4e9e3; border-radius: 16px; background: #fbfcf9; box-shadow: 0 28px 75px rgba(11,54,34,.14), 0 5px 18px rgba(11,54,34,.06); transform: perspective(1100px) rotateY(-5deg) rotateX(2deg); }
+.pl-preview-topbar { height: 38px; display:flex; align-items:center; gap:12px; padding:0 14px; background:#fff; border-bottom:1px solid #e9eee9; color:#929b94; font-size:7px; letter-spacing:1.3px; font-weight:800; }
+.pl-preview-topbar b { margin-left:auto; letter-spacing:2px; }
+.pl-preview-body { display:grid; grid-template-columns:48px minmax(0,1fr); min-height:330px; }
+.pl-preview-sidebar { display:flex; align-items:center; flex-direction:column; gap:18px; padding:15px 0; background:#09291d; color:#a8c2b3; }
+.pl-preview-logo { display:grid; place-items:center; width:25px; height:25px; border-radius:8px; background:#0ca36b; color:#fff; font-size:13px; font-weight:900; margin-bottom:7px; }
+.pl-preview-sidebar i { display:grid; place-items:center; width:27px; height:27px; border-radius:7px; font-style:normal; font-size:13px; }
+.pl-preview-sidebar i.selected { background:#c8f169; color:#153c28; }
+.pl-preview-sidebar small { margin-top:auto; }
+.pl-preview-main { padding:20px 22px 17px; min-width:0; }
+.pl-preview-heading { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; }
+.pl-preview-heading div { display:flex; flex-direction:column; gap:5px; }
+.pl-preview-heading small,.pl-preview-welcome small { color:#8b968d; font-size:7px; letter-spacing:1.5px; font-weight:850; }
+.pl-preview-heading strong { color:#17251c; font-size:17px; letter-spacing:-.5px; }
+.pl-preview-heading > span { display:grid; place-items:center; width:27px; height:27px; border-radius:50%; background:#edf3e8; color:#507346; font-size:8px; font-weight:900; }
+.pl-preview-welcome { position:relative; display:flex; flex-direction:column; gap:7px; padding:16px 18px; border-radius:10px; background:linear-gradient(110deg,#08794e,#0da36a); color:#fff; }
+.pl-preview-welcome small { color:#c8f2d8; }
+.pl-preview-welcome strong { font-size:16px; letter-spacing:-.4px; }
+.pl-preview-welcome > span { position:absolute; right:15px; top:20px; display:grid; place-items:center; width:28px; height:28px; border-radius:50%; background:#c8f169; color:#17452e; font-size:17px; }
+.pl-preview-stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:11px; }
+.pl-preview-stats > div { display:flex; flex-direction:column; gap:5px; padding:12px; border:1px solid #e8ece6; border-radius:9px; background:#fff; }
+.pl-preview-stats small,.pl-preview-chart small { color:#8b968d; font-size:8px; }
+.pl-preview-stats b { color:#17251c; font-size:21px; }
+.pl-preview-stats em { color:#13845b; font-size:8px; font-style:normal; }
+.pl-preview-chart { margin-top:11px; padding:12px; border:1px solid #e8ece6; border-radius:9px; background:#fff; }
+.pl-preview-chart > div:first-child { display:flex; justify-content:space-between; align-items:center; }
+.pl-preview-chart strong,.pl-preview-bottom strong { color:#27372d; font-size:9px; }
+.pl-chart-bars { height:54px; display:flex; align-items:end; gap:6px; padding-top:9px; }
+.pl-chart-bars i { flex:1; border-radius:3px 3px 0 0; background:linear-gradient(#8ed5ae,#0b9560); height:var(--bar-height,50%); }
+.pl-chart-bars i:nth-child(3n+1){--bar-height:38%}.pl-chart-bars i:nth-child(3n+2){--bar-height:68%}.pl-chart-bars i:nth-child(3n){--bar-height:85%}
+.pl-preview-bottom { display:flex; justify-content:space-between; margin:13px 0 7px; }
+.pl-preview-bottom span { color:#118459; font-size:8px; font-weight:800; }
+.pl-preview-row { display:flex; align-items:center; gap:8px; padding:8px 0; border-top:1px solid #edf0eb; color:#536158; font-size:8px; }
+.pl-preview-row i { width:7px; height:7px; border-radius:50%; background:#c8f169; }
+.pl-preview-row b { margin-left:auto; padding:4px 7px; border-radius:20px; background:#f4f0dc; color:#8a7638; font-size:7px; }
+.pl-preview-row b.live { background:#e1f5e9; color:#0a8554; }
+.pl-preview-float { position:absolute; right:-3px; bottom:4px; display:flex; align-items:center; gap:9px; padding:11px 15px; border:1px solid rgba(255,255,255,.8); border-radius:11px; background:rgba(255,255,255,.94); box-shadow:0 12px 32px rgba(17,55,35,.13); }
+.pl-preview-float > span { display:grid; place-items:center; width:25px; height:25px; border-radius:8px; background:#e1f6e8; color:#0b8957; font-weight:900; }
+.pl-preview-float div { display:flex; flex-direction:column; gap:3px; }
+.pl-preview-float b { color:#23372a; font-size:9px; }.pl-preview-float small { color:#849087; font-size:7px; }
+@media (max-width: 760px) {
+  .pl-intro-layout { grid-template-columns:1fr; gap:22px; margin-bottom:38px; }
+  .pl-intro-layout .pl-section-intro { max-width:100%; }
+  .pl-dashboard-preview { padding:4px 4px 25px 0; }
+  .pl-preview-body { min-height:290px; }
+  .pl-preview-main { padding:15px 13px 12px; }
+  .pl-preview-heading strong { font-size:14px; }
+  .pl-preview-welcome { padding:13px; }
+  .pl-preview-welcome strong { font-size:13px; }
+  .pl-preview-float { right:0; bottom:0; }
+}
+
 .pl-section-intro h2, .pl-split-copy h2 { margin: 22px 0 0; font-size: clamp(40px, 5vw, 62px); line-height: 1.03; letter-spacing: -3px; font-weight: 820; }
 .pl-section-intro h2 span, .pl-split-copy h2 span { color: #a58b3c; }
 .pl-section-intro > p, .pl-split-copy > p { max-width: 570px; margin: 20px 0 0; color: #717168; font-size: 15px; line-height: 1.85; }
