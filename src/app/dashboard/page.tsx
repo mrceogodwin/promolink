@@ -12,7 +12,7 @@ export default async function DashboardPage(){
  const firstName=user.name.trim().split(/\s+/)[0]||"there";
  const initial=(user.name.trim()[0]||"P").toUpperCase();
  const nav=admin?[
-  ["⌂","Overview","/dashboard"],["✓","Audience review","/dashboard/admin/review"],["♙","User management","/dashboard/admin/users"],["▦","Platform metrics","/dashboard/admin/overview"],["↗","Campaign oversight","/dashboard/campaigns"],["◷","Activity","/dashboard/activity"],["⚙","Settings","/dashboard/settings"]
+  ["⌂","Overview","/dashboard"],["✓","Audience review","/dashboard/admin/review"],["◉","Delivery evidence","/dashboard/admin/delivery-evidence"],["♙","User management","/dashboard/admin/users"],["▦","Platform metrics","/dashboard/admin/overview"],["↗","Campaign oversight","/dashboard/campaigns"],["◷","Activity","/dashboard/activity"],["⚙","Settings","/dashboard/settings"]
  ]:owner?[
   ["⌂","Overview","/dashboard"],["▤","My audience listings","/dashboard/listings"],["↗","Campaign approvals","/dashboard/campaigns"],["₦","Wallet & earnings","/dashboard/wallet"],["◷","Activity","/dashboard/activity"],["⚙","Settings","/dashboard/settings"]
  ]:[
