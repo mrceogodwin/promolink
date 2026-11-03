@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 import { getSessionUser } from "@/lib/auth";
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 export async function GET() {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
@@ -21,12 +22,19 @@ export async function GET() {
           COALESCE(SUM(amount_minor) FILTER (WHERE status = 'success'), 0)::text AS successful_amount_minor,
           COUNT(*) FILTER (
             WHERE status = 'success'
-              AND NOT EXISTS (
-                SELECT 1 FROM ledger_entries le
-                WHERE le.payment_event_id = payment_events.id
-                  AND le.entry_type = 'deposit'
+              AND (
+                NOT EXISTS (
+                  SELECT 1 FROM ledger_entries le
+                  WHERE le.payment_event_id = payment_events.id
+                    AND le.entry_type = 'deposit'
+                )
+                OR NOT EXISTS (
+                  SELECT 1 FROM ledger_entries le
+                  WHERE le.payment_event_id = payment_events.id
+                    AND le.entry_type = 'reserve'
+                )
               )
-          )::int AS successful_without_deposit,
+          )::int AS successful_with_incomplete_ledger,
           COUNT(*) FILTER (
             WHERE status = 'pending'
               AND created_at < now() - interval '30 minutes'
@@ -43,7 +51,7 @@ export async function GET() {
       campaigns: campaigns[0],
       payments: payments[0],
       reconciliation,
-      notice: "Payment-event totals are provider records, not bank settlement confirmation. Reconciliation flags identify records requiring investigation."
+      notice: "Payment-event totals are provider records, not bank settlement confirmation. Reconciliation flags successful payments missing either required funding ledger entry, or pending payments older than 30 minutes."
     });
   } catch (error) {
     console.error("Admin overview failed", error instanceof Error ? error.message : "unknown error");
