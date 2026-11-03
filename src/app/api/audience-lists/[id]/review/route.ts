@@ -1,3 +1,4 @@
+import { sameOriginError } from "@/lib/request-security";
 import { NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 import { getSessionUser } from "@/lib/auth";
@@ -6,6 +7,8 @@ export const runtime = "nodejs";
 
 export async function PATCH(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
+    const originError = sameOriginError(request);
+    if (originError) return originError;
     const user = await getSessionUser();
     if (!user) return NextResponse.json({ error: "Sign in to review listings." }, { status: 401 });
     if (user.role !== "admin") return NextResponse.json({ error: "Administrator access is required." }, { status: 403 });
