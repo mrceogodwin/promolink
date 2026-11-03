@@ -106,3 +106,41 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     return NextResponse.json({ error: "Could not queue campaign delivery. Confirm delivery orchestration migrations are applied." }, { status: 503 });
   }
 }
+
+
+export async function GET(_request: Request, context: { params: Promise<{ id: string }> }) {
+  try {
+    const user = await getSessionUser();
+    if (!user) return NextResponse.json({ error: "Sign in to view delivery status." }, { status: 401 });
+    if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
+
+    const { id } = await context.params;
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
+      return NextResponse.json({ error: "Invalid campaign ID." }, { status: 400 });
+    }
+
+    const sql = neon(process.env.DATABASE_URL);
+    const campaigns = user.role === "admin"
+      ? await sql`SELECT c.id FROM campaigns c WHERE c.id = ${id} LIMIT 1`
+      : user.role === "advertiser"
+        ? await sql`SELECT c.id FROM campaigns c WHERE c.id = ${id} AND c.advertiser_id = ${user.id} LIMIT 1`
+        : await sql`SELECT c.id FROM campaigns c JOIN audience_lists a ON a.id = c.audience_list_id WHERE c.id = ${id} AND a.owner_id = ${user.id} LIMIT 1`;
+    if (!campaigns.length) return NextResponse.json({ error: "Campaign not found or you do not have access." }, { status: 404 });
+
+    const deliveries = await sql`
+      SELECT d.id, d.channel, d.status, d.scheduled_at, d.started_at, d.completed_at,
+        d.last_error_code, d.created_at, d.updated_at,
+        ci.display_name AS provider_name,
+        (SELECT COUNT(*)::int FROM delivery_attempts da WHERE da.delivery_id = d.id) AS attempt_count,
+        (SELECT COUNT(*)::int FROM delivery_evidence de WHERE de.delivery_id = d.id AND de.verification_status = 'verified') AS verified_evidence_count
+      FROM campaign_deliveries d
+      LEFT JOIN channel_integrations ci ON ci.id = d.integration_id
+      WHERE d.campaign_id = ${id}
+      ORDER BY d.created_at DESC
+    `;
+    return NextResponse.json({ deliveries });
+  } catch (error) {
+    console.error("Campaign delivery status read failed", error instanceof Error ? error.message : "unknown error");
+    return NextResponse.json({ error: "Could not load campaign delivery status. Confirm delivery orchestration migrations are applied." }, { status: 503 });
+  }
+}
