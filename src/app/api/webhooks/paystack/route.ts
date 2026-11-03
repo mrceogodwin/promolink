@@ -82,11 +82,41 @@ export async function POST(request: Request) {
       // Payment confirmation, ledger posting, campaign funding and audit history
       // commit together. A webhook retry cannot leave a paid event without its
       // corresponding ledger entry or funded campaign transition.
-      await sql`
+      const posted = await sql`
         WITH confirmed AS (
           UPDATE payment_events
           SET status = 'success', raw_event = ${raw}::jsonb, updated_at = now()
           WHERE id = ${payment.id} AND status = 'pending'
+            AND EXISTS (
+              SELECT 1 FROM campaigns c
+              WHERE c.id = payment_events.campaign_id
+                AND c.advertiser_id = payment_events.user_id
+                AND c.status = 'pending_payment'
+            )
+            AND NOT EXISTS (
+              SELECT 1 FROM ledger_entries le
+              WHERE le.reference = 'paystack:' || payment_events.provider_reference || ':deposit'
+                AND (
+                  le.user_id IS DISTINCT FROM payment_events.user_id
+                  OR le.campaign_id IS DISTINCT FROM payment_events.campaign_id
+                  OR le.payment_event_id IS DISTINCT FROM payment_events.id
+                  OR le.entry_type <> 'deposit'
+                  OR le.amount_minor <> payment_events.amount_minor
+                  OR le.currency <> payment_events.currency
+                )
+            )
+            AND NOT EXISTS (
+              SELECT 1 FROM ledger_entries le
+              WHERE le.reference = 'paystack:' || payment_events.provider_reference || ':reserve'
+                AND (
+                  le.user_id IS DISTINCT FROM payment_events.user_id
+                  OR le.campaign_id IS DISTINCT FROM payment_events.campaign_id
+                  OR le.payment_event_id IS DISTINCT FROM payment_events.id
+                  OR le.entry_type <> 'reserve'
+                  OR le.amount_minor <> payment_events.amount_minor
+                  OR le.currency <> payment_events.currency
+                )
+            )
           RETURNING id, campaign_id, user_id, amount_minor, currency, provider_reference
         ),
         deposit_ledger AS (
@@ -134,6 +164,10 @@ export async function POST(request: Request) {
         SELECT p.id FROM confirmed p
         INNER JOIN logged l ON l.entity_id = p.campaign_id
       `;
+      if (!posted.length) {
+        console.error("Paystack confirmation deferred: campaign state or ledger reference conflict.");
+        return NextResponse.json({ error: "Payment confirmation could not be safely reconciled. Please retry." }, { status: 500 });
+      }
     } else {
       // Failed payment and campaign state restoration are also one statement.
       await sql`
