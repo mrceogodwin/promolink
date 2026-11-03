@@ -31,6 +31,7 @@ export async function POST(request: Request) {
         WHERE c.status = 'funded'
           AND a.status = 'approved'
           AND ci.status = 'active'
+          AND (d.next_attempt_at IS NULL OR d.next_attempt_at <= now())
           AND (
             d.status IN ('queued','failed')
             OR (d.status = 'processing' AND d.lease_expires_at < now())
