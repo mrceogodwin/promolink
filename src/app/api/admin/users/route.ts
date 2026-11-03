@@ -34,10 +34,33 @@ export async function PATCH(request: Request) {
     if (id === admin.id && status === "suspended") return NextResponse.json({ error: "You cannot suspend your own administrator account." }, { status: 400 });
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
     const sql = neon(process.env.DATABASE_URL);
-    const rows = await sql`UPDATE users SET status = ${status}, updated_at = now() WHERE id = ${id} AND role <> 'admin' RETURNING id, name, email, role, status, created_at, updated_at`;
+    const rows = await sql`
+      WITH updated AS (
+        UPDATE users
+        SET status = ${status}, updated_at = now()
+        WHERE id = ${id} AND role <> 'admin'
+        RETURNING id, name, email, role, status, created_at, updated_at
+      ),
+      revoked AS (
+        DELETE FROM sessions s
+        USING updated u
+        WHERE s.user_id = u.id AND u.status = 'suspended'
+        RETURNING s.user_id
+      ),
+      logged AS (
+        INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata)
+        SELECT ${admin.id},
+          CASE WHEN u.status = 'suspended' THEN 'user.suspended' ELSE 'user.reactivated' END,
+          'user', u.id,
+          jsonb_build_object('status', u.status, 'revoked_sessions', (SELECT count(*) FROM revoked))
+        FROM updated u
+        RETURNING entity_id
+      )
+      SELECT u.id, u.name, u.email, u.role, u.status, u.created_at, u.updated_at
+      FROM updated u
+      INNER JOIN logged l ON l.entity_id = u.id
+    `;
     if (!rows.length) return NextResponse.json({ error: "User not found or administrator accounts cannot be changed here." }, { status: 404 });
-    if (status === "suspended") await sql`DELETE FROM sessions WHERE user_id = ${id}`;
-    await sql`INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata) VALUES (${admin.id}, ${status === "suspended" ? "user.suspended" : "user.reactivated"}, 'user', ${id}, ${JSON.stringify({ status })}::jsonb)`;
     return NextResponse.json({ user: rows[0] });
   } catch (error) {
     console.error("Admin user update failed", error instanceof Error ? error.message : "unknown error");
