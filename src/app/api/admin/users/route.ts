@@ -1,3 +1,4 @@
+import { sameOriginError } from "@/lib/request-security";
 import { NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 import { getSessionUser } from "@/lib/auth";
@@ -7,6 +8,8 @@ const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-
 
 export async function GET() {
   try {
+    const originError = sameOriginError(request);
+    if (originError) return originError;
     const admin = await getSessionUser();
     if (!admin) return NextResponse.json({ error: "Sign in to manage users." }, { status: 401 });
     if (admin.role !== "admin") return NextResponse.json({ error: "Administrator access is required." }, { status: 403 });
