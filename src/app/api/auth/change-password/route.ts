@@ -28,9 +28,28 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Your current password is incorrect." }, { status: 403 });
     }
     const passwordHash = await hashPassword(newPassword);
-    await sql`UPDATE users SET password_hash = ${passwordHash}, updated_at = now() WHERE id = ${user.id}`;
-    await sql`DELETE FROM sessions WHERE user_id = ${user.id}`;
-    await sql`INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata) VALUES (${user.id}, 'password.changed', 'user', ${user.id}, '{}'::jsonb)`;
+    const changed = await sql`
+      WITH updated AS (
+        UPDATE users
+        SET password_hash = ${passwordHash}, updated_at = now()
+        WHERE id = ${user.id} AND status = 'active' AND password_hash = ${record.password_hash}
+        RETURNING id
+      ), revoked AS (
+        DELETE FROM sessions
+        WHERE user_id IN (SELECT id FROM updated)
+        RETURNING id
+      ), logged AS (
+        INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata)
+        SELECT ${user.id}, 'password.changed', 'user', ${user.id},
+          jsonb_build_object('sessions_revoked', (SELECT count(*) FROM revoked))
+        FROM updated
+        RETURNING id
+      )
+      SELECT id FROM updated
+    `;
+    if (!changed.length) {
+      return NextResponse.json({ error: "Your account changed during this request. Sign in again and retry." }, { status: 409 });
+    }
     return NextResponse.json({ ok: true, message: "Password updated. Sign in again with your new password." });
   } catch (error) {
     console.error("Password change failed", error instanceof Error ? error.message : "unknown error");
