@@ -19,9 +19,22 @@ export async function POST(request: Request) {
   if (!authorized(request)) return NextResponse.json({ error: "Worker authentication failed." }, { status: 401 });
   if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
 
+  const declaredLength = Number(request.headers.get("content-length") || "0");
+  if (declaredLength > 16_384) {
+    return NextResponse.json({ error: "Request body exceeds the 16 KB limit." }, { status: 413 });
+  }
+
   let body: Record<string, unknown>;
   try {
-    body = await request.json();
+    const rawBody = await request.text();
+    if (Buffer.byteLength(rawBody, "utf8") > 16_384) {
+      return NextResponse.json({ error: "Request body exceeds the 16 KB limit." }, { status: 413 });
+    }
+    const parsed: unknown = JSON.parse(rawBody);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return NextResponse.json({ error: "A JSON object is required." }, { status: 400 });
+    }
+    body = parsed as Record<string, unknown>;
   } catch {
     return NextResponse.json({ error: "A valid JSON body is required." }, { status: 400 });
   }
