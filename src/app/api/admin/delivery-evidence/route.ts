@@ -63,6 +63,7 @@ export async function PATCH(request: Request) {
         WHERE de.id = ${evidenceId}
           AND de.verification_status = 'pending'
           AND de.evidence_type IN ('provider_webhook','provider_report')
+          AND d.status IN ('queued','processing','submitted')
         FOR UPDATE OF de, d
       ),
       changed AS (
