@@ -89,12 +89,22 @@ export async function POST(request: Request) {
           WHERE id = ${payment.id} AND status = 'pending'
           RETURNING id, campaign_id, user_id, amount_minor, currency, provider_reference
         ),
-        ledger AS (
+        deposit_ledger AS (
           INSERT INTO ledger_entries
             (user_id, campaign_id, payment_event_id, entry_type, amount_minor, currency, reference, metadata)
           SELECT user_id, campaign_id, id, 'deposit', amount_minor, currency,
             'paystack:' || provider_reference || ':deposit',
             jsonb_build_object('provider', 'paystack', 'reference', provider_reference)
+          FROM confirmed
+          ON CONFLICT (reference) DO NOTHING
+          RETURNING id
+        ),
+        reserve_ledger AS (
+          INSERT INTO ledger_entries
+            (user_id, campaign_id, payment_event_id, entry_type, amount_minor, currency, reference, metadata)
+          SELECT user_id, campaign_id, id, 'reserve', amount_minor, currency,
+            'paystack:' || provider_reference || ':reserve',
+            jsonb_build_object('provider', 'paystack', 'reference', provider_reference, 'purpose', 'campaign_funding')
           FROM confirmed
           ON CONFLICT (reference) DO NOTHING
           RETURNING id
@@ -114,7 +124,8 @@ export async function POST(request: Request) {
             jsonb_build_object(
               'provider', 'paystack',
               'reference', p.provider_reference,
-              'ledger_entry_posted', EXISTS (SELECT 1 FROM ledger),
+              'deposit_ledger_posted', EXISTS (SELECT 1 FROM deposit_ledger),
+              'campaign_reserve_posted', EXISTS (SELECT 1 FROM reserve_ledger),
               'campaign_marked_funded', EXISTS (SELECT 1 FROM funded)
             )
           FROM confirmed p
