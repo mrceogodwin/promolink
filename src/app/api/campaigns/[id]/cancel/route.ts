@@ -1,11 +1,14 @@
+import { sameOriginError } from "@/lib/request-security";
 import { NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 import { getSessionUser } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
-export async function PATCH(_request: Request, context: { params: Promise<{ id: string }> }) {
+export async function PATCH(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
+    const originError = sameOriginError(request);
+    if (originError) return originError;
     const user = await getSessionUser();
     if (!user) return NextResponse.json({ error: "Sign in to cancel a campaign." }, { status: 401 });
     if (user.role !== "advertiser") return NextResponse.json({ error: "Only the campaign advertiser can cancel this request." }, { status: 403 });
