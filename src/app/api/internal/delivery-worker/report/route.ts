@@ -88,6 +88,12 @@ export async function POST(request: Request) {
           AND d.status = 'processing'
           AND d.lease_expires_at > now()
           AND a.status = 'started'
+          AND a.attempt_number = (
+            SELECT MAX(latest.attempt_number)
+            FROM delivery_attempts latest
+            WHERE latest.delivery_id = d.id
+          )
+          AND a.request_fingerprint = md5(d.id::text || d.lease_expires_at::text)
         FOR UPDATE OF d, a
       ),
       updated_attempt AS (
