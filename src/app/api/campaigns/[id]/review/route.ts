@@ -19,6 +19,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     const input = body as Record<string, unknown>;
     const status = input.status === "approved" ? "approved" : input.status === "rejected" ? "cancelled" : null;
     if (!status) return NextResponse.json({ error: "Choose approve or reject." }, { status: 400 });
+    if (user.role === "admin" && status === "approved") return NextResponse.json({ error: "Only the owner of the audience listing can approve a campaign request." }, { status: 403 });
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
     const sql = neon(process.env.DATABASE_URL);
     const rows = user.role === "admin"
