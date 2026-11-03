@@ -9,8 +9,11 @@ function authorized(request: Request) {
   const configured = process.env.DELIVERY_WORKER_SECRET || "";
   const supplied = request.headers.get("authorization") || "";
   const expected = "Bearer " + configured;
-  if (!configured || supplied.length !== expected.length) return false;
-  return timingSafeEqual(Buffer.from(supplied), Buffer.from(expected));
+  if (!configured) return false;
+  const suppliedBytes = Buffer.from(supplied);
+  const expectedBytes = Buffer.from(expected);
+  if (suppliedBytes.length !== expectedBytes.length) return false;
+  return timingSafeEqual(suppliedBytes, expectedBytes);
 }
 
 // Claims one delivery. It never sends messages and never returns integration
