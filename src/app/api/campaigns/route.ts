@@ -41,7 +41,21 @@ export async function POST(request: Request) {
     const sql = neon(process.env.DATABASE_URL);
     const audience = await sql`SELECT id FROM audience_lists WHERE id = ${audienceListId} AND status = 'approved' LIMIT 1`;
     if (!audience.length) return NextResponse.json({ error: "That audience is not available for campaigns yet." }, { status: 404 });
-    const rows = await sql`INSERT INTO campaigns (advertiser_id, audience_list_id, title, brief, budget_amount, currency, status) VALUES (${user.id}, ${audienceListId}, ${title}, ${brief}, ${budget}, 'NGN', 'pending_owner_approval') RETURNING id, title, audience_list_id, budget_amount, currency, status, created_at`;
+    const rows = await sql`
+      WITH created AS (
+        INSERT INTO campaigns (advertiser_id, audience_list_id, title, brief, budget_amount, currency, status)
+        VALUES (${user.id}, ${audienceListId}, ${title}, ${brief}, ${budget}, 'NGN', 'pending_owner_approval')
+        RETURNING id, title, audience_list_id, budget_amount, currency, status, created_at
+      ),
+      logged AS (
+        INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata)
+        SELECT ${user.id}, 'campaign_request_submitted', 'campaign', id,
+          jsonb_build_object('audience_list_id', audience_list_id, 'budget_amount', budget_amount, 'currency', currency)
+        FROM created
+        RETURNING entity_id
+      )
+      SELECT created.* FROM created INNER JOIN logged ON logged.entity_id = created.id
+    `;
     return NextResponse.json({ campaign: rows[0] }, { status: 201 });
   } catch (error) {
     console.error("Campaign create failed", error instanceof Error ? error.message : "unknown error");
