@@ -8,16 +8,16 @@ PromoLink is an audience-promotion marketplace. Audience owners can submit chann
 
 | Area | Status |
 |---|---|
-| Marketing landing page | Implemented; latest redesign awaits a successful build/deploy |
+| Marketing landing page | Implemented; latest development deployment build is READY |
 | Neon-backed account registration and login | Implemented in code; requires end-to-end verification |
 | Session cookies and logout | Implemented in code; requires end-to-end verification |
-| Audience listing submission | Implemented in code; pending review by default |
+| Audience listing submission | Implemented; publisher form restored and pending review by default |
 | Administrator listing review | Implemented in code; requires end-to-end verification |
 | Campaign request creation | Implemented in code; owner approval required |
-| Campaign owner approval/rejection | Implemented in code; requires verification |
+| Campaign owner approval/rejection | Implemented in code; owner-scoped API checks present; end-to-end verification pending |
 | Authentication rate limiting | Implemented in code using Neon |
-| Payments, ledger settlement and withdrawals | Not production-ready; Paystack is not configured |
-| Channel delivery integrations and verified delivery evidence | Not implemented/verified |
+| Paystack checkout and signed webhook foundation | Implemented in code; provider secret absent and end-to-end payment verification pending |\n| Wallet balances, delivery-based earning, withdrawals and disputes | Not implemented/production-ready |
+| Channel delivery integrations and verified delivery evidence | Not implemented/verified |\n| SEO sitemap, robots rules and canonical metadata | Implemented; search indexing and rankings not yet verified |
 | Password reset and email verification | Not implemented |
 
 Do not treat a workflow as production-ready until CI passes and it has been tested against the configured Neon database.
