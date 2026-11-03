@@ -43,7 +43,7 @@ export default function DeliveryEvidencePage() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Evidence review failed.");
-      setNotice(decision === "verified" ? "Evidence verified. Delivery marked delivered." : "Evidence rejected.");
+      setNotice(decision === "verified" ? (data.evidence?.delivery_marked_delivered ? "Evidence verified. Delivery marked delivered." : "Evidence verified and recorded.") : "Evidence rejected.");
       await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Evidence review failed.");
