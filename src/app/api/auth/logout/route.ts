@@ -4,7 +4,7 @@ import { destroySession } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     const originError = sameOriginError(request);
     if (originError) return originError;
