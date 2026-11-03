@@ -91,7 +91,6 @@ export async function POST(request: Request) {
                           ELSE 'processing' END,
             lease_expires_at = CASE WHEN ${outcome} = 'unknown' THEN d.lease_expires_at ELSE NULL END,
             next_attempt_at = CASE
-              WHEN ${outcome} = 'failed' AND ${metadata.retryable === false} THEN NULL
               WHEN ${outcome} = 'failed' THEN now() + make_interval(mins => LEAST(60, 5 * power(2, LEAST(e.attempt_number - 1, 4))::int))
               ELSE NULL END,
             last_error_code = CASE WHEN ${outcome} = 'failed' THEN ${errorCode} ELSE NULL END,
