@@ -1,3 +1,4 @@
+import { sameOriginError } from "@/lib/request-security";
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
@@ -7,6 +8,8 @@ export const runtime = "nodejs";
 
 export async function POST(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
+    const originError = sameOriginError(request);
+    if (originError) return originError;
     const user = await getSessionUser();
     if (!user) return NextResponse.json({ error: "Sign in to fund a campaign." }, { status: 401 });
     if (user.role !== "advertiser") return NextResponse.json({ error: "Only the campaign advertiser can initiate payment." }, { status: 403 });
