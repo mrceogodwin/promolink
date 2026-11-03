@@ -60,37 +60,28 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
 
     const integration = integrations[0];
     const idempotencyKey = "campaign-initial-" + createHash("sha256").update(String(campaign.id)).digest("hex");
-    const rows = await sql`
-      WITH inserted AS (
-        INSERT INTO campaign_deliveries
-          (campaign_id, audience_list_id, channel, integration_id, status, idempotency_key, created_by)
-        VALUES
-          (${campaign.id}, ${campaign.audience_list_id}, ${campaign.channel}, ${integration.id}, 'queued', ${idempotencyKey}, ${user.id})
-        ON CONFLICT (idempotency_key) DO NOTHING
-        RETURNING id, campaign_id, channel, status, created_at
-      ),
-      existing AS (
-        SELECT id, campaign_id, channel, status, created_at
-        FROM campaign_deliveries
-        WHERE idempotency_key = ${idempotencyKey}
-      ),
-      logged AS (
-        INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata)
-        SELECT ${user.id}, 'campaign_delivery_queued', 'campaign', ${campaign.id},
-          jsonb_build_object('channel', ${campaign.channel}, 'provider', ${integration.provider},
-            'delivery_id', COALESCE((SELECT id FROM inserted), (SELECT id FROM existing)))
-        WHERE EXISTS (SELECT 1 FROM inserted)
-        RETURNING id
-      )
-      SELECT id, campaign_id, channel, status, created_at,
-        EXISTS (SELECT 1 FROM inserted) AS newly_queued
-      FROM inserted
-      UNION ALL
-      SELECT id, campaign_id, channel, status, created_at, false AS newly_queued
-      FROM existing
-      WHERE NOT EXISTS (SELECT 1 FROM inserted)
+    const inserted = await sql`
+      INSERT INTO campaign_deliveries
+        (campaign_id, audience_list_id, channel, integration_id, status, idempotency_key, created_by)
+      VALUES
+        (${campaign.id}, ${campaign.audience_list_id}, ${campaign.channel}, ${integration.id}, 'queued', ${idempotencyKey}, ${user.id})
+      ON CONFLICT (idempotency_key) DO NOTHING
+      RETURNING id, campaign_id, channel, status, created_at
+    `;
+    const rows = inserted.length ? inserted : await sql`
+      SELECT id, campaign_id, channel, status, created_at
+      FROM campaign_deliveries
+      WHERE idempotency_key = ${idempotencyKey}
       LIMIT 1
     `;
+    if (inserted.length) {
+      await sql`
+        INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata)
+        VALUES (${user.id}, 'campaign_delivery_queued', 'campaign', ${campaign.id},
+          jsonb_build_object('channel', ${campaign.channel}, 'provider', ${integration.provider},
+            'delivery_id', ${inserted[0].id}))
+      `;
+    }
     if (!rows.length) return NextResponse.json({ error: "Could not create or retrieve the delivery queue record." }, { status: 500 });
 
     return NextResponse.json({
@@ -100,7 +91,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
         ? "Campaign queued. A configured provider worker must process it and return verifiable delivery evidence."
         : "This campaign already has a delivery queue record.",
       sent: false
-    }, { status: rows[0].newly_queued ? 201 : 200 });
+    }, { status: inserted.length > 0 ? 201 : 200 });
   } catch (error) {
     console.error("Campaign delivery queue failed", error instanceof Error ? error.message : "unknown error");
     return NextResponse.json({ error: "Could not queue campaign delivery. Confirm delivery orchestration migrations are applied." }, { status: 503 });
