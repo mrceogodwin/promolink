@@ -40,13 +40,13 @@ npm run dev
 
 ## Database setup
 
-The canonical waitlist migration is `db/migrations/003_public_waitlist.sql`. Apply migrations in order only on a new database:
+Apply migrations in order only on a new database:
 
 1. `db/migrations/001_initial_auth.sql`
 2. `db/migrations/002_auth_rate_limits.sql`
-3. `db/migrations/003_public_waitlist.sql`
+3. `db/migrations/003_public_waitlist.sql`\n4. `db/migrations/004_delivery_orchestration.sql`
 
-The existing PromoLink Neon default branch already contains the application tables and waitlist table, including its `source` column. Do not rerun migrations blindly or overwrite existing data. Inspect the live schema before any manual migration.
+The existing PromoLink Neon branches already contain the core application tables and waitlist table, including its `source` column. Migration 004 has been authored but has not been applied to either branch. Do not rerun migrations blindly or overwrite existing data. Inspect the live schema before any manual migration.
 
 Set `DATABASE_URL` in local development and in the appropriate Vercel environments. Never commit database credentials or paste them into source files.
 
