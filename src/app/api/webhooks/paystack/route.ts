@@ -52,9 +52,29 @@ export async function POST(request: Request) {
         event.data?.currency !== payment.currency
       ) {
         await sql`
-          UPDATE payment_events
-          SET status = 'failed', raw_event = ${raw}::jsonb, updated_at = now()
-          WHERE id = ${payment.id} AND status = 'pending'
+          WITH failed AS (
+            UPDATE payment_events
+            SET status = 'failed', raw_event = ${raw}::jsonb, updated_at = now()
+            WHERE id = ${payment.id} AND status = 'pending'
+            RETURNING campaign_id, user_id, provider_reference
+          ), restored AS (
+            UPDATE campaigns c
+            SET status = 'approved', updated_at = now()
+            FROM failed p
+            WHERE c.id = p.campaign_id
+              AND c.advertiser_id = p.user_id
+              AND c.status = 'pending_payment'
+            RETURNING c.id
+          )
+          INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata)
+          SELECT p.user_id, 'campaign_payment_rejected_mismatch', 'campaign', p.campaign_id,
+            jsonb_build_object(
+              'provider', 'paystack',
+              'reference', p.provider_reference,
+              'reason', 'amount_or_currency_mismatch',
+              'campaign_restored', EXISTS (SELECT 1 FROM restored)
+            )
+          FROM failed p
         `;
         return NextResponse.json({ error: "Payment amount or currency did not match the recorded transaction." }, { status: 400 });
       }
