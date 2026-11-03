@@ -1,3 +1,4 @@
+import { sameOriginError } from "@/lib/request-security";
 import { NextResponse } from "next/server";
 import { consumeRateLimit, createSession, hashPassword, normalizeEmail } from "@/lib/auth";
 import { neon } from "@neondatabase/serverless";
@@ -6,6 +7,8 @@ export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
+    const originError = sameOriginError(request);
+    if (originError) return originError;
     const body: unknown = await request.json().catch(() => null);
     if (!body || typeof body !== "object" || Array.isArray(body)) {
       return NextResponse.json({ error: "Send valid account details." }, { status: 400 });
