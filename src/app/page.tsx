@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Logo } from "@/components/Logo";
 
 const channels = [
@@ -86,7 +87,7 @@ export default function Home() {
               <div className="pl-trust-note"><span className="pl-check">✓</span> Owners stay in control. Campaigns need approval.</div>
             </div>
             <div className="pl-community-art">
-              <img src="/community-network.svg" alt="Connected WhatsApp communities and group conversations" />
+              <Image src="/community-network.svg" alt="Connected WhatsApp communities and group conversations" width={900} height={760} priority />
               <div className="pl-community-caption"><span /> COMMUNITIES THAT MOVE PEOPLE</div>
             </div>
           </div>
