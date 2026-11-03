@@ -1,3 +1,4 @@
+import { sameOriginError } from "@/lib/request-security";
 import { NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 import { getSessionUser } from "@/lib/auth";
@@ -6,6 +7,8 @@ export const runtime = "nodejs";
 
 export async function GET() {
   try {
+    const originError = sameOriginError(request);
+    if (originError) return originError;
     const user = await getSessionUser();
     if (!user) return NextResponse.json({ error: "Sign in to view campaigns." }, { status: 401 });
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
