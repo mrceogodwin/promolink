@@ -11,7 +11,7 @@ export async function PATCH(request: Request) {
     const body: unknown = await request.json().catch(() => null);
     if (!body || typeof body !== "object" || Array.isArray(body)) return NextResponse.json({ error: "Send valid profile details." }, { status: 400 });
     const input = body as Record<string, unknown>;
-    const name = typeof input.name === "string" ? input.name.trim().replace(/\\s+/g, " ") : "";
+    const name = typeof input.name === "string" ? input.name.trim().replace(/\s+/g, " ") : "";
     if (name.length < 2 || name.length > 120) return NextResponse.json({ error: "Name must be between 2 and 120 characters." }, { status: 400 });
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
     const sql = neon(process.env.DATABASE_URL);
