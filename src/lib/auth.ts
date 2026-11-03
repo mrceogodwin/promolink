@@ -42,11 +42,16 @@ export async function hashPassword(password: string) {
 }
 
 export async function verifyPassword(password: string, stored: string) {
-  const [algorithm, salt, expectedHex] = stored.split(":");
-  if (algorithm !== "scrypt" || !salt || !expectedHex) return false;
+  if (typeof stored !== "string") return false;
+  const parts = stored.split(":");
+  if (parts.length !== 3) return false;
+  const [algorithm, salt, expectedHex] = parts;
+  // Password records must use the exact format emitted by hashPassword.
+  // Reject malformed or oversized database values before invoking scrypt.
+  if (algorithm !== "scrypt" || !/^[a-f0-9]{32}$/.test(salt) || !/^[a-f0-9]{128}$/.test(expectedHex)) return false;
   const expected = Buffer.from(expectedHex, "hex");
-  const actual = (await scrypt(password, salt, expected.length)) as Buffer;
-  return expected.length === actual.length && timingSafeEqual(expected, actual);
+  const actual = (await scrypt(password, salt, 64)) as Buffer;
+  return timingSafeEqual(expected, actual);
 }
 
 function hashToken(token: string) {
