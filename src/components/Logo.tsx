@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 interface LogoProps {
   className?: string;
@@ -9,11 +10,12 @@ interface LogoProps {
 export function Logo({ className = "", showWordmark = true, dark = false }: LogoProps) {
   return (
     <Link href="/" aria-label="PromoLink home" className={`inline-flex items-center gap-2.5 ${className}`}>
-      <img
+      <Image
         src="/logo-mark.svg"
         alt=""
-        width={36}
-        height={36}
+        width={40}
+        height={40}
+        priority
         className="h-9 w-9 shrink-0"
       />
       {showWordmark && (
