@@ -9,13 +9,42 @@ export async function GET() {
   if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
   try {
     const sql = neon(process.env.DATABASE_URL);
-    const [users, listings, campaigns, payments] = await Promise.all([
+    const [users, listings, campaigns, payments, reconciliation] = await Promise.all([
       sql`SELECT COUNT(*)::int AS total, COUNT(*) FILTER (WHERE status='active')::int AS active, COUNT(*) FILTER (WHERE status='suspended')::int AS suspended FROM users`,
       sql`SELECT COUNT(*)::int AS total, COUNT(*) FILTER (WHERE status='pending_review')::int AS pending, COUNT(*) FILTER (WHERE status='approved')::int AS approved FROM audience_lists`,
       sql`SELECT COUNT(*)::int AS total, COUNT(*) FILTER (WHERE status='pending_owner_approval')::int AS pending, COUNT(*) FILTER (WHERE status='running')::int AS running, COUNT(*) FILTER (WHERE status='completed')::int AS completed FROM campaigns`,
-      sql`SELECT COUNT(*)::int AS total, COUNT(*) FILTER (WHERE status='success')::int AS successful, COUNT(*) FILTER (WHERE status='pending')::int AS pending FROM payment_events`
+      sql`SELECT COUNT(*)::int AS total, COUNT(*) FILTER (WHERE status='success')::int AS successful, COUNT(*) FILTER (WHERE status='pending')::int AS pending FROM payment_events`,
+      sql`
+        SELECT
+          currency,
+          COUNT(*) FILTER (WHERE status = 'success')::int AS successful_events,
+          COALESCE(SUM(amount_minor) FILTER (WHERE status = 'success'), 0)::text AS successful_amount_minor,
+          COUNT(*) FILTER (
+            WHERE status = 'success'
+              AND NOT EXISTS (
+                SELECT 1 FROM ledger_entries le
+                WHERE le.payment_event_id = payment_events.id
+                  AND le.entry_type = 'deposit'
+              )
+          )::int AS successful_without_deposit,
+          COUNT(*) FILTER (
+            WHERE status = 'pending'
+              AND created_at < now() - interval '30 minutes'
+          )::int AS pending_over_30_minutes
+        FROM payment_events
+        WHERE provider = 'paystack'
+        GROUP BY currency
+        ORDER BY currency
+      `
     ]);
-    return NextResponse.json({ users: users[0], listings: listings[0], campaigns: campaigns[0], payments: payments[0], notice: "Payment-event counts are records only and do not confirm provider settlement." });
+    return NextResponse.json({
+      users: users[0],
+      listings: listings[0],
+      campaigns: campaigns[0],
+      payments: payments[0],
+      reconciliation,
+      notice: "Payment-event totals are provider records, not bank settlement confirmation. Reconciliation flags identify records requiring investigation."
+    });
   } catch (error) {
     console.error("Admin overview failed", error instanceof Error ? error.message : "unknown error");
     return NextResponse.json({ error: "Could not load platform metrics." }, { status: 503 });
