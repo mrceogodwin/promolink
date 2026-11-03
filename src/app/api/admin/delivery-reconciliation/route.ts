@@ -8,10 +8,10 @@ export const dynamic = "force-dynamic";
 
 async function adminUser() {
   const user = await getSessionUser();
-  if (!user) return { response: NextResponse.json({ error: "Sign in required." }, { status: 401 }) };
-  if (user.role !== "admin") return { response: NextResponse.json({ error: "Administrator access required." }, { status: 403 }) };
-  if (!process.env.DATABASE_URL) return { response: NextResponse.json({ error: "Database is not configured." }, { status: 503 }) };
-  return { user };
+  if (!user) return { user: null, response: NextResponse.json({ error: "Sign in required." }, { status: 401 }) };
+  if (user.role !== "admin") return { user: null, response: NextResponse.json({ error: "Administrator access required." }, { status: 403 }) };
+  if (!process.env.DATABASE_URL) return { user: null, response: NextResponse.json({ error: "Database is not configured." }, { status: 503 }) };
+  return { user, response: null };
 }
 
 // Unknown outcomes are deliberately excluded from automatic retries. This
