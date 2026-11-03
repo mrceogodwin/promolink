@@ -23,14 +23,15 @@ export async function GET() {
         END),0)::text AS available_minor,
         COALESCE(SUM(CASE
           WHEN entry_type = 'reserve' THEN amount_minor
-          WHEN entry_type = 'delivery_charge' THEN -amount_minor
+          WHEN entry_type IN ('delivery_charge','reserve_release') THEN -amount_minor
           ELSE 0
         END),0)::text AS reserved_minor,
         COALESCE(SUM(amount_minor) FILTER (WHERE entry_type='deposit'),0)::text AS deposits_minor,
         COALESCE(SUM(amount_minor) FILTER (WHERE entry_type='earning'),0)::text AS earnings_minor,
         COALESCE(SUM(amount_minor) FILTER (WHERE entry_type='delivery_charge'),0)::text AS spent_minor,
         COALESCE(SUM(amount_minor) FILTER (WHERE entry_type='withdrawal'),0)::text AS withdrawn_minor,
-        COALESCE(SUM(amount_minor) FILTER (WHERE entry_type='fee'),0)::text AS fees_minor
+        COALESCE(SUM(amount_minor) FILTER (WHERE entry_type='fee'),0)::text AS fees_minor,
+        COALESCE(SUM(amount_minor) FILTER (WHERE entry_type='refund'),0)::text AS refunds_minor
       FROM ledger_entries WHERE user_id=${user.id} GROUP BY currency ORDER BY currency`,
       sql`SELECT id, campaign_id, entry_type, amount_minor::text, currency, reference, metadata, created_at
         FROM ledger_entries WHERE user_id=${user.id} ORDER BY created_at DESC LIMIT 100`
