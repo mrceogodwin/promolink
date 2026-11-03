@@ -51,7 +51,21 @@ export async function POST(request: Request) {
     if (!models.has(pricingModel)) return NextResponse.json({ error: "Choose a valid pricing model." }, { status: 400 });
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
     const sql = neon(process.env.DATABASE_URL);
-    const rows = await sql`INSERT INTO audience_lists (owner_id, title, description, category, country_code, channel, estimated_reach, currency, price_amount, pricing_model, status) VALUES (${user.id}, ${title}, ${description}, ${category}, ${countryCode || null}, ${channel}, ${reach}, ${currency}, ${price}, ${pricingModel}, 'pending_review') RETURNING id, title, channel, estimated_reach, currency, price_amount, pricing_model, status, created_at`;
+    const rows = await sql`
+      WITH created AS (
+        INSERT INTO audience_lists (owner_id, title, description, category, country_code, channel, estimated_reach, currency, price_amount, pricing_model, status)
+        VALUES (${user.id}, ${title}, ${description}, ${category}, ${countryCode || null}, ${channel}, ${reach}, ${currency}, ${price}, ${pricingModel}, 'pending_review')
+        RETURNING id, title, channel, estimated_reach, currency, price_amount, pricing_model, status, created_at
+      ),
+      logged AS (
+        INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata)
+        SELECT ${user.id}, 'audience_listing_submitted', 'audience_list', id,
+          jsonb_build_object('channel', ${channel}, 'category', ${category})
+        FROM created
+        RETURNING entity_id
+      )
+      SELECT created.* FROM created INNER JOIN logged ON logged.entity_id = created.id
+    `;
     return NextResponse.json({ listing: rows[0] }, { status: 201 });
   } catch (error) {
     console.error("Audience listing create failed", error instanceof Error ? error.message : "unknown error");
