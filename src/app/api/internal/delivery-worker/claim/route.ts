@@ -52,8 +52,8 @@ export async function POST(request: Request) {
           )
           AND (d.scheduled_at IS NULL OR d.scheduled_at <= now())
         ORDER BY COALESCE(d.scheduled_at, d.created_at), d.created_at
-        FOR UPDATE OF d SKIP LOCKED
         LIMIT 1
+        FOR UPDATE OF d SKIP LOCKED
       ),
       claimed_delivery AS (
         UPDATE campaign_deliveries d
@@ -92,6 +92,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ claimed: true, job: claimed[0], message: "Delivery claimed. A provider adapter must process it and report the real provider outcome." });
   } catch (error) {
     console.error("Delivery worker claim failed", error instanceof Error ? error.message : "unknown error");
-    return NextResponse.json({ error: "Could not claim a delivery. Confirm migration 006 is applied." }, { status: 503 });
+    return NextResponse.json({ error: "Could not claim a delivery. Confirm migrations 004, 006 and 007 are applied." }, { status: 503 });
   }
 }
