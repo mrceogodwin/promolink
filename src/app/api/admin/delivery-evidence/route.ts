@@ -57,14 +57,25 @@ export async function PATCH(request: Request) {
     const sql = neon(process.env.DATABASE_URL);
     const reviewed = await sql`
       WITH target AS (
-        SELECT de.id, de.delivery_id, d.campaign_id, d.status AS delivery_status
+        SELECT de.id, de.delivery_id, d.campaign_id, d.status AS delivery_status,
+          a.id AS attempt_id
         FROM delivery_evidence de
         JOIN campaign_deliveries d ON d.id = de.delivery_id
+        JOIN delivery_attempts a
+          ON a.delivery_id = d.id
+         AND a.provider_reference = de.provider_reference
+         AND a.status IN ('accepted','delivered')
         WHERE de.id = ${evidenceId}
           AND de.verification_status = 'pending'
           AND de.evidence_type IN ('provider_webhook','provider_report')
+          AND de.provider_reference IS NOT NULL
           AND d.status IN ('queued','processing','submitted')
-        FOR UPDATE OF de, d
+          AND a.attempt_number = (
+            SELECT MAX(latest.attempt_number)
+            FROM delivery_attempts latest
+            WHERE latest.delivery_id = d.id
+          )
+        FOR UPDATE OF de, d, a
       ),
       changed AS (
         UPDATE delivery_evidence de
@@ -75,11 +86,21 @@ export async function PATCH(request: Request) {
         WHERE de.id = t.id
         RETURNING de.id, de.delivery_id, de.verification_status
       ),
+      attempt_delivered AS (
+        UPDATE delivery_attempts a
+        SET status = 'delivered'
+        FROM changed c
+        JOIN target t ON t.id = c.id
+        WHERE a.id = t.attempt_id
+          AND c.verification_status = 'verified'
+        RETURNING a.id, a.delivery_id
+      ),
       delivered AS (
         UPDATE campaign_deliveries d
         SET status = 'delivered', completed_at = now(), updated_at = now(),
             last_error_code = NULL, last_error_message = NULL
         FROM changed c
+        JOIN attempt_delivered a ON a.delivery_id = c.delivery_id
         WHERE d.id = c.delivery_id
           AND c.verification_status = 'verified'
           AND d.status IN ('queued','processing','submitted')
