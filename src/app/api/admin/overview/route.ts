@@ -21,24 +21,35 @@ export async function GET() {
           COUNT(*) FILTER (WHERE status = 'success')::int AS successful_events,
           COALESCE(SUM(amount_minor) FILTER (WHERE status = 'success'), 0)::text AS successful_amount_minor,
           COUNT(*) FILTER (
-            WHERE status = 'success'
-              AND (
-                NOT EXISTS (
-                  SELECT 1 FROM ledger_entries le
-                  WHERE le.payment_event_id = payment_events.id
-                    AND le.entry_type = 'deposit'
-                )
-                OR NOT EXISTS (
-                  SELECT 1 FROM ledger_entries le
-                  WHERE le.payment_event_id = payment_events.id
-                    AND le.entry_type = 'reserve'
-                )
+            WHERE status = 'success' AND (
+              NOT EXISTS (
+                SELECT 1 FROM ledger_entries le
+                WHERE le.payment_event_id = payment_events.id AND le.entry_type = 'deposit'
+                  AND le.user_id = payment_events.user_id AND le.campaign_id IS NOT DISTINCT FROM payment_events.campaign_id
+                  AND le.amount_minor = payment_events.amount_minor AND le.currency = payment_events.currency
               )
-          )::int AS successful_with_incomplete_ledger,
+              OR NOT EXISTS (
+                SELECT 1 FROM ledger_entries le
+                WHERE le.payment_event_id = payment_events.id AND le.entry_type = 'reserve'
+                  AND le.user_id = payment_events.user_id AND le.campaign_id IS NOT DISTINCT FROM payment_events.campaign_id
+                  AND le.amount_minor = payment_events.amount_minor AND le.currency = payment_events.currency
+              )
+              OR (
+                SELECT COUNT(*) FROM ledger_entries le
+                WHERE le.payment_event_id = payment_events.id AND le.entry_type IN ('deposit','reserve')
+              ) <> 2
+            )
+          )::int AS successful_with_incomplete_or_mismatched_ledger,
           COUNT(*) FILTER (
-            WHERE status = 'pending'
-              AND created_at < now() - interval '30 minutes'
-          )::int AS pending_over_30_minutes
+            WHERE status = 'pending' AND created_at < now() - interval '30 minutes'
+          )::int AS pending_over_30_minutes,
+          COUNT(*) FILTER (
+            WHERE status = 'success' AND campaign_id IS NOT NULL
+              AND NOT EXISTS (
+                SELECT 1 FROM campaigns c
+                WHERE c.id = payment_events.campaign_id AND c.status IN ('funded','running','completed')
+              )
+          )::int AS successful_payment_with_unfunded_campaign
         FROM payment_events
         WHERE provider = 'paystack'
         GROUP BY currency
@@ -51,7 +62,7 @@ export async function GET() {
       campaigns: campaigns[0],
       payments: payments[0],
       reconciliation,
-      notice: "Payment-event totals are provider records, not bank settlement confirmation. Reconciliation flags successful payments missing either required funding ledger entry, or pending payments older than 30 minutes."
+      notice: "Payment-event totals are provider records, not bank settlement confirmation. Reconciliation flags successful payments with missing, duplicate or mismatched deposit/reserve ledger entries, successful campaign payments without a funded campaign state, and pending payments older than 30 minutes."
     });
   } catch (error) {
     console.error("Admin overview failed", error instanceof Error ? error.message : "unknown error");
