@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 type Entry = { id:string; campaign_id:string|null; entry_type:string; amount_minor:string; currency:string; reference:string; metadata:Record<string,unknown>; created_at:string };
 type Summary = { currency:string; available_minor:string; reserved_minor:string; deposits_minor:string; earnings_minor:string; spent_minor:string; withdrawn_minor:string; fees_minor:string; refunds_minor:string };
 
-const title=(value:string)=>value.replaceAll("_"," ").replace(/\\b\\w/g,c=>c.toUpperCase());
+const title=(value:string)=>value.replaceAll("_"," ").replace(/\b\w/g,c=>c.toUpperCase());
 const money=(minor:string,currency:string)=>new Intl.NumberFormat("en-NG",{style:"currency",currency:currency.trim(),maximumFractionDigits:2}).format(Number(minor)/100);
 
 export default function WalletPage(){
