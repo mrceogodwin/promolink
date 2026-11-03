@@ -87,7 +87,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     return NextResponse.json({
       delivery: rows[0],
       provider: integration.display_name,
-      message: rows[0].newly_queued
+      message: inserted.length > 0
         ? "Campaign queued. A configured provider worker must process it and return verifiable delivery evidence."
         : "This campaign already has a delivery queue record.",
       sent: false
