@@ -34,7 +34,21 @@ export async function POST(request: Request) {
           AND (d.next_attempt_at IS NULL OR d.next_attempt_at <= now())
           AND (
             d.status IN ('queued','failed')
-            OR (d.status = 'processing' AND d.lease_expires_at < now())
+            OR (
+              d.status = 'processing'
+              AND d.lease_expires_at < now()
+              AND EXISTS (
+                SELECT 1
+                FROM delivery_attempts latest
+                WHERE latest.delivery_id = d.id
+                  AND latest.status = 'started'
+                  AND latest.attempt_number = (
+                    SELECT MAX(prior.attempt_number)
+                    FROM delivery_attempts prior
+                    WHERE prior.delivery_id = d.id
+                  )
+              )
+            )
           )
           AND (d.scheduled_at IS NULL OR d.scheduled_at <= now())
         ORDER BY COALESCE(d.scheduled_at, d.created_at), d.created_at
