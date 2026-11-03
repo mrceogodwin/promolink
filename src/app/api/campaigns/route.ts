@@ -7,8 +7,6 @@ export const runtime = "nodejs";
 
 export async function GET() {
   try {
-    const originError = sameOriginError(request);
-    if (originError) return originError;
     const user = await getSessionUser();
     if (!user) return NextResponse.json({ error: "Sign in to view campaigns." }, { status: 401 });
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
@@ -27,6 +25,8 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const originError = sameOriginError(request);
+    if (originError) return originError;
     const user = await getSessionUser();
     if (!user) return NextResponse.json({ error: "Sign in to create a campaign." }, { status: 401 });
     if (user.role !== "advertiser") return NextResponse.json({ error: "Only advertisers can create campaigns." }, { status: 403 });
