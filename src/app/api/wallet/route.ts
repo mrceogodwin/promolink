@@ -18,7 +18,7 @@ export async function GET() {
         currency,
         COALESCE(SUM(CASE
           WHEN entry_type IN ('deposit','earning','refund') THEN amount_minor
-          WHEN entry_type IN ('reserve','delivery_charge','fee','withdrawal') THEN -amount_minor
+          WHEN entry_type IN ('reserve','fee','withdrawal') THEN -amount_minor
           ELSE 0
         END),0)::text AS available_minor,
         COALESCE(SUM(CASE
