@@ -1,3 +1,4 @@
+import { sameOriginError } from "@/lib/request-security";
 import { NextResponse } from "next/server";
 import { getSessionUser, hashPassword, verifyPassword, consumeRateLimit } from "@/lib/auth";
 import { neon } from "@neondatabase/serverless";
@@ -6,6 +7,8 @@ export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
+    const originError = sameOriginError(request);
+    if (originError) return originError;
     const user = await getSessionUser();
     if (!user) return NextResponse.json({ error: "Sign in to change your password." }, { status: 401 });
     const body: unknown = await request.json().catch(() => null);
