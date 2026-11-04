@@ -43,6 +43,7 @@ export async function GET() {
           COUNT(*) FILTER (
             WHERE status = 'pending' AND created_at < now() - interval '30 minutes'
           )::int AS pending_over_30_minutes,
+          COUNT(*) FILTER (WHERE status = 'needs_review')::int AS payments_needing_manual_review,
           COUNT(*) FILTER (
             WHERE status = 'success' AND campaign_id IS NOT NULL
               AND NOT EXISTS (
@@ -62,7 +63,7 @@ export async function GET() {
       campaigns: campaigns[0],
       payments: payments[0],
       reconciliation,
-      notice: "Payment-event totals are provider records, not bank settlement confirmation. Reconciliation flags successful payments with missing, duplicate or mismatched deposit/reserve ledger entries, successful campaign payments without a funded campaign state, and pending payments older than 30 minutes."
+      notice: "Payment-event totals are provider records, not bank settlement confirmation. Reconciliation flags successful payments with missing, duplicate or mismatched deposit/reserve ledger entries, successful campaign payments without a funded campaign state, pending payments older than 30 minutes, and successful-but-mismatched payments awaiting manual review."
     });
   } catch (error) {
     console.error("Admin overview failed", error instanceof Error ? error.message : "unknown error");
