@@ -34,6 +34,17 @@ export async function POST(request: Request) {
         WHERE d.id = ${deliveryId}::uuid
         FOR UPDATE OF c
       ),
+      -- Serialize new publisher earnings with withdrawal requests, which lock
+      -- the same users row before calculating available earnings.
+      publisher_lock AS (
+        SELECT u.id
+        FROM users u
+        JOIN audience_lists a ON a.owner_id = u.id
+        JOIN campaign_deliveries d ON d.audience_list_id = a.id
+        JOIN campaign_lock c ON c.id = d.campaign_id
+        WHERE d.id = ${deliveryId}::uuid
+        FOR UPDATE OF u
+      ),
       eligible AS (
         SELECT d.id AS delivery_id, c.id AS campaign_id, c.advertiser_id,
           a.owner_id AS publisher_id, a.currency,
@@ -42,6 +53,7 @@ export async function POST(request: Request) {
         FROM campaign_lock c
         JOIN campaign_deliveries d ON d.campaign_id = c.id
         JOIN audience_lists a ON a.id = d.audience_list_id
+        JOIN publisher_lock pl ON pl.id = a.owner_id
         JOIN platform_fee_policy p ON p.id = 1
         WHERE d.id = ${deliveryId}::uuid
           AND d.status = 'delivered'
