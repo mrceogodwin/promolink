@@ -24,6 +24,7 @@ export async function GET() {
       JOIN campaign_deliveries d ON d.id = de.delivery_id
       LEFT JOIN channel_integrations ci ON ci.id = d.integration_id
       WHERE de.verification_status = 'pending'
+        AND de.evidence_type = 'provider_webhook'
       ORDER BY de.created_at ASC
       LIMIT 100
     `;
@@ -44,7 +45,15 @@ export async function PATCH(request: Request) {
     if (user.role !== "admin") return NextResponse.json({ error: "Administrator access required." }, { status: 403 });
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
 
-    const body = await request.json().catch(() => null) as { evidence_id?: unknown; decision?: unknown } | null;
+    const declaredLength = Number(request.headers.get("content-length") || "0");
+    if (declaredLength > 8_192) return NextResponse.json({ error: "Request body exceeds the 8 KB limit." }, { status: 413 });
+    const rawBody = await request.text();
+    if (Buffer.byteLength(rawBody, "utf8") > 8_192) return NextResponse.json({ error: "Request body exceeds the 8 KB limit." }, { status: 413 });
+    let body: { evidence_id?: unknown; decision?: unknown } | null = null;
+    try {
+      const parsed: unknown = JSON.parse(rawBody);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) body = parsed as { evidence_id?: unknown; decision?: unknown };
+    } catch { /* handled by the validation response below */ }
     const evidenceId = typeof body?.evidence_id === "string" ? body.evidence_id : "";
     const decision = body?.decision;
     if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(evidenceId)) {
