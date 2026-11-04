@@ -14,7 +14,7 @@ export default async function DashboardPage(){
  const nav=admin?[
   ["⌂","Overview","/dashboard"],["✓","Audience review","/dashboard/admin/review"],["◉","Delivery evidence","/dashboard/admin/delivery-evidence"],["↻","Delivery reconciliation","/dashboard/admin/delivery-reconciliation"],["₦","Payment exceptions","/dashboard/admin/payment-review"],["▤","Publisher settlements","/dashboard/admin/publisher-settlements"],["♙","User management","/dashboard/admin/users"],["▦","Platform metrics","/dashboard/admin/overview"],["↗","Campaign oversight","/dashboard/campaigns"],["◷","Activity","/dashboard/activity"],["⚙","Settings","/dashboard/settings"]
  ]:owner?[
-  ["⌂","Overview","/dashboard"],["▤","My audience listings","/dashboard/listings"],["↗","Campaign approvals","/dashboard/campaigns"],["₦","Wallet & earnings","/dashboard/wallet"],["◷","Activity","/dashboard/activity"],["⚙","Settings","/dashboard/settings"]
+  ["⌂","Overview","/dashboard"],["▤","My audience listings","/dashboard/listings"],["↗","Campaign approvals","/dashboard/campaigns"],["₦","Wallet & transactions","/dashboard/wallet"],["↗","Publisher earnings","/dashboard/earnings"],["◷","Activity","/dashboard/activity"],["⚙","Settings","/dashboard/settings"]
  ]:[
   ["⌂","Overview","/dashboard"],["◎","Browse audiences","/dashboard/audiences"],["↗","My campaigns","/dashboard/campaigns"],["₦","Wallet & transactions","/dashboard/wallet"],["◷","Activity","/dashboard/activity"],["⚙","Settings","/dashboard/settings"]
  ];
