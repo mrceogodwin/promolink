@@ -67,7 +67,7 @@ export async function PATCH(request: Request) {
          AND a.status IN ('accepted','delivered')
         WHERE de.id = ${evidenceId}
           AND de.verification_status = 'pending'
-          AND de.evidence_type IN ('provider_webhook','provider_report')
+          AND de.evidence_type = 'provider_webhook'
           AND de.provider_reference IS NOT NULL
           AND d.status IN ('queued','processing','submitted')
           AND a.attempt_number = (
