@@ -5,7 +5,7 @@ import { getSessionUser } from "@/lib/auth";
 
 export const runtime = "nodejs";
 const channels = new Set(["whatsapp", "telegram", "facebook", "instagram", "tiktok"]);
-const models = new Set(["fixed_post", "per_verified_delivery", "performance"]);
+const models = new Set(["fixed_post"]);
 
 export async function GET() {
   try {
@@ -48,10 +48,10 @@ export async function POST(request: Request) {
     if (description.length > 2000 || category.length < 2 || category.length > 80) return NextResponse.json({ error: "Enter a category and a description under 2,000 characters." }, { status: 400 });
     if (!channels.has(channel)) return NextResponse.json({ error: "Choose a supported channel." }, { status: 400 });
     if (!Number.isSafeInteger(reach) || reach < 1 || reach > 1000000000) return NextResponse.json({ error: "Estimated reach must be a positive whole number." }, { status: 400 });
-    if (!Number.isFinite(price) || price < 0 || price > 9999999999) return NextResponse.json({ error: "Enter a valid price." }, { status: 400 });
+    if (!Number.isFinite(price) || price <= 0 || price > 9999999999) return NextResponse.json({ error: "Enter a price greater than zero." }, { status: 400 });
     if (!/^[A-Z]{3}$/.test(currency)) return NextResponse.json({ error: "Currency must be a 3-letter code." }, { status: 400 });
     if (countryCode && !/^[A-Z]{2}$/.test(countryCode)) return NextResponse.json({ error: "Country must be a 2-letter code." }, { status: 400 });
-    if (!models.has(pricingModel)) return NextResponse.json({ error: "Choose a valid pricing model." }, { status: 400 });
+    if (!models.has(pricingModel)) return NextResponse.json({ error: "Only fixed-post pricing is currently supported for verified settlement. Per-delivery and performance pricing are not enabled yet." }, { status: 400 });
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
     const sql = neon(process.env.DATABASE_URL);
     const rows = await sql`
