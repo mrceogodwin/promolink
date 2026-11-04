@@ -40,7 +40,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
       eligible AS (
         SELECT c.id
         FROM campaign_lock c
-        WHERE c.status = 'running'
+        WHERE c.status IN ('funded', 'running')
           AND EXISTS (SELECT 1 FROM delivery_lock)
           AND NOT EXISTS (
             SELECT 1 FROM delivery_lock d
