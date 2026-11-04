@@ -106,6 +106,11 @@ export async function POST(request: Request) {
         FROM settlement
         RETURNING id
       ),
+      platform_revenue AS (
+        INSERT INTO platform_revenue_entries (settlement_id,amount_minor,currency)
+        SELECT id,platform_fee_minor,currency FROM settlement
+        RETURNING id
+      ),
       audit AS (
         INSERT INTO audit_logs (actor_user_id,action,entity_type,entity_id,metadata)
         SELECT ${user.id},'publisher_delivery_settled','campaign_delivery',s.delivery_id,
@@ -113,7 +118,7 @@ export async function POST(request: Request) {
             'platform_fee_minor',s.platform_fee_minor,'publisher_amount_minor',s.publisher_amount_minor,
             'currency',s.currency,'fee_policy_bps',s.fee_policy_bps)
         FROM settlement s
-        WHERE EXISTS (SELECT 1 FROM charge) AND EXISTS (SELECT 1 FROM earning)
+        WHERE EXISTS (SELECT 1 FROM charge) AND EXISTS (SELECT 1 FROM earning) AND EXISTS (SELECT 1 FROM platform_revenue)
         RETURNING entity_id
       )
       SELECT s.id,s.delivery_id,s.gross_amount_minor::text,s.platform_fee_minor::text,
