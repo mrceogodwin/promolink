@@ -86,7 +86,6 @@ export async function POST(request: Request) {
         SELECT delivery_id,campaign_id,advertiser_id,publisher_id,gross_minor,
           fee_minor,gross_minor-fee_minor,currency,platform_fee_bps
         FROM funded
-        ON CONFLICT (delivery_id) DO NOTHING
         RETURNING *
       ),
       charge AS (
@@ -95,7 +94,6 @@ export async function POST(request: Request) {
           'settlement:' || id::text || ':advertiser_charge',
           jsonb_build_object('settlement_id',id,'delivery_id',delivery_id)
         FROM settlement
-        ON CONFLICT (reference) DO NOTHING
         RETURNING id
       ),
       earning AS (
