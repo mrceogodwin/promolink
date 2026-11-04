@@ -15,7 +15,10 @@ export async function GET() {
       sql`SELECT currency,
         COALESCE(SUM(amount_minor) FILTER (WHERE entry_type = 'earning'),0)::text AS gross_earnings_minor,
         COALESCE(SUM(amount_minor) FILTER (WHERE entry_type = 'withdrawal'),0)::text AS withdrawn_minor,
-        COALESCE(SUM(amount_minor) FILTER (WHERE entry_type = 'fee'),0)::text AS fees_minor
+        COALESCE(SUM(amount_minor) FILTER (WHERE entry_type = 'fee'),0)::text AS fees_minor,
+        COALESCE((SELECT SUM(w.amount_minor) FROM publisher_withdrawal_requests w
+          WHERE w.publisher_id = ${user.id} AND w.currency = ledger_entries.currency
+            AND w.status IN ('requested','approved')),0)::text AS pending_withdrawals_minor
         FROM ledger_entries WHERE user_id = ${user.id} GROUP BY currency ORDER BY currency`,
       sql`SELECT s.id, s.delivery_id, s.campaign_id, s.gross_amount_minor::text,
         s.platform_fee_minor::text, s.publisher_amount_minor::text, s.currency,
@@ -26,7 +29,7 @@ export async function GET() {
     ]);
     const summary = balances.map(row => ({
       ...row,
-      available_earnings_minor: (BigInt(row.gross_earnings_minor) - BigInt(row.withdrawn_minor) - BigInt(row.fees_minor)).toString()
+      available_earnings_minor: (BigInt(row.gross_earnings_minor) - BigInt(row.withdrawn_minor) - BigInt(row.fees_minor) - BigInt(row.pending_withdrawals_minor)).toString()
     }));
     return NextResponse.json({ summary, settlements });
   } catch (error) {
