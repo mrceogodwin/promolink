@@ -42,8 +42,10 @@ export async function POST(request: Request) {
     if (!Number.isFinite(budget) || budget <= 0 || budget > 9999999999) return NextResponse.json({ error: "Budget must be a positive amount." }, { status: 400 });
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
     const sql = neon(process.env.DATABASE_URL);
-    const audience = await sql`SELECT id FROM audience_lists WHERE id = ${audienceListId} AND status = 'approved' LIMIT 1`;
+    const audience = await sql`SELECT id, currency, price_amount FROM audience_lists WHERE id = ${audienceListId} AND status = 'approved' LIMIT 1`;
     if (!audience.length) return NextResponse.json({ error: "That audience is not available for campaigns yet." }, { status: 404 });
+    if (audience[0].currency !== "NGN") return NextResponse.json({ error: "This audience listing uses a currency that PromoLink checkout does not currently support." }, { status: 400 });
+    if (budget < Number(audience[0].price_amount)) return NextResponse.json({ error: "Campaign budget must cover the audience listing fixed-post price." }, { status: 400 });
     const rows = await sql`
       WITH created AS (
         INSERT INTO campaigns (advertiser_id, audience_list_id, title, brief, budget_amount, currency, status)
