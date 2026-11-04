@@ -23,7 +23,7 @@ export async function GET() {
       FROM delivery_evidence de
       JOIN campaign_deliveries d ON d.id = de.delivery_id
       LEFT JOIN channel_integrations ci ON ci.id = d.integration_id
-      WHERE de.verification_status = 'pending'
+      WHERE de.verification_status IN ('pending','verified')
         AND de.evidence_type = 'provider_webhook'
       ORDER BY de.created_at ASC
       LIMIT 100
