@@ -11,7 +11,10 @@ export async function POST(request: Request) {
   }
 
   const signature = request.headers.get("x-paystack-signature") || "";
+  const declaredLength = Number(request.headers.get("content-length") || "0");
+  if (declaredLength > 65_536) return NextResponse.json({ error: "Webhook payload is too large." }, { status: 413 });
   const raw = await request.text();
+  if (Buffer.byteLength(raw, "utf8") > 65_536) return NextResponse.json({ error: "Webhook payload is too large." }, { status: 413 });
   const expected = createHmac("sha512", secret).update(raw).digest();
   let supplied: Buffer;
   try {
@@ -51,30 +54,29 @@ export async function POST(request: Request) {
         Number(event.data?.amount) !== Number(payment.amount_minor) ||
         event.data?.currency !== payment.currency
       ) {
+        // A successful provider charge with an unexpected amount/currency is
+        // money received but not safely attributable. Hold it for manual review;
+        // never mark it failed or release the campaign for a second charge.
         await sql`
-          WITH failed AS (
+          WITH held AS (
             UPDATE payment_events
-            SET status = 'failed', raw_event = ${raw}::jsonb, updated_at = now()
+            SET status = 'needs_review',
+                raw_event = jsonb_build_object(
+                  'event', 'charge.success',
+                  'reference', ${reference},
+                  'reported_amount_minor', ${Number.isFinite(Number(event.data?.amount)) ? Number(event.data?.amount) : null},
+                  'reported_currency', ${typeof event.data?.currency === "string" ? event.data.currency.slice(0, 3) : null},
+                  'reason', 'amount_or_currency_mismatch'
+                ),
+                updated_at = now()
             WHERE id = ${payment.id} AND status = 'pending'
             RETURNING campaign_id, user_id, provider_reference
-          ), restored AS (
-            UPDATE campaigns c
-            SET status = 'approved', updated_at = now()
-            FROM failed p
-            WHERE c.id = p.campaign_id
-              AND c.advertiser_id = p.user_id
-              AND c.status = 'pending_payment'
-            RETURNING c.id
           )
           INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata)
-          SELECT p.user_id, 'campaign_payment_rejected_mismatch', 'campaign', p.campaign_id,
-            jsonb_build_object(
-              'provider', 'paystack',
-              'reference', p.provider_reference,
-              'reason', 'amount_or_currency_mismatch',
-              'campaign_restored', EXISTS (SELECT 1 FROM restored)
-            )
-          FROM failed p
+          SELECT p.user_id, 'campaign_payment_needs_manual_review', 'campaign', p.campaign_id,
+            jsonb_build_object('provider', 'paystack', 'reference', p.provider_reference,
+              'reason', 'amount_or_currency_mismatch')
+          FROM held p
         `;
         return NextResponse.json({ error: "Payment amount or currency did not match the recorded transaction." }, { status: 400 });
       }
@@ -85,7 +87,7 @@ export async function POST(request: Request) {
       const posted = await sql`
         WITH confirmed AS (
           UPDATE payment_events
-          SET status = 'success', raw_event = ${raw}::jsonb, updated_at = now()
+          SET status = 'success', raw_event = jsonb_build_object('event', 'charge.success', 'reference', ${reference}, 'amount_minor', ${Number(event.data?.amount)}, 'currency', ${payment.currency}), updated_at = now()
           WHERE id = ${payment.id} AND status = 'pending'
             AND EXISTS (
               SELECT 1 FROM campaigns c
@@ -173,7 +175,7 @@ export async function POST(request: Request) {
       await sql`
         WITH failed AS (
           UPDATE payment_events
-          SET status = 'failed', raw_event = ${raw}::jsonb, updated_at = now()
+          SET status = 'failed', raw_event = jsonb_build_object('event', 'charge.failed', 'reference', ${reference}), updated_at = now()
           WHERE id = ${payment.id} AND status = 'pending'
           RETURNING campaign_id, user_id, provider_reference
         ),
