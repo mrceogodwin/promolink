@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     if (!channels.has(channel)) return NextResponse.json({ error: "Choose a supported channel." }, { status: 400 });
     if (!Number.isSafeInteger(reach) || reach < 1 || reach > 1000000000) return NextResponse.json({ error: "Estimated reach must be a positive whole number." }, { status: 400 });
     if (!Number.isFinite(price) || price <= 0 || price > 9999999999) return NextResponse.json({ error: "Enter a price greater than zero." }, { status: 400 });
-    if (!/^[A-Z]{3}$/.test(currency)) return NextResponse.json({ error: "Currency must be a 3-letter code." }, { status: 400 });
+    if (currency !== "NGN") return NextResponse.json({ error: "PromoLink currently supports NGN pricing only. Other currencies are not enabled for checkout and settlement yet." }, { status: 400 });
     if (countryCode && !/^[A-Z]{2}$/.test(countryCode)) return NextResponse.json({ error: "Country must be a 2-letter code." }, { status: 400 });
     if (!models.has(pricingModel)) return NextResponse.json({ error: "Only fixed-post pricing is currently supported for verified settlement. Per-delivery and performance pricing are not enabled yet." }, { status: 400 });
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
