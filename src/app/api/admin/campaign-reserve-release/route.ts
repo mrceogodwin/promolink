@@ -39,6 +39,12 @@ export async function POST(request: Request) {
         WHERE c.id = ${campaignId}::uuid
         FOR UPDATE
       ),
+      delivery_lock AS (
+        SELECT d.id, d.campaign_id, d.status
+        FROM campaign_deliveries d
+        JOIN campaign_lock c ON c.id = d.campaign_id
+        FOR UPDATE OF d
+      ),
       eligible AS (
         SELECT c.id AS campaign_id, c.advertiser_id, c.currency,
           COALESCE((
@@ -59,12 +65,12 @@ export async function POST(request: Request) {
         FROM campaign_lock c
         WHERE c.status IN ('cancelled', 'completed')
           AND NOT EXISTS (
-            SELECT 1 FROM campaign_deliveries d
+            SELECT 1 FROM delivery_lock d
             WHERE d.campaign_id = c.id
               AND d.status NOT IN ('delivered', 'failed', 'cancelled')
           )
           AND NOT EXISTS (
-            SELECT 1 FROM campaign_deliveries d
+            SELECT 1 FROM delivery_lock d
             WHERE d.campaign_id = c.id AND d.status = 'delivered'
               AND NOT EXISTS (
                 SELECT 1 FROM publisher_settlements s
