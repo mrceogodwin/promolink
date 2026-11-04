@@ -104,7 +104,9 @@ export async function POST(request: Request) {
               'reason', 'amount_or_currency_mismatch')
           FROM held p
         `;
-        return NextResponse.json({ error: "Payment amount or currency did not match the recorded transaction." }, { status: 400 });
+        // The mismatch has been durably held for manual review. Acknowledge it
+        // to Paystack so the same successful charge is not retried indefinitely.
+        return NextResponse.json({ received: true, needs_review: true });
       }
 
       // Payment confirmation, ledger posting, campaign funding and audit history
