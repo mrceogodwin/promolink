@@ -4,6 +4,31 @@ import { neon } from "@neondatabase/serverless";
 
 export const runtime = "nodejs";
 
+async function readLimitedBody(request: Request, maxBytes: number): Promise<string | null> {
+  if (!request.body) return "";
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > maxBytes) {
+        await reader.cancel();
+        return null;
+      }
+      chunks.push(value);
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+  return new TextDecoder().decode(bytes);
+}
+
 export async function POST(request: Request) {
   const secret = process.env.PAYSTACK_SECRET_KEY;
   if (!secret || !process.env.DATABASE_URL) {
@@ -13,8 +38,8 @@ export async function POST(request: Request) {
   const signature = request.headers.get("x-paystack-signature") || "";
   const declaredLength = Number(request.headers.get("content-length") || "0");
   if (declaredLength > 65_536) return NextResponse.json({ error: "Webhook payload is too large." }, { status: 413 });
-  const raw = await request.text();
-  if (Buffer.byteLength(raw, "utf8") > 65_536) return NextResponse.json({ error: "Webhook payload is too large." }, { status: 413 });
+  const raw = await readLimitedBody(request, 65_536);
+  if (raw === null) return NextResponse.json({ error: "Webhook payload is too large." }, { status: 413 });
   const expected = createHmac("sha512", secret).update(raw).digest();
   let supplied: Buffer;
   try {
@@ -32,6 +57,7 @@ export async function POST(request: Request) {
       data?: { reference?: string; amount?: number; currency?: string; status?: string };
     };
     const reference = event.data?.reference;
+    const reportedAmount = Number.isFinite(Number(event.data?.amount)) ? Number(event.data?.amount) : null;
     if (!reference || !["charge.success", "charge.failed"].includes(event.event || "")) {
       return NextResponse.json({ received: true });
     }
@@ -64,7 +90,7 @@ export async function POST(request: Request) {
                 raw_event = jsonb_build_object(
                   'event', 'charge.success',
                   'reference', ${reference},
-                  'reported_amount_minor', ${Number.isFinite(Number(event.data?.amount)) ? Number(event.data?.amount) : null},
+                  'reported_amount_minor', ${reportedAmount},
                   'reported_currency', ${typeof event.data?.currency === "string" ? event.data.currency.slice(0, 3) : null},
                   'reason', 'amount_or_currency_mismatch'
                 ),
