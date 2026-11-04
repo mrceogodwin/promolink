@@ -104,7 +104,6 @@ export async function POST(request: Request) {
             'gross_amount_minor',gross_amount_minor,'platform_fee_minor',platform_fee_minor,
             'fee_policy_bps',fee_policy_bps)
         FROM settlement
-        ON CONFLICT (reference) DO NOTHING
         RETURNING id
       ),
       audit AS (
