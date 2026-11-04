@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     const budget = Number(input.budget_amount);
     if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(audienceListId)) return NextResponse.json({ error: "Choose a valid audience listing." }, { status: 400 });
     if (title.length < 3 || title.length > 140 || brief.length > 3000) return NextResponse.json({ error: "Campaign title must be 3–140 characters and brief under 3,000 characters." }, { status: 400 });
-    if (!Number.isFinite(budget) || budget <= 0 || budget > 9999999999) return NextResponse.json({ error: "Budget must be a positive amount." }, { status: 400 });
+    if (!Number.isFinite(budget) || budget < 100 || budget > 9999999999) return NextResponse.json({ error: "Campaign budget must be at least ₦100, the current minimum supported by checkout." }, { status: 400 });
     if (!process.env.DATABASE_URL) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
     const sql = neon(process.env.DATABASE_URL);
     const audience = await sql`SELECT id, currency, price_amount FROM audience_lists WHERE id = ${audienceListId} AND status = 'approved' LIMIT 1`;
