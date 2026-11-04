@@ -38,7 +38,7 @@ export async function POST(request: Request) {
   const amount = body.amount_minor;
   const currency = typeof body.currency === "string" ? body.currency.trim().toUpperCase() : "";
   const note = typeof body.note === "string" ? body.note.trim() : "";
-  if (!Number.isSafeInteger(amount) || Number(amount) <= 0 || Number(amount) > 1000000000000) return NextResponse.json({ error: "Enter a valid withdrawal amount in minor currency units." }, { status: 400 });
+  if (typeof amount !== "number" || !Number.isSafeInteger(amount) || amount <= 0 || amount > 1000000000000) return NextResponse.json({ error: "Enter a valid withdrawal amount in minor currency units." }, { status: 400 });
   if (!/^[A-Z]{3}$/.test(currency)) return NextResponse.json({ error: "Enter a valid three-letter currency code." }, { status: 400 });
   if (note.length > 500) return NextResponse.json({ error: "The note must be 500 characters or fewer." }, { status: 400 });
   try {
