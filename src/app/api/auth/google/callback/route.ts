@@ -44,7 +44,7 @@ export async function GET(request: Request) {
     const name = typeof profile.name === "string" ? profile.name.trim().slice(0,120) : "";
     if (!googleSub || !email || profile.verified_email !== true || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail(request, "google_email_unverified");
     const sql = neon(process.env.DATABASE_URL);
-    let rows = await sql`SELECT id,role,status FROM users WHERE google_sub=${googleSub} LIMIT 1`;
+    const rows = await sql`SELECT id,role,status FROM users WHERE google_sub=${googleSub} LIMIT 1`;
     let user = rows[0] as {id:string;role:string;status:string}|undefined;
     if (!user) {
       const existing = await sql`SELECT id,role,status,google_sub FROM users WHERE email=${email} LIMIT 1`;
