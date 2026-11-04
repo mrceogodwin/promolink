@@ -80,7 +80,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
       await sql`
         WITH failed AS (
           UPDATE payment_events
-          SET status = 'failed', raw_event = ${JSON.stringify(payload ?? {})}::jsonb, updated_at = now()
+          SET status = 'failed', raw_event = jsonb_build_object('initialization_failed', true, 'provider_http_ok', ${response.ok}, 'provider_message', ${typeof payload?.message === "string" ? payload.message.slice(0, 200) : null}), updated_at = now()
           WHERE provider_reference = ${reference} AND status = 'pending'
           RETURNING campaign_id
         ), released AS (
