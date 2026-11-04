@@ -25,7 +25,9 @@ export async function GET() {
       SELECT d.id AS delivery_id, d.campaign_id, d.channel, d.status AS delivery_status,
         d.lease_expires_at, d.updated_at, ci.provider, ci.display_name AS provider_name,
         a.id AS attempt_id, a.attempt_number, a.provider_reference,
-        a.error_code, a.created_at AS attempt_created_at
+        a.error_code, a.created_at AS attempt_created_at,
+        (d.lease_expires_at IS NOT NULL AND d.lease_expires_at <= now()
+          AND a.provider_reference IS NULL) AS can_retry_safely
       FROM campaign_deliveries d
       JOIN LATERAL (
         SELECT da.id, da.attempt_number, da.provider_reference, da.error_code, da.created_at, da.status
