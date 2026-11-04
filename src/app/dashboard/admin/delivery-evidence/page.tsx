@@ -100,7 +100,7 @@ export default function DeliveryEvidencePage() {
                 <button onClick={() => void review(item, "verified")} disabled={!!busy} className="rounded-xl bg-[#075638] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50">{busy === item.id ? "Saving…" : "Verify delivery"}</button>
                 <button onClick={() => void review(item, "rejected")} disabled={!!busy} className="rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm font-bold text-red-700 disabled:opacity-50">Reject evidence</button>
               </>}
-              {item.verification_status === "verified" && item.delivery_status === "delivered" && <button onClick={() => void settle(item)} disabled={!!busy} className="rounded-xl border border-[#b8d9c3] bg-[#e5f7eb] px-4 py-2.5 text-sm font-bold text-[#075638] disabled:opacity-50">{busy === item.id ? "Posting…" : "Post publisher settlement"}</button>}}
+              {item.verification_status === "verified" && item.delivery_status === "delivered" && <button onClick={() => void settle(item)} disabled={!!busy} className="rounded-xl border border-[#b8d9c3] bg-[#e5f7eb] px-4 py-2.5 text-sm font-bold text-[#075638] disabled:opacity-50">{busy === item.id ? "Posting…" : "Post publisher settlement"}</button>}
             </div>
           </article>)}
       </section>
