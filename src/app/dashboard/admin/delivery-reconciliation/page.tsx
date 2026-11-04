@@ -7,7 +7,7 @@ type Item = {
   delivery_id: string; campaign_id: string; channel: string; delivery_status: string;
   lease_expires_at: string | null; updated_at: string; provider: string | null;
   provider_name: string | null; attempt_id: string; attempt_number: number;
-  provider_reference: string | null; error_code: string | null; attempt_created_at: string;
+  provider_reference: string | null; error_code: string | null; attempt_created_at: string; can_retry_safely: boolean;
 };
 
 export default function DeliveryReconciliationPage() {
@@ -92,12 +92,13 @@ export default function DeliveryReconciliationPage() {
             <div className="mt-5 rounded-xl bg-amber-50 p-4 text-sm leading-6 text-amber-950">
               Do not retry just because the worker timed out. First inspect the provider dashboard or logs using the campaign/attempt details. If the provider accepted the message, resolve it through authenticated provider evidence instead.
             </div>
+            {!item.can_retry_safely && <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-semibold text-red-800">Retry is locked: wait for the worker lease to expire and ensure no provider reference was returned. Check the provider before proceeding.</p>}
             <label className="mt-4 flex items-start gap-3 text-sm font-semibold">
               <input type="checkbox" checked={!!checks[item.delivery_id]} onChange={e => setChecks(prev => ({ ...prev, [item.delivery_id]: e.target.checked }))} className="mt-1 h-4 w-4" />
               I checked the provider records and confirmed this attempt was not accepted or submitted.
             </label>
             <textarea value={notes[item.delivery_id] || ""} onChange={e => setNotes(prev => ({ ...prev, [item.delivery_id]: e.target.value }))} rows={3} maxLength={500} placeholder="Record what provider records you checked and why retry is safe…" className="mt-3 w-full rounded-xl border border-[#d6e5da] p-3 text-sm outline-none focus:border-[#08794e]" />
-            <button onClick={() => void reconcile(item)} disabled={!!busy || !checks[item.delivery_id] || (notes[item.delivery_id] || "").trim().length < 12} className="mt-3 rounded-xl bg-[#075638] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50">{busy === item.delivery_id ? "Recording…" : "Confirm not submitted & allow retry"}</button>
+            <button onClick={() => void reconcile(item)} disabled={!!busy || !item.can_retry_safely || !checks[item.delivery_id] || (notes[item.delivery_id] || "").trim().length < 12} className="mt-3 rounded-xl bg-[#075638] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50">{busy === item.delivery_id ? "Recording…" : "Confirm not submitted & allow retry"}</button>
           </article>)}
       </section>
     </div>
