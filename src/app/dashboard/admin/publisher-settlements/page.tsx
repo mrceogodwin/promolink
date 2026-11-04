@@ -60,7 +60,7 @@ export default function PublisherSettlementsPage() {
       <section className="mt-8 rounded-2xl border border-[#e0ebe3] bg-white p-5">
         <p className="text-xs font-extrabold uppercase tracking-[.16em] text-[#08794e]">Advertiser wallet</p>
         <h2 className="mt-2 text-lg font-extrabold">Return unused campaign reserve</h2>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-[#61746a]">Admin-only, one-time release for a completed or cancelled campaign. All deliveries must be terminal and every delivered item must already be settled. The unused balance is credited to the advertiser's PromoLink wallet—not to a bank card or bank account.</p>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-[#61746a]">Admin-only, one-time release for a completed or cancelled campaign. All deliveries must be terminal and every delivered item must already be settled. The unused balance is credited to the advertiser&apos;s PromoLink wallet—not to a bank card or bank account.</p>
         <div className="mt-4 flex flex-col gap-3 sm:flex-row">
           <input aria-label="Campaign ID" value={campaignId} onChange={event => setCampaignId(event.target.value)} placeholder="Campaign UUID" className="min-w-0 flex-1 rounded-xl border border-[#d6e5da] px-4 py-3 text-sm outline-none focus:border-[#08794e]" />
           <button onClick={() => void releaseUnusedReserve()} disabled={releasing || !campaignId.trim()} className="rounded-xl bg-[#08794e] px-5 py-3 text-sm font-bold text-white disabled:opacity-50">{releasing ? "Processing…" : "Review & return reserve"}</button>
