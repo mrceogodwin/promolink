@@ -77,7 +77,10 @@ export async function PATCH(request: Request) {
         WHERE d.id = ${deliveryId}::uuid
           AND a.id = ${attemptId}::uuid
           AND d.status = 'processing'
+          AND d.lease_expires_at IS NOT NULL
+          AND d.lease_expires_at <= now()
           AND a.status = 'unknown'
+          AND a.provider_reference IS NULL
           AND a.attempt_number = (
             SELECT MAX(latest.attempt_number)
             FROM delivery_attempts latest
