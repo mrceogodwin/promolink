@@ -45,24 +45,24 @@ export async function GET(request: Request) {
     if (!googleSub || !email || profile.verified_email !== true || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail(request, "google_email_unverified");
     const sql = neon(process.env.DATABASE_URL);
     const rows = await sql`SELECT id,role,status FROM users WHERE google_sub=${googleSub} LIMIT 1`;
-    let user = rows[0] as {id:string;role:string;status:string}|undefined;
+    let user: { id: string; role: string; status: string } | undefined = rows[0] as { id: string; role: string; status: string } | undefined;
     if (!user) {
       const existing = await sql`SELECT id,role,status,google_sub FROM users WHERE email=${email} LIMIT 1`;
       if (existing.length) {
         const account = existing[0] as {id:string;role:string;status:string;google_sub:string|null};
         if (account.google_sub && account.google_sub !== googleSub) return fail(request,"google_account_conflict");
         const linked = await sql`UPDATE users SET google_sub=${googleSub}, updated_at=now() WHERE id=${account.id} AND (google_sub IS NULL OR google_sub=${googleSub}) RETURNING id,role,status`;
-        user = linked[0] as typeof user;
+        user = linked[0] as { id: string; role: string; status: string } | undefined;
       } else {
         if (requestedRole !== "advertiser" && requestedRole !== "audience_owner") return fail(request,"google_account_not_found","/register");
         const created = await sql`INSERT INTO users(name,email,password_hash,google_sub,role) VALUES(${name || email.split("@")[0]},${email},NULL,${googleSub},${requestedRole}) ON CONFLICT(email) DO NOTHING RETURNING id,role,status`;
-        user = created[0] as typeof user;
+        user = created[0] as { id: string; role: string; status: string } | undefined;
         if (!user) {
           const raced = await sql`SELECT id,role,status,google_sub FROM users WHERE email=${email} LIMIT 1`;
           const account = raced[0] as {id:string;role:string;status:string;google_sub:string|null}|undefined;
           if (!account || (account.google_sub && account.google_sub !== googleSub)) return fail(request,"google_account_conflict");
           const linked = await sql`UPDATE users SET google_sub=${googleSub},updated_at=now() WHERE id=${account.id} AND (google_sub IS NULL OR google_sub=${googleSub}) RETURNING id,role,status`;
-          user = linked[0] as typeof user;
+          user = linked[0] as { id: string; role: string; status: string } | undefined;
         }
       }
     }
