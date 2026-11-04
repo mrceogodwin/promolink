@@ -16,11 +16,19 @@ export async function GET() {
     const [summary, entries] = await Promise.all([
       sql`SELECT
         currency,
-        COALESCE(SUM(CASE
-          WHEN entry_type IN ('deposit','earning','refund') THEN amount_minor
-          WHEN entry_type IN ('reserve','fee','withdrawal') THEN -amount_minor
-          ELSE 0
-        END),0)::text AS available_minor,
+        (
+          COALESCE(SUM(CASE
+            WHEN entry_type IN ('deposit','earning','refund') THEN amount_minor
+            WHEN entry_type IN ('reserve','fee','withdrawal') THEN -amount_minor
+            ELSE 0
+          END),0)
+          - COALESCE((SELECT SUM(w.amount_minor) FROM publisher_withdrawal_requests w
+            WHERE w.publisher_id = ${user.id} AND w.currency = ledger_entries.currency
+              AND w.status IN ('requested','approved')),0)
+        )::text AS available_minor,
+        COALESCE((SELECT SUM(w.amount_minor) FROM publisher_withdrawal_requests w
+          WHERE w.publisher_id = ${user.id} AND w.currency = ledger_entries.currency
+            AND w.status IN ('requested','approved')),0)::text AS pending_withdrawals_minor,
         COALESCE(SUM(CASE
           WHEN entry_type = 'reserve' THEN amount_minor
           WHEN entry_type IN ('delivery_charge','reserve_release') THEN -amount_minor
