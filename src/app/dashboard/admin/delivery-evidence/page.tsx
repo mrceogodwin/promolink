@@ -50,6 +50,22 @@ export default function DeliveryEvidencePage() {
     } finally { setBusy(""); }
   }
 
+  async function settle(item: Evidence) {
+    if (!window.confirm("Post the advertiser charge, publisher earning and platform fee for this verified delivery? This is a ledger action and cannot be casually reversed.")) return;
+    setBusy(item.id); setError(""); setNotice("");
+    try {
+      const response = await fetch("/api/admin/publisher-settlements/post", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ delivery_id: item.delivery_id })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Settlement could not be posted.");
+      setNotice("Settlement posted. Publisher earnings and platform fee were recorded in the ledger.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Settlement could not be posted.");
+    } finally { setBusy(""); }
+  }
+
   return <main className="min-h-screen bg-[#f7faf7] px-4 py-8 text-[#11251b] sm:px-8">
     <div className="mx-auto max-w-6xl">
       <Link href="/dashboard" className="text-sm font-semibold text-[#08794e] hover:underline">← Back to workspace</Link>
@@ -82,6 +98,7 @@ export default function DeliveryEvidencePage() {
             <div className="mt-4 flex flex-wrap gap-2">
               <button onClick={() => void review(item, "verified")} disabled={!!busy} className="rounded-xl bg-[#075638] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50">{busy === item.id ? "Saving…" : "Verify delivery"}</button>
               <button onClick={() => void review(item, "rejected")} disabled={!!busy} className="rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm font-bold text-red-700 disabled:opacity-50">Reject evidence</button>
+              {item.delivery_status === "delivered" && <button onClick={() => void settle(item)} disabled={!!busy} className="rounded-xl border border-[#b8d9c3] bg-[#e5f7eb] px-4 py-2.5 text-sm font-bold text-[#075638] disabled:opacity-50">{busy === item.id ? "Posting…" : "Post publisher settlement"}</button>}
             </div>
           </article>)}
       </section>
