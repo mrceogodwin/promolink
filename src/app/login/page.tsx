@@ -1,12 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 
 export default function LoginPage() {
+  const [oauthMessage, setOauthMessage] = useState("");
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get("error");
+    if (code) setOauthMessage(googleErrors[code] || "Sign-in could not be completed. Please try again.");
+  }, []);
   const router = useRouter();
+  const googleErrors: Record<string, string> = {
+  google_not_configured: "Google sign-in is not configured yet. Please use email sign-in for now.",
+  google_cancelled: "Google sign-in was cancelled. You can try again.",
+  google_invalid_response: "Google returned an incomplete response. Please try again.",
+  google_state_invalid: "Your sign-in session expired or could not be verified. Please try again.",
+  google_token_exchange_failed: "Google could not complete sign-in. Please try again.",
+  google_token_invalid: "Google returned an invalid sign-in token. Please try again.",
+  google_profile_failed: "We could not retrieve your Google profile. Please try again.",
+  google_email_unverified: "Use a Google account with a verified email address.",
+  google_account_conflict: "This Google account is linked to a different PromoLink account.",
+  google_account_not_found: "No account exists yet. Choose an account type to register first.",
+  account_unavailable: "This PromoLink account is not currently active. Contact support.",
+  google_auth_failed: "Google sign-in could not be completed. Please try again.",
+};
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
@@ -51,6 +70,7 @@ export default function LoginPage() {
               Access your PromoLink account.
             </p>
 
+            {oauthMessage && <div role="alert" className="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">{oauthMessage}</div>}
             <Link href="/api/auth/google" className="mt-7 flex w-full items-center justify-center gap-3 rounded-lg border border-[#d6e5da] bg-white px-4 py-3 text-sm font-bold text-[#11251b] transition-colors hover:bg-[#f7faf7]">
               <svg aria-hidden="true" viewBox="0 0 48 48" className="h-5 w-5"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.03 13.22l7.98 6.19C12.18 13.72 17.62 9.5 24 9.5Z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.9c-.58 2.96-2.25 5.48-4.73 7.18l7.63 5.91c4.45-4.12 7.18-10.19 7.18-17.56Z"/><path fill="#FBBC05" d="M10.01 28.59A14.4 14.4 0 0 1 9.25 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.53 2.58 10.78l7.43-6.19Z"/><path fill="#34A853" d="M24 48c6.47 0 11.91-2.13 15.88-5.89l-7.63-5.91c-2.12 1.42-4.83 2.26-8.25 2.26-6.38 0-11.82-4.22-13.99-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z"/></svg>
               Continue with Google
