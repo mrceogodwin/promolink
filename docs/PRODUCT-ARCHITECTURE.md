@@ -180,9 +180,13 @@ Do not build a fake QR flow or simulated delivery and present it as real.
 
 ## 10. Current Status
 
-- Landing page exists and is deployed.
-- No authentication, database, payments or WhatsApp integration has been implemented yet.
-- Vercel Deployment Protection / SSO is currently enabled and blocks public access. This must be disabled for the site to be publicly viewable.
+- Neon-backed authentication routes, role-aware dashboards, audience-list submission/review, campaign creation, Paystack initialization/webhook reconciliation, delivery queue/worker leases, ledger reserve/release, settlement/withdrawal foundations, and admin reconciliation routes exist on `feature/neon-auth-foundation`.
+- Google OAuth routes and the Google identity migration exist; live OAuth still requires Meta? No — Google OAuth credentials and an end-to-end test.
+- The Meta WhatsApp Cloud API template adapter and signed status webhook have been added on the feature branch. They have not been connected to a live worker or tested against Meta.
+- The database migrations 004–012 were applied to the main Neon database in the prior implementation session; re-verify against the intended Neon project before production cutover.
+- The feature branch's pull request remains open and draft. Its latest Vercel check was pending at the last inspection; a successful production deployment has not been verified.
+- The current schema stores audience-list metadata and estimated reach only. There is no private recipient ingestion, consent, opt-out, or encrypted phone-number store. Real campaign sending must remain disabled until this is designed and security-reviewed.
+- Production readiness is not verified. Required provider credentials, public webhook reachability, authentication, payment, delivery, settlement and withdrawal flows still need end-to-end tests.
 
 ---
 
