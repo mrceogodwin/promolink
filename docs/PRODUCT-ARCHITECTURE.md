@@ -1,15 +1,15 @@
 # PromoLink — Product & Technical Architecture
 
 **Last updated:** 2026-10-24  
-**Status:** Architecture plan only. No backend features are implemented yet.
+**Status:** Landing page and Neon connection health check exist. Authentication foundation and initial schema are in progress on `feature/neon-auth-foundation`; production readiness is not yet verified.
 
 ---
 
 ## 1. Core Product Definition
 
-PromoLink is a **WhatsApp audience advertising marketplace**.
+PromoLink is a **multi-channel audience advertising marketplace** designed to support verified promotions across social and messaging platforms.
 
-Audience owners organise eligible WhatsApp contacts and groups into audience lists, set a price per successful delivery, and earn when advertisers run approved promotional campaigns through those lists.
+Audience owners list eligible channels, communities, pages and creator inventory, choose an appropriate pricing model, and earn when advertisers run approved promotional campaigns. The platform must not expose private contact lists or phone numbers.
 
 Advertisers browse approved audiences, create campaigns, fund budgets, and pay according to a clearly defined delivery rule.
 
@@ -43,7 +43,7 @@ Advertisers browse approved audiences, create campaigns, fund budgets, and pay a
 
 **Recommended stack**
 - Next.js 15 App Router + TypeScript + Tailwind CSS (already in place)
-- Auth.js / NextAuth (or Clerk)
+- Neon-backed server-side sessions and scrypt password hashing (current implementation in progress)
 - PostgreSQL via Neon
 - Prisma or Drizzle ORM
 - Paystack (primary Nigerian payment provider)
@@ -180,9 +180,13 @@ Do not build a fake QR flow or simulated delivery and present it as real.
 
 ## 10. Current Status
 
-- Landing page exists and is deployed.
-- No authentication, database, payments or WhatsApp integration has been implemented yet.
-- Vercel Deployment Protection / SSO is currently enabled and blocks public access. This must be disabled for the site to be publicly viewable.
+- Neon-backed authentication routes, role-aware dashboards, audience-list submission/review, campaign creation, Paystack initialization/webhook reconciliation, delivery queue/worker leases, ledger reserve/release, settlement/withdrawal foundations, and admin reconciliation routes exist on `feature/neon-auth-foundation`.
+- Google OAuth routes and the Google identity migration exist; live OAuth still requires Google OAuth credentials and an end-to-end test.
+- The Meta WhatsApp Cloud API template adapter and signed status webhook have been added on the feature branch. They have not been connected to a live worker or tested against Meta.
+- The database migrations 004–012 were applied to the main Neon database in the prior implementation session; re-verify against the intended Neon project before production cutover.
+- The feature branch's pull request remains open and draft. Its latest Vercel check was pending at the last inspection; a successful production deployment has not been verified.
+- The current schema stores audience-list metadata and estimated reach only. There is no private recipient ingestion, consent, opt-out, or encrypted phone-number store. Real campaign sending must remain disabled until this is designed and security-reviewed.
+- Production readiness is not verified. Required provider credentials, public webhook reachability, authentication, payment, delivery, settlement and withdrawal flows still need end-to-end tests.
 
 ---
 
