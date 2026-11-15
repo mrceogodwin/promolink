@@ -181,7 +181,7 @@ Do not build a fake QR flow or simulated delivery and present it as real.
 ## 10. Current Status
 
 - Neon-backed authentication routes, role-aware dashboards, audience-list submission/review, campaign creation, Paystack initialization/webhook reconciliation, delivery queue/worker leases, ledger reserve/release, settlement/withdrawal foundations, and admin reconciliation routes exist on `feature/neon-auth-foundation`.
-- Google OAuth routes and the Google identity migration exist; live OAuth still requires Meta? No — Google OAuth credentials and an end-to-end test.
+- Google OAuth routes and the Google identity migration exist; live OAuth still requires Google OAuth credentials and an end-to-end test.
 - The Meta WhatsApp Cloud API template adapter and signed status webhook have been added on the feature branch. They have not been connected to a live worker or tested against Meta.
 - The database migrations 004–012 were applied to the main Neon database in the prior implementation session; re-verify against the intended Neon project before production cutover.
 - The feature branch's pull request remains open and draft. Its latest Vercel check was pending at the last inspection; a successful production deployment has not been verified.
