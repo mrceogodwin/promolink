@@ -20,8 +20,8 @@ function decodeKey(name: string): Buffer {
 
 export function normalizeE164(value: unknown): string {
   if (typeof value !== "string") throw new Error("Phone number must be text");
-  const normalized = value.trim().replace(/[\\s().-]/g, "");
-  if (!/^\\+[1-9]\\d{7,14}$/.test(normalized)) {
+  const normalized = value.trim().replace(/[\s().-]/g, "");
+  if (!/^\+[1-9]\d{7,14}$/.test(normalized)) {
     throw new Error("Phone numbers must use international E.164 format, for example +2348012345678");
   }
   return normalized;
