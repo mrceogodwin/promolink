@@ -1,16 +1,7 @@
 <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="logoGrad" x1="4" y1="4" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#A78BFA"/>
-      <stop offset="45%" stop-color="#7C3AED"/>
-      <stop offset="100%" stop-color="#4C1D95"/>
-    </linearGradient>
-  </defs>
-  <!-- Rounded square background matching brand -->
-  <rect width="40" height="40" rx="10" fill="url(#logoGrad)"/>
-  <!-- Stylized P / link mark in white -->
-  <path d="M13 29V12.5C13 10.5 14.8 9 17.2 9C20.8 9 23.5 11.2 23.5 15C23.5 18.2 21.3 20.3 18.2 20.5H16.5" stroke="white" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  <circle cx="20.5" cy="15" r="3.6" fill="white"/>
-  <!-- Subtle arrow tip suggestion -->
-  <path d="M16.5 20.5C19 22 21 24.5 21.5 28" stroke="white" stroke-width="2.2" stroke-linecap="round" opacity="0.9"/>
+  <defs><linearGradient id="logoGrad" x1="3" y1="2" x2="37" y2="38" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#18C978"/><stop offset="100%" stop-color="#05613E"/></linearGradient></defs>
+  <rect width="40" height="40" rx="12" fill="url(#logoGrad)"/>
+  <path d="M10 15.2C10 11.8 12.8 9 16.2 9H22.7C27.2 9 30.5 12.3 30.5 16.5C30.5 20.7 27.2 24 22.7 24H18.8" stroke="white" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M30 24.8C30 28.2 27.2 31 23.8 31H17.3C12.8 31 9.5 27.7 9.5 23.5C9.5 19.3 12.8 16 17.3 16H21.2" stroke="#D9FF9A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M20 13.5L24 16.5L20 19.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
