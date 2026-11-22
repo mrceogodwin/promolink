@@ -16,5 +16,5 @@ export default function LogoutButton() {
       setBusy(false);
     }
   }
-  return <button onClick={logout} disabled={busy} className="rounded-lg border border-white/15 px-4 py-2 text-sm font-semibold text-white/80 hover:border-[#d6bd69] disabled:opacity-50">{busy ? "Signing out…" : "Log out"}</button>;
+  return <button onClick={logout} disabled={busy} className="rounded-lg border border-[#cbded1] bg-[#f0f8f2] px-4 py-2 text-sm font-bold text-[#075638] hover:border-[#08794e] hover:bg-[#e5f7eb] disabled:opacity-50">{busy ? "Signing out…" : "Log out"}</button>;
 }
