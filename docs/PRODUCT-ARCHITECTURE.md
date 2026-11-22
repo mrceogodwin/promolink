@@ -185,7 +185,7 @@ Do not build a fake QR flow or simulated delivery and present it as real.
 - The Meta WhatsApp Cloud API template adapter and signed status webhook have been added on the feature branch. They have not been connected to a live worker or tested against Meta.
 - The database migrations 004–012 were applied to the main Neon database in the prior implementation session; re-verify against the intended Neon project before production cutover.
 - The feature branch's pull request remains open and draft. Its latest Vercel check was pending at the last inspection; a successful production deployment has not been verified.
-- The current schema stores audience-list metadata and estimated reach only. There is no private recipient ingestion, consent, opt-out, or encrypted phone-number store. Real campaign sending must remain disabled until this is designed and security-reviewed.
+- Migration `013_private_audience_contacts.sql` and server-side AES-256-GCM phone encryption, owner-only contact import, aggregate contact counts, and owner-scoped suppression endpoints now exist on the feature branch. Migration 013 has not been applied to Neon; encryption keys are not configured; the owner-facing import UI and recipient-initiated opt-out path are not complete.\n- Campaign creation still does not configure Meta-approved templates or variables, and the worker is not connected to the Meta adapter. Real campaign sending must remain disabled until these pieces are implemented and tested.
 - Production readiness is not verified. Required provider credentials, public webhook reachability, authentication, payment, delivery, settlement and withdrawal flows still need end-to-end tests.
 
 ---
