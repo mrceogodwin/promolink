@@ -2,6 +2,10 @@
 -- Apply only after review; this migration is not run automatically.
 -- Phone numbers are encrypted by the application before storage. Never store plaintext.
 
+-- Enforce that each contact's owner actually owns its audience list.
+CREATE UNIQUE INDEX IF NOT EXISTS audience_lists_id_owner_uidx
+  ON audience_lists(id, owner_id);
+
 CREATE TABLE IF NOT EXISTS audience_contact_suppressions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   owner_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -14,7 +18,7 @@ CREATE TABLE IF NOT EXISTS audience_contact_suppressions (
 
 CREATE TABLE IF NOT EXISTS audience_contacts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  audience_list_id UUID NOT NULL REFERENCES audience_lists(id) ON DELETE CASCADE,
+  audience_list_id UUID NOT NULL,
   owner_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   phone_ciphertext TEXT NOT NULL,
   phone_hash CHAR(64) NOT NULL,
@@ -27,6 +31,8 @@ CREATE TABLE IF NOT EXISTS audience_contacts (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (audience_list_id, phone_hash),
+  FOREIGN KEY (audience_list_id, owner_id)
+    REFERENCES audience_lists(id, owner_id) ON DELETE CASCADE,
   CHECK ((consent_status = 'opted_in' AND opted_out_at IS NULL) OR
          (consent_status = 'withdrawn' AND opted_out_at IS NOT NULL))
 );
