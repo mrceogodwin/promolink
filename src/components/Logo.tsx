@@ -5,11 +5,12 @@ interface LogoProps {
   className?: string;
   showWordmark?: boolean;
   dark?: boolean;
+  href?: string;
 }
 
-export function Logo({ className = "", showWordmark = true, dark = false }: LogoProps) {
+export function Logo({ className = "", showWordmark = true, dark = false, href = "/" }: LogoProps) {
   return (
-    <Link href="/" aria-label="PromoLink home" className={`inline-flex items-center gap-2.5 ${className}`}>
+    <Link href={href} aria-label="PromoLink home" className={`inline-flex items-center gap-2.5 ${className}`}>
       <Image
         src="/logo-mark.svg"
         alt=""
