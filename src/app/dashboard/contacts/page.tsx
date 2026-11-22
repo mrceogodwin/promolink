@@ -23,7 +23,7 @@ function parseCsv(text: string): Record<string, string>[] {
   if (cell.length || row.length) { row.push(cell.trim()); rows.push(row); }
   if (rows.length < 2) throw new Error("CSV must include a header and at least one contact row.");
   const headers = rows.shift()!.map(x => x.toLowerCase().replace(/^\uFEFF/, ""));
-  if (!headers.includes("phone")) throw new Error("CSV needs a phone column in international format, e.g. +2348012345678.");
+  if (!headers.includes("phone") || !headers.includes("consent_obtained_at") || !headers.includes("consent_evidence_ref")) throw new Error("CSV needs phone, consent_obtained_at and consent_evidence_ref columns.");
   return rows.filter(r => r.some(Boolean)).map(r => Object.fromEntries(headers.map((h, i) => [h, r[i] || ""])));
 }
 
@@ -138,7 +138,7 @@ export default function AudienceContactsPage() {
 
       <section className="mt-5 rounded-2xl border border-[#e0ebe3] bg-white p-5 sm:p-7">
         <h2 className="text-lg font-extrabold">Import consented contacts</h2>
-        <p className="mt-2 text-sm leading-6 text-[#61746a]">Upload a CSV with columns: <code>phone</code>, <code>consent_obtained_at</code> (optional ISO date), and <code>consent_evidence_ref</code> (optional reference). Use international E.164 numbers such as +2348012345678. Maximum 500 per import.</p>
+        <p className="mt-2 text-sm leading-6 text-[#61746a]">Upload a CSV with required columns: <code>phone</code>, <code>consent_obtained_at</code> (ISO date/time), and <code>consent_evidence_ref</code> (a reference to the opt-in record). Use international E.164 numbers such as +2348012345678. Maximum 500 per import.</p>
         <label className="mt-5 block text-sm font-bold" htmlFor="contacts-csv">CSV file</label>
         <input id="contacts-csv" type="file" accept=".csv,text/csv" onChange={(e: ChangeEvent<HTMLInputElement>) => setFile(e.target.files?.[0] || null)} className="mt-2 block w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-[#e5f7eb] file:px-4 file:py-2 file:font-bold file:text-[#08794e]" />
         <label className="mt-4 block text-sm font-bold" htmlFor="consent-source">How was consent collected?</label>
