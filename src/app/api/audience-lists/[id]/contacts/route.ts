@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 import { getSessionUser, consumeRateLimit } from "@/lib/auth";
 import { sameOriginError } from "@/lib/request-security";
-import { encryptAudiencePhone, hashAudiencePhone, normalizeE164 } from "@/lib/audience-contacts/crypto";
+import { assertAudienceContactCryptoConfigured, encryptAudiencePhone, hashAudiencePhone, normalizeE164 } from "@/lib/audience-contacts/crypto";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
