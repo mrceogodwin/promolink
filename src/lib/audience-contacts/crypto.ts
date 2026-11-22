@@ -1,6 +1,6 @@
 import { createCipheriv, createDecipheriv, createHmac, randomBytes } from "node:crypto";
 
-const VERSION = 1;
+const VERSION = 1;\n\nexport function assertAudienceContactCryptoConfigured() {\n  decodeKey("AUDIENCE_CONTACT_ENCRYPTION_KEY");\n  const lookupKey = process.env.AUDIENCE_CONTACT_LOOKUP_KEY;\n  if (!lookupKey || Buffer.byteLength(lookupKey, "utf8") < 32) {\n    throw new Error("AUDIENCE_CONTACT_LOOKUP_KEY must be configured with at least 32 characters");\n  }\n}
 
 function decodeKey(name: string): Buffer {
   const encoded = process.env[name];
