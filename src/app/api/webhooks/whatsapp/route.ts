@@ -102,7 +102,7 @@ export async function POST(request: Request) {
       ? String(error.code).replace(/[^A-Za-z0-9_]/g, "").slice(0, 48) || null
       : null;
     const safeErrorTitle = error && typeof error.title === "string"
-      ? error.title.replace(/[\\r\\n\\t]/g, " ").slice(0, 160)
+      ? error.title.replace(/[\r\n\t]/g, " ").slice(0, 160)
       : null;
     const fingerprint = createHash("sha256")
       .update([messageId, status, String(item.timestamp || ""), safeErrorCode || ""].join(":"))
