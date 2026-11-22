@@ -20,7 +20,7 @@ Set these on the PromoLink Vercel project (Preview first, then Production after 
 - `META_APP_SECRET`: the Meta app secret used to verify `X-Hub-Signature-256`.
 - `WHATSAPP_WEBHOOK_VERIFY_TOKEN`: a long random value chosen by the operator and entered in Meta's webhook configuration.
 - `DELIVERY_WORKER_SECRET`: a separate long random secret for the internal delivery worker.
-- `DATABASE_URL`: existing Neon connection string.
+- `DATABASE_URL`: existing Neon connection string.\n- `AUDIENCE_CONTACT_ENCRYPTION_KEY`: base64-encoded 32-byte AES-256-GCM key for recipient phone encryption.\n- `AUDIENCE_CONTACT_LOOKUP_KEY`: independent random secret of at least 32 characters for keyed phone-number hashes and suppression matching.
 
 Never put these values in source control, client-side environment variables, campaign records, logs, or public API responses. Do not reuse the webhook verification token as the worker secret.
 
