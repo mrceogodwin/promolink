@@ -16,8 +16,10 @@ PromoLink is an audience-promotion marketplace. Audience owners can submit chann
 | Campaign request creation | Implemented in code; owner approval required |
 | Campaign owner approval/rejection | Implemented in code; owner-scoped API checks present; end-to-end verification pending |
 | Authentication rate limiting | Implemented in code using Neon |
-| Paystack checkout and signed webhook foundation | Implemented in code; provider secret absent and end-to-end payment verification pending |\n| Wallet balances, delivery-based earning, withdrawals and disputes | Not implemented/production-ready |
-| Channel delivery integrations and verified delivery evidence | Not implemented/verified |\n| SEO sitemap, robots rules and canonical metadata | Implemented; search indexing and rankings not yet verified |
+| Paystack checkout and signed webhook foundation | Implemented in code; provider secret absent and end-to-end payment verification pending |
+| Wallet balances, delivery-based earning, withdrawals and disputes | Not implemented/production-ready |
+| Channel delivery integrations and verified delivery evidence | Not implemented/verified |
+| SEO sitemap, robots rules and canonical metadata | Implemented; search indexing and rankings not yet verified |
 | Password reset and email verification | Not implemented |
 
 Do not treat a workflow as production-ready until CI passes and it has been tested against the configured Neon database.
@@ -44,7 +46,8 @@ Apply migrations in order only on a new database:
 
 1. `db/migrations/001_initial_auth.sql`
 2. `db/migrations/002_auth_rate_limits.sql`
-3. `db/migrations/003_public_waitlist.sql`\n4. `db/migrations/004_delivery_orchestration.sql`
+3. `db/migrations/003_public_waitlist.sql`
+4. `db/migrations/004_delivery_orchestration.sql`
 
 The existing PromoLink Neon branches already contain the core application tables and waitlist table, including its `source` column. Migration 004 has been authored but has not been applied to either branch. Do not rerun migrations blindly or overwrite existing data. Inspect the live schema before any manual migration.
 
