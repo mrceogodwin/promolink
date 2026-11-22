@@ -39,7 +39,7 @@ function configuration() {
   const accessToken = process.env.META_WHATSAPP_ACCESS_TOKEN || "";
   const phoneNumberId = process.env.META_WHATSAPP_PHONE_NUMBER_ID || "";
   const version = process.env.META_GRAPH_API_VERSION || "";
-  if (!accessToken || !phoneNumberId || !/^v\\d+\\.\\d+$/.test(version)) {
+  if (!accessToken || !phoneNumberId || !/^v\d+\.\d+$/.test(version)) {
     throw new Error("Meta WhatsApp Cloud API credentials are not configured.");
   }
   return { accessToken, phoneNumberId, version };
@@ -47,8 +47,8 @@ function configuration() {
 
 function normalizeRecipient(value: string) {
   // E.164 digits only, without a leading plus sign, as expected by the API.
-  const digits = value.replace(/^\\+/, "");
-  if (!/^\\d{8,15}$/.test(digits)) throw new Error("Recipient must be a valid E.164 phone number.");
+  const digits = value.replace(/^\+/, "");
+  if (!/^\d{8,15}$/.test(digits)) throw new Error("Recipient must be a valid E.164 phone number.");
   return digits;
 }
 
