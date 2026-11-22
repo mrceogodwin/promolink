@@ -1,6 +1,14 @@
 import { createCipheriv, createDecipheriv, createHmac, randomBytes } from "node:crypto";
 
-const VERSION = 1;\n\nexport function assertAudienceContactCryptoConfigured() {\n  decodeKey("AUDIENCE_CONTACT_ENCRYPTION_KEY");\n  const lookupKey = process.env.AUDIENCE_CONTACT_LOOKUP_KEY;\n  if (!lookupKey || Buffer.byteLength(lookupKey, "utf8") < 32) {\n    throw new Error("AUDIENCE_CONTACT_LOOKUP_KEY must be configured with at least 32 characters");\n  }\n}
+const VERSION = 1;
+
+export function assertAudienceContactCryptoConfigured() {
+  decodeKey("AUDIENCE_CONTACT_ENCRYPTION_KEY");
+  const lookupKey = process.env.AUDIENCE_CONTACT_LOOKUP_KEY;
+  if (!lookupKey || Buffer.byteLength(lookupKey, "utf8") < 32) {
+    throw new Error("AUDIENCE_CONTACT_LOOKUP_KEY must be configured with at least 32 characters");
+  }
+}
 
 function decodeKey(name: string): Buffer {
   const encoded = process.env[name];
@@ -12,8 +20,8 @@ function decodeKey(name: string): Buffer {
 
 export function normalizeE164(value: unknown): string {
   if (typeof value !== "string") throw new Error("Phone number must be text");
-  const normalized = value.trim().replace(/[\s().-]/g, "");
-  if (!/^\+[1-9]\d{7,14}$/.test(normalized)) {
+  const normalized = value.trim().replace(/[\\s().-]/g, "");
+  if (!/^\\+[1-9]\\d{7,14}$/.test(normalized)) {
     throw new Error("Phone numbers must use international E.164 format, for example +2348012345678");
   }
   return normalized;
